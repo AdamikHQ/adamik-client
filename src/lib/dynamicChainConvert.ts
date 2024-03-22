@@ -1,4 +1,6 @@
-export const dynamicChainConvert = (chain: string): string => {
+import { Chain } from "./types";
+
+export const dynamicChainConvert = (chain: string): Chain => {
   switch (chain) {
     case "cosmos":
     case "COSMOS":
@@ -6,5 +8,5 @@ export const dynamicChainConvert = (chain: string): string => {
     case "ALGO":
       return "algorand";
   }
-  return chain;
+  return chain as Chain;
 };

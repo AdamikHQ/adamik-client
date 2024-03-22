@@ -1,6 +1,7 @@
 import { env } from "@/env";
+import { Transaction } from "@/lib/types";
 
-export const getEncode = async (plainTransaction: any) => {
+export const getEncode = async (plainTransaction: Transaction) => {
   const response = await fetch(
     `${env.NEXT_PUBLIC_ADAMIK_API_URL}/transaction/encode`,
     {
