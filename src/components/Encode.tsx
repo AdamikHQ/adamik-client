@@ -23,6 +23,7 @@ export const Encode = () => {
   const { primaryWallet } = useDynamicContext();
   const [transaction, setTransaction] = useState<Transaction>();
   const [result, setResult] = useState<any>();
+  const [resultJSON, setResultJSON] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const getDataForm = useCallback(
     async (e: FormEvent) => {
@@ -35,6 +36,13 @@ export const Encode = () => {
           amount: amountToSmallestUnit(transaction.amount as string, 6), //FIXME: Need to put logic in backend see with Hakim
         });
         setResult(data);
+
+        const dataJSON = await getEncode({
+          ...transaction,
+          format: "json",
+          amount: amountToSmallestUnit(transaction.amount as string, 6), //FIXME: Need to put logic in backend see with Hakim
+        });
+        setResultJSON(dataJSON);
         setIsLoading(false);
       }
     },
@@ -107,14 +115,24 @@ export const Encode = () => {
                 <Loading />
               ) : (
                 result && (
-                  <div>
-                    <Label htmlFor="name">Result</Label>
-                    <Textarea
-                      className="border text-xs p-2 rounded-md"
-                      value={JSON.stringify(result)}
-                      readOnly={true}
-                    />
-                  </div>
+                  <>
+                    <div>
+                      <Label htmlFor="name">Result hex</Label>
+                      <Textarea
+                        className="border text-xs p-2 rounded-md"
+                        value={JSON.stringify(result.encoded)}
+                        readOnly={true}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="name">Result JSON</Label>
+                      <Textarea
+                        className="border text-xs p-2 rounded-md"
+                        value={JSON.stringify(resultJSON.encoded)}
+                        readOnly={true}
+                      />
+                    </div>
+                  </>
                 )
               )}
             </div>
