@@ -7,6 +7,7 @@ type TransactionCommon = {
   fees?: string;
   gas?: string;
   amount?: string;
+  format?: string;
 };
 
 export type TransferTransaction = {
