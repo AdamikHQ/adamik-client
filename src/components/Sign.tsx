@@ -1,77 +1,68 @@
-"use client";
-
-import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
-import { FormEvent, useCallback, useState } from "react";
+import { SquarePen } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Label } from "./ui/label";
-import { Loading } from "./ui/loading";
 import { Textarea } from "./ui/textarea";
+import { IWallet } from "@/lib/types";
+import { useCallback } from "react";
 
-export const Sign = () => {
-  const { walletConnector } = useDynamicContext();
-  const [encodedTransaction, setEncodedTransaction] = useState<string>("");
-  const [result, setResult] = useState<any>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const getDataForm = useCallback(
-    async (e: FormEvent) => {
-      e.preventDefault();
-      if (encodedTransaction && walletConnector) {
-        setIsLoading(true);
-        const signer = await walletConnector.getSigner();
-        console.log({ signer });
-        const data = await walletConnector.signMessage(encodedTransaction);
-        setResult(data);
-        setIsLoading(false);
-      }
-    },
-    [encodedTransaction]
-  );
+type SignProps = {
+  encodedTransaction?: string;
+  wallet: IWallet;
+};
+
+export const Sign: React.FC<SignProps> = ({ encodedTransaction, wallet }) => {
+  const signWithWallet = useCallback(async () => {
+    if (!encodedTransaction) {
+      alert("Please encode first before signing");
+    } else {
+      await wallet.signMessage(encodedTransaction);
+    }
+  }, [wallet, encodedTransaction]);
 
   return (
-    walletConnector && (
-      <Card className="w-full">
-        <form onSubmit={getDataForm}>
-          <CardHeader>
-            <CardTitle>Sign</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="senders">Encoded transaction</Label>
-                <Textarea
-                  className="border text-xs p-2 rounded-md"
-                  onChange={(e) => setEncodedTransaction(e.target.value)}
-                  value={encodedTransaction}
-                />
-              </div>
-              {isLoading ? (
-                <Loading />
-              ) : (
-                result && (
-                  <div>
-                    <Label htmlFor="name">Result</Label>
-                    <Textarea
-                      className="border text-xs p-2 rounded-md"
-                      value={JSON.stringify(result)}
-                      readOnly={true}
-                    />
-                  </div>
-                )
-              )}
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button type="submit">Sign Message</Button>
-          </CardFooter>
-        </form>
-      </Card>
-    )
+    <Card className="overflow-hidden">
+      <CardHeader className="flex flex-row items-start bg-muted/50">
+        <div className="grid gap-0.5">
+          <CardTitle className="group flex items-center gap-2 text-lg">
+            Wallet Signer
+          </CardTitle>
+          <CardDescription>
+            Once you do your encode try to sign with {wallet.name}
+          </CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent className="p-6 text-sm">
+        <div className="grid gap-3">
+          <Textarea
+            value={
+              wallet.signFormat === "hex"
+                ? encodedTransaction
+                : JSON.stringify(encodedTransaction, null, 2)
+            }
+            readOnly={true}
+          />
+        </div>
+      </CardContent>
+      <CardFooter className="flex flex-row items-center justify-end border-t bg-muted/50 px-6 py-3">
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-8 gap-1"
+          onClick={() => signWithWallet()}
+        >
+          <SquarePen className="h-3.5 w-3.5" />
+          <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
+            Sign with {wallet.name}
+          </span>
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };

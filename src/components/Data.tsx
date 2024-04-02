@@ -1,10 +1,10 @@
 "use client";
 
-import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import { Button } from "./ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -12,79 +12,84 @@ import {
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { getData } from "@/api/getData";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import React, { FormEvent, useCallback, useState } from "react";
 import { Loading } from "./ui/loading";
-import { dynamicChainConvert } from "@/lib/dynamicChainConvert";
 import { Textarea } from "./ui/textarea";
 
-export const Data = () => {
-  const { primaryWallet } = useDynamicContext();
-  const [address, setAddress] = useState<string>("");
+type DataProps = { address: string; chainId: string };
+
+export const Data: React.FC<DataProps> = ({
+  address,
+  chainId,
+}) => {
   const [result, setResult] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const getDataForm = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-      if (address && primaryWallet?.chain) {
+      if (address) {
         setIsLoading(true);
-        const data = await getData(
-          dynamicChainConvert(primaryWallet?.chain),
-          address
-        );
+        const data = await getData(chainId, address);
         setResult(data);
         setIsLoading(false);
       }
     },
-    [address]
+    [address, chainId]
   );
 
-  useEffect(() => {
-    setAddress("");
-    setResult("");
-    if (primaryWallet?.address) {
-      setAddress(primaryWallet?.address);
-    }
-  }, [primaryWallet?.address]);
-
   return (
-    primaryWallet && (
-      <Card className="w-full">
-        <form onSubmit={getDataForm}>
-          <CardHeader>
-            <CardTitle>Get Data</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Address</Label>
-                <Input
-                  id="address"
-                  placeholder="Address"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                />
-              </div>
-              {isLoading ? (
-                <Loading />
-              ) : (
-                result && (
-                  <div>
-                    <Label htmlFor="name">Result</Label>
-                    <Textarea
-                      className="border text-xs p-2 rounded-md"
-                      value={JSON.stringify(result)}
-                      readOnly={true}
-                    />
-                  </div>
-                )
-              )}
+    <Card className="w-full">
+      <form onSubmit={getDataForm}>
+        <CardHeader className="flex flex-row items-start bg-muted/80">
+          <div className="grid gap-0.5">
+            <CardTitle className="group flex items-center gap-2 text-lg">
+              Adamik - Get Data
+            </CardTitle>
+            <CardDescription>
+              <span className="font-light">/data/state</span>
+            </CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 py-4">
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="name">Address</Label>
+              <Input
+                id="address"
+                placeholder="Address"
+                value={address}
+                disabled={true}
+                readOnly={true}
+              />
+              <Label htmlFor="name">ChainId</Label>
+              <Input
+                id="chainId"
+                placeholder="chainId"
+                disabled={true}
+                readOnly={true}
+                value={chainId}
+              />
             </div>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button type="submit">Fetch Data</Button>
-          </CardFooter>
-        </form>
-      </Card>
-    )
+            {isLoading ? (
+              <Loading />
+            ) : (
+              result && (
+                <div>
+                  <Label htmlFor="name">Result</Label>
+                  <Textarea
+                    className="border text-xs p-2 rounded-md"
+                    value={JSON.stringify(result)}
+                    readOnly={true}
+                  />
+                </div>
+              )
+            )}
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-end">
+          <Button type="submit">Fetch Data</Button>
+        </CardFooter>
+      </form>
+    </Card>
   );
 };

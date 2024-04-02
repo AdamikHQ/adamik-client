@@ -1,9 +1,9 @@
+import { SiteHeader } from "@/components/ui/site-header";
 import { cn } from "@/lib/utils";
+import { AppProviders } from "@/providers";
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/providers/ThemeProvider";
-import { AppProviders } from "@/providers";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -24,11 +24,16 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen bg-secondary font-sans antialiased",
           fontSans.variable
         )}
       >
-        <AppProviders>{children}</AppProviders>
+        <AppProviders>
+          <SiteHeader />
+          <main className="mx-auto max-w-[59rem] flex-1 auto-rows-max gap-4 p-4 md:p-8">
+            {children}
+          </main>
+        </AppProviders>
       </body>
     </html>
   );

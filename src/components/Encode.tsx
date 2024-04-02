@@ -1,78 +1,88 @@
 "use client";
 
-import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
+import { getEncode } from "@/api/getEncode";
+import { IWallet, Transaction } from "@/lib/types";
+import { amountToSmallestUnit } from "@/lib/utils";
+import { FormEvent, useCallback, useState } from "react";
 import { Button } from "./ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { FormEvent, useCallback, useEffect, useState } from "react";
 import { Loading } from "./ui/loading";
-import { getEncode } from "@/api/getEncode";
-import { Transaction } from "@/lib/types";
-import { dynamicChainConvert } from "@/lib/dynamicChainConvert";
 import { Textarea } from "./ui/textarea";
-import { amountToSmallestUnit } from "@/lib/utils";
 
-export const Encode = () => {
-  const { primaryWallet } = useDynamicContext();
-  const [transaction, setTransaction] = useState<Transaction>();
+type EncodeProps = {
+  transaction: Transaction;
+  setTransaction: (transaction: Transaction) => void;
+  setEncodedTransaction: (encodedTransaction: string) => void;
+  wallet: IWallet;
+};
+
+export const Encode: React.FC<EncodeProps> = ({
+  transaction,
+  setTransaction,
+  setEncodedTransaction,
+  wallet,
+}) => {
   const [result, setResult] = useState<any>();
   const [resultJSON, setResultJSON] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const getDataForm = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-      console.log(transaction);
       if (transaction) {
         setIsLoading(true);
         const data = await getEncode({
           ...transaction,
-          amount: amountToSmallestUnit(transaction.amount as string, 6), //FIXME: Need to put logic in backend see with Hakim
+          amount: amountToSmallestUnit(
+            transaction.amount as string,
+            wallet.unit
+          ), //FIXME: Need to put logic in backend see with Hakim
         });
         setResult(data);
 
         const dataJSON = await getEncode({
           ...transaction,
           format: "json",
-          amount: amountToSmallestUnit(transaction.amount as string, 6), //FIXME: Need to put logic in backend see with Hakim
+          amount: amountToSmallestUnit(
+            transaction.amount as string,
+            wallet.unit
+          ), //FIXME: Need to put logic in backend see with Hakim
         });
         setResultJSON(dataJSON);
+        data &&
+          setEncodedTransaction(
+            wallet.signFormat === "hex" ? data.encoded : dataJSON.encoded
+          );
         setIsLoading(false);
       }
     },
-    [transaction]
+    [transaction, wallet, setEncodedTransaction]
   );
-
-  useEffect(() => {
-    setTransaction(undefined);
-    setResult("");
-    if (primaryWallet?.address) {
-      setTransaction({
-        ...transaction,
-        chainId: dynamicChainConvert(primaryWallet.chain),
-        senders: [primaryWallet.address],
-        mode: "transfer",
-        recipients: [],
-        useMaxAmount: false,
-      });
-    }
-  }, [primaryWallet?.address]);
 
   return (
     transaction && (
       <Card className="w-full">
         <form onSubmit={getDataForm}>
-          <CardHeader>
-            <CardTitle>Transaction Encoder</CardTitle>
+          <CardHeader className="flex flex-row items-start bg-muted/80">
+            <div className="grid gap-0.5">
+              <CardTitle className="group flex items-center gap-2 text-lg">
+                Adamik - Transaction Encoder
+              </CardTitle>
+              <CardDescription>
+                <span className="font-light">/transaction/encode</span>
+              </CardDescription>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="grid w-full items-center gap-4">
+            <div className="grid py-4 gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="senders">Sender</Label>
                 <Input
@@ -113,6 +123,15 @@ export const Encode = () => {
               </div>
               {isLoading ? (
                 <Loading />
+              ) : result && result.status.errors.length > 0 ? (
+                <>
+                  <Label htmlFor="name">Result errors</Label>
+                  <Textarea
+                    className="border text-xs p-2 rounded-md"
+                    value={JSON.stringify(result.status)}
+                    readOnly={true}
+                  />
+                </>
               ) : (
                 result && (
                   <>
@@ -137,7 +156,7 @@ export const Encode = () => {
               )}
             </div>
           </CardContent>
-          <CardFooter className="flex justify-between">
+          <CardFooter className="flex justify-end">
             <Button type="submit">Encode</Button>
           </CardFooter>
         </form>

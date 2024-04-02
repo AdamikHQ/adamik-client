@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { DynamicProvider } from "./DynamicProvider";
 import { ThemeProvider } from "./ThemeProvider";
+import { WalletProvider } from "./WalletProvider";
 
 export const AppProviders: React.FC<React.PropsWithChildren> = ({
   children,
@@ -14,7 +14,7 @@ export const AppProviders: React.FC<React.PropsWithChildren> = ({
       enableSystem
       disableTransitionOnChange
     >
-      <DynamicProvider>{children}</DynamicProvider>
+      <WalletProvider>{children}</WalletProvider>
     </ThemeProvider>
   );
 };
