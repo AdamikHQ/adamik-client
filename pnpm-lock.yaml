@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@cosmostation/extension':
+    specifier: ^0.0.13
+    version: 0.0.13
   '@radix-ui/react-checkbox':
     specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.2.22)(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0)
@@ -109,6 +112,18 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
+
+  /@cosmostation/extension@0.0.13:
+    resolution: {integrity: sha512-qRSX4hG0Jnnq/0DOfi6DLvvmfqEvVQxnZJeHgUYaV/AHBpGEXZNNj5feh+XhliG/oC+YWy7hfzbsePQtMGWkNQ==}
+    engines: {node: '>= 16.0.0'}
+    dependencies:
+      '@cosmostation/wallets': 2.0.8
+    dev: false
+
+  /@cosmostation/wallets@2.0.8:
+    resolution: {integrity: sha512-aATHn2jLjO+RFpw5PFgXZQjx/HuDls6D2FmZviuuxQXAdTTgwsSGaYFGwvmggoFFP2IEzhtZlFqod7rwuCosTQ==}
+    engines: {node: '>= 16.0.0'}
+    dev: false
 
   /@eslint-community/eslint-utils@4.4.0(eslint@8.57.0):
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}

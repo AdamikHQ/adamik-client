@@ -1,22 +1,18 @@
-import { IWallet, Transaction } from "@/lib/types";
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+    Card,
+    CardDescription,
+    CardHeader,
+    CardTitle
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Data } from "./Data";
-import Image from "next/image";
-import { Encode } from "./Encode";
-import { Textarea } from "./ui/textarea";
-import { SquarePen } from "lucide-react";
-import { Sign } from "./Sign";
+import { IWallet, Transaction } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import { Data } from "./Data";
+import { Encode } from "./Encode";
+import { Sign } from "./Sign";
 
 export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
   const [transaction, setTransaction] = useState<Transaction>({
@@ -62,7 +58,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
                   height={24}
                   className="inline-block"
                 />
-                {" "} - Keplr
+                {" "} - {wallet.name}
               </CardTitle>
               <CardDescription className="max-w-lg text-balance leading-relaxed">
                 

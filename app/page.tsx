@@ -6,14 +6,12 @@ import { useWallet } from "@/hooks/useWallet";
 import { cn } from "@/lib/utils";
 
 export default function Home() {
-  const { wallets } = useWallet();
+  const { activeWallet } = useWallet();
   return (
     <div className={cn("flex flex-col gap-4")}>
       <WalletChoice />
       <Separator orientation="vertical" className={cn("h-[1px]")} />
-      {wallets.map((wallet) => {
-        return <Wallet key={wallet.name} wallet={wallet} />;
-      })}
+      {activeWallet && activeWallet ? <Wallet wallet={activeWallet} /> : null}
     </div>
   );
 }

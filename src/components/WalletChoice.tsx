@@ -5,33 +5,49 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { useWallet } from "@/hooks/useWallet";
 import { KeplrWallet } from "@/lib/wallets/KeplrWallet";
 import Image from "next/image";
-import { useCallback } from "react";
 import { Button } from "./ui/button";
+import { IWallet } from "@/lib/types";
+import { CosmostationWallet } from "@/lib/wallets/CosmostationWallet";
+import { cn } from "@/lib/utils";
+import { LeapWallet } from "@/lib/wallets/LeapWallet";
 
 const wallets = [
   {
     name: "Keplr",
     icon: "/icons/Keplr.svg",
-    connect: async () => {
+    connect: async (addWallet: (wallet: IWallet) => void) => {
       const keplrWallet = new KeplrWallet();
       await keplrWallet.connect();
+      addWallet(keplrWallet);
+    },
+  },
+  {
+    name: "Cosmostation",
+    icon: "/icons/Cosmostation.svg",
+    connect: async (addWallet: (wallet: IWallet) => void) => {
+      const cosmostationWallet = new CosmostationWallet();
+      await cosmostationWallet.connect();
+      addWallet(cosmostationWallet);
+    },
+  },
+  {
+    name: "Leap",
+    icon: "/icons/Leap.svg",
+    connect: async (addWallet: (wallet: IWallet) => void) => {
+      const leapWallet = new LeapWallet();
+      await leapWallet.connect();
+      addWallet(leapWallet);
     },
   },
 ];
 
 export const WalletChoice = () => {
-  const { addWallet } = useWallet();
-
-  const connectKeplr = useCallback(async () => {
-    const keplrWallet = new KeplrWallet();
-    addWallet(keplrWallet);
-    await keplrWallet.connect();
-  }, [addWallet]);
+  const { addWallet, activeWallet } = useWallet();
 
   return (
     <Card>
@@ -42,27 +58,29 @@ export const WalletChoice = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex items-center">
-        <Button
-          variant="ghost"
-          className="opacity-80 hover:opacity-100"
-          size="icon"
-          onClick={() => connectKeplr()}
-        >
-          <Image src="/icons/Keplr.svg" alt="Keplr" height={32} width={32} />
-        </Button>
-        WIP : 
-        <Button
-          variant="ghost"
-          className="opacity-10 hover:opacity-100"
-          size="icon"
-        >
-          <Image
-            src="/icons/Metamask.svg"
-            alt="Metamask"
-            height={32}
-            width={32}
-          />
-        </Button>
+        {wallets.map((wallet) => {
+          return (
+            <Button
+              variant="ghost"
+              className={cn(
+                "opacity-50 hover:opacity-100",
+                activeWallet &&
+                  wallet.name === activeWallet.name &&
+                  "opacity-100"
+              )}
+              size="icon"
+              onClick={wallet.connect.bind(null, addWallet)}
+              key={wallet.name}
+            >
+              <Image
+                src={wallet.icon}
+                alt={wallet.name}
+                height={32}
+                width={32}
+              />
+            </Button>
+          );
+        })}
       </CardContent>
     </Card>
   );
