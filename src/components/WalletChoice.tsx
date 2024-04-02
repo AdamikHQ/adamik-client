@@ -15,6 +15,7 @@ import { IWallet } from "@/lib/types";
 import { CosmostationWallet } from "@/lib/wallets/CosmostationWallet";
 import { cn } from "@/lib/utils";
 import { LeapWallet } from "@/lib/wallets/LeapWallet";
+import { PeraWallet } from "@/lib/wallets/PeraWallet";
 
 const wallets = [
   {
@@ -42,6 +43,15 @@ const wallets = [
       const leapWallet = new LeapWallet();
       await leapWallet.connect();
       addWallet(leapWallet);
+    },
+  },
+  {
+    name: "Pera",
+    icon: "/icons/Pera.svg",
+    connect: async (addWallet: (wallet: IWallet) => void) => {
+      const peraWallet = new PeraWallet();
+      await peraWallet.connect();
+      addWallet(peraWallet);
     },
   },
 ];
