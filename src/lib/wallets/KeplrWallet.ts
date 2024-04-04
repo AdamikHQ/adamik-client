@@ -1,4 +1,4 @@
-import { AminoSignResponse, Keplr, StdSignDoc } from "@keplr-wallet/types";
+import { AminoSignResponse, Keplr, OfflineAminoSigner, OfflineDirectSigner, StdSignDoc } from "@keplr-wallet/types";
 import { IWallet } from "../types";
 
 
@@ -8,13 +8,10 @@ export class KeplrWallet implements IWallet {
   public icon = "/icons/Keplr.svg";
   public unit = 6; // TODO: Get from Adamik ? 
   public signFormat = "amino";
-  private targetedChain: string;
+  private offlineSigner: OfflineAminoSigner & OfflineDirectSigner | null = null;
   private adamikNameConverted: { [k: string]: string } = {
     "cosmoshub": "cosmoshub-4",
     "osmosis": "osmosis-1",
-  }
-  constructor() {
-    this.targetedChain = this.supportedChains[0];
   }
 
   private checkConnectivity(): Keplr {
@@ -26,37 +23,44 @@ export class KeplrWallet implements IWallet {
     return keplr;
   }
 
-  setTargetedChain(chain: string): void {
-    this.targetedChain = chain;
-  }
-
-  async connect(): Promise<void> {
+  async connect(chainId: string): Promise<void> {
     const keplr = this.checkConnectivity();
 
-    await keplr.enable(this.adamikNameConverted[this.targetedChain]);
+    await keplr.enable(this.adamikNameConverted[chainId]);
     const chains = await keplr.getChainInfosWithoutEndpoints();
     const chain = chains.find((chain) => {
-      return chain.chainId === this.adamikNameConverted[this.targetedChain];
+      return chain.chainId === this.adamikNameConverted[chainId];
     });
     this.unit = chain?.currencies[0].coinDecimals as number;
   }
 
-  async getAddress(): Promise<string> {
+  async getAddress(chainId: string): Promise<string> {
     const keplr = this.checkConnectivity();
 
-    const offlineSigner = keplr.getOfflineSigner((this.adamikNameConverted[this.targetedChain]));
-    const accounts = await offlineSigner.getAccounts();
+    this.offlineSigner = keplr.getOfflineSigner((this.adamikNameConverted[chainId]));
+    const accounts = await this.offlineSigner.getAccounts();
 
     return accounts[0].address;
   }
 
-  async signMessage(message: StdSignDoc): Promise<AminoSignResponse> {
-    const keplr = this.checkConnectivity();
-
-    const offlineSigner = keplr.getOfflineSigner((this.adamikNameConverted[this.targetedChain]));
-    const accounts = await offlineSigner.getAccounts();
-    const signature = await offlineSigner.signAmino(accounts[0].address, message);
+  async signMessage(chainId: string, message: StdSignDoc): Promise<AminoSignResponse> {
+    const accounts = await this.offlineSigner!.getAccounts();
+    const signature = await this.offlineSigner!.signAmino(accounts[0].address, message);
 
     return signature;
+  }
+
+  extractSignature(signature: AminoSignResponse): string {
+    return signature.signature.signature;
+  }
+
+  async getPubkey(): Promise<string> {
+    const accounts = await this.offlineSigner!.getAccounts();
+
+    return Buffer.from(accounts[0].pubkey).toString('base64');
+  }
+
+  getExplorerUrl(chainId: string, hash: string): string {
+    return `https://www.mintscan.io/${chainId}/txs/${hash}`;
   }
 }

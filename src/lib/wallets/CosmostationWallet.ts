@@ -8,32 +8,40 @@ export class CosmostationWallet implements IWallet {
   public icon = "/icons/Cosmostation.svg";
   public unit = 6; // TODO: Get from Adamik ? 
   public signFormat = "amino";
-  private targetedChain: string;
   private adamikNameConverted: { [k: string]: string } = {
     "cosmoshub": "cosmoshub-4",
     "osmosis": "osmosis-1",
   }
-  constructor() {
-    this.targetedChain = this.supportedChains[0];
+  
+
+  private provider: Awaited<ReturnType<typeof cosmos>> | null = null;
+
+
+  async connect(chainId: string): Promise<void> {
+    await cosmos(this.adamikNameConverted[chainId]);
   }
 
-  setTargetedChain(chain: string): void {
-    this.targetedChain = chain;
+  async getAddress(chainId: string): Promise<string> {
+    this.provider = await cosmos(this.adamikNameConverted[chainId]);
+    return (await  this.provider.requestAccount()).address;
   }
 
-  async connect(): Promise<void> {
-    await cosmos(this.adamikNameConverted[this.targetedChain]);
-  }
-
-  async getAddress(): Promise<string> {
-    const provider = await cosmos(this.adamikNameConverted[this.targetedChain]);
-    return (await provider.requestAccount()).address;
-  }
-
-  async signMessage(message: CosmosSignAminoDoc): Promise<CosmosSignAminoResponse> {
-    const provider = await cosmos(this.adamikNameConverted[this.targetedChain]);
+  async signMessage(chainId: string, message: CosmosSignAminoDoc): Promise<CosmosSignAminoResponse> {
+    const provider = await cosmos(this.adamikNameConverted[chainId]);
     const signature = await provider.signAmino(message);
 
     return signature;
+  }
+
+  extractSignature(signature: CosmosSignAminoResponse): string {
+    return signature.signature;
+  }
+
+  async getPubkey(): Promise<string> {
+    return (await this.provider!.requestAccount()).public_key.value;
+  }
+
+  getExplorerUrl(chainId: string, hash: string): string {
+    return `https://www.mintscan.io/${chainId}/txs/${hash}`;
   }
 }

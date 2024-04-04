@@ -1,10 +1,13 @@
 import { env } from "@/env";
-import { Chain } from "@/lib/types";
+import { Transaction } from "@/lib/types";
 
+type BroadcastArgs = {
+  transaction: Transaction;
+  signature: string;
+  encodedTransaction?: string;
+}
 export const broadcast = async (
-  chainId: Chain,
-  signature: string,
-  encodedTransaction: string
+  { transaction, signature, encodedTransaction }: BroadcastArgs
 ) => {
   const response = await fetch(
     `${env.NEXT_PUBLIC_ADAMIK_API_URL}/transaction/broadcast`,
@@ -16,7 +19,7 @@ export const broadcast = async (
       method: "POST",
       body: JSON.stringify({
         transaction: {
-          plain: { chainId },
+          plain: transaction,
           encoded: encodedTransaction,
           signature,
         },

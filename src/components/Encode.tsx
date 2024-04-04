@@ -3,7 +3,7 @@
 import { getEncode } from "@/api/getEncode";
 import { IWallet, Transaction } from "@/lib/types";
 import { amountToSmallestUnit } from "@/lib/utils";
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import {
   Card,
@@ -41,6 +41,7 @@ export const Encode: React.FC<EncodeProps> = ({
         setIsLoading(true);
         const data = await getEncode({
           ...transaction,
+          pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
           amount: amountToSmallestUnit(
             transaction.amount as string,
             wallet.unit
@@ -51,21 +52,41 @@ export const Encode: React.FC<EncodeProps> = ({
         const dataJSON = await getEncode({
           ...transaction,
           format: "json",
+          pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
           amount: amountToSmallestUnit(
             transaction.amount as string,
             wallet.unit
           ), //FIXME: Need to put logic in backend see with Hakim
         });
         setResultJSON(dataJSON);
-        data &&
+        if (data) {
           setEncodedTransaction(
             wallet.signFormat === "hex" ? data.encoded : dataJSON.encoded
           );
+          const fees =
+            typeof data?.plain?.fees === "string"
+              ? data?.plain?.fees
+              : transaction.fees;
+          const gas =
+            typeof data?.plain?.gas === "string"
+              ? data?.plain?.gas
+              : transaction.gas;
+          setTransaction({
+            ...transaction,
+            fees,
+            gas,
+          });
+        }
         setIsLoading(false);
       }
     },
-    [transaction, wallet, setEncodedTransaction]
+    [transaction, wallet, setEncodedTransaction, setTransaction]
   );
+
+  useEffect(() => {
+    setResult(undefined);
+    setResultJSON(undefined);
+  }, [wallet, transaction.chainId]);
 
   return (
     transaction && (

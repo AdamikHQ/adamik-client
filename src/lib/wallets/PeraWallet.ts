@@ -1,4 +1,3 @@
-import { SignerTransaction } from "@perawallet/connect/dist/util/model/peraWalletModels";
 import { IWallet } from "../types";
 import { PeraWalletConnect } from "@perawallet/connect"
 
@@ -36,7 +35,7 @@ export class PeraWallet implements IWallet {
         throw new Error("PeraWallet not connected");
     }
 
-    async signMessage(payload: string) {
+    async signMessage(payload: string): Promise<Uint8Array[]> {
         if (this.peraWallet) {
             return await this.peraWallet.signData([{ data: Uint8Array.from(Buffer.from(payload, "hex")), message: "encoded with Adamik !" }], this.addresses[0]);
             // return await this.peraWallet.signTransaction([payload], this.addresses[0]);
@@ -44,6 +43,11 @@ export class PeraWallet implements IWallet {
         throw new Error("PeraWallet not connected");
     }
 
-    public setTargetedChain(chainId: string) {
+    extractSignature(signature: Uint8Array[]): string {
+        return Buffer.from(signature[0]).toString("hex");
+    }
+
+    getExplorerUrl(chainId: string, hash: string): string {
+        return `https://algoexplorer.io/tx/${hash}`;
     }
 }

@@ -8,6 +8,7 @@ type TransactionCommon = {
   gas?: string;
   amount?: string;
   format?: string;
+  pubKey?: string;
 };
 
 export type TransferTransaction = {
@@ -26,8 +27,10 @@ export interface IWallet<T = any, R = any> {
   icon: string;
   unit: number;
   signFormat: string;
-  connect: () => Promise<void>;
-  getAddress: () => Promise<string>;
-  signMessage: (payload: T) => Promise<R>;
-  setTargetedChain: (chain: string) => void;
+  connect: (chainId: string) => Promise<void>;
+  getAddress: (chainId: string) => Promise<string>;
+  signMessage: (chainId: string, payload: T) => Promise<R>;
+  extractSignature: (signature: R) => string;
+  getPubkey?: () => Promise<string>;
+  getExplorerUrl: (chainId: string, hash: string) => string;
 }

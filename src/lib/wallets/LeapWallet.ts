@@ -1,5 +1,6 @@
-import { AminoSignResponse, Keplr, StdSignDoc } from "@keplr-wallet/types";
+import { AminoSignResponse, Keplr, OfflineAminoSigner, OfflineDirectSigner, StdSignDoc } from "@keplr-wallet/types";
 import { IWallet } from "../types";
+import { off } from "process";
 
 
 export class LeapWallet implements IWallet {
@@ -8,14 +9,13 @@ export class LeapWallet implements IWallet {
   public icon = "/icons/Leap.svg";
   public unit = 6; // TODO: Get from Adamik ? 
   public signFormat = "amino";
-  private targetedChain: string;
+
   private adamikNameConverted: { [k: string]: string } = {
     "cosmoshub": "cosmoshub-4",
     "osmosis": "osmosis-1",
   }
-  constructor() {
-    this.targetedChain = this.supportedChains[0];
-  }
+
+  private offlineSigner: OfflineAminoSigner & OfflineDirectSigner | null = null;
 
   private checkConnectivity(): Keplr {
     const { leap } = window
@@ -26,32 +26,46 @@ export class LeapWallet implements IWallet {
     return leap;
   }
 
-  setTargetedChain(chain: string): void {
-    this.targetedChain = chain;
-  }
 
-  async connect(): Promise<void> {
+  async connect(chainId: string): Promise<void> {
     const leap = this.checkConnectivity();
 
-    await leap.enable(this.adamikNameConverted[this.targetedChain]);
+    await leap.enable(this.adamikNameConverted[chainId]);
   }
 
-  async getAddress(): Promise<string> {
+  async getAddress(chainId: string): Promise<string> {
     const leap = this.checkConnectivity();
 
-    const offlineSigner = leap.getOfflineSigner((this.adamikNameConverted[this.targetedChain]));
-    const accounts = await offlineSigner.getAccounts();
+    this.offlineSigner = leap.getOfflineSigner((this.adamikNameConverted[chainId]));
+    const accounts = await this.offlineSigner.getAccounts();
 
     return accounts[0].address;
   }
 
-  async signMessage(message: StdSignDoc): Promise<AminoSignResponse> {
+  async signMessage(chainId: string, message: StdSignDoc): Promise<AminoSignResponse> {
     const leap = this.checkConnectivity();
 
-    const offlineSigner = leap.getOfflineSigner((this.adamikNameConverted[this.targetedChain]));
-    const accounts = await offlineSigner.getAccounts();
-    const signature = await offlineSigner.signAmino(accounts[0].address, message);
+    if (this.offlineSigner === null) {
+      this.offlineSigner = leap.getOfflineSigner((this.adamikNameConverted[chainId]));
+    }
+    const accounts = await this.offlineSigner.getAccounts();
+    const signature = await this.offlineSigner.signAmino(accounts[0].address, message);
 
     return signature;
+  }
+
+  extractSignature(signature: AminoSignResponse): string {
+    return signature.signature.signature;
+  }
+
+  async getPubkey(): Promise<string> {
+    const accounts = await this.offlineSigner!.getAccounts();
+
+    return Buffer.from(accounts[0].pubkey).toString('base64');
+  }
+
+
+  getExplorerUrl(chainId: string, hash: string): string {
+    return `https://www.mintscan.io/${chainId}/txs/${hash}`;
   }
 }

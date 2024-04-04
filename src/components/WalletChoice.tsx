@@ -23,7 +23,7 @@ const wallets = [
     icon: "/icons/Keplr.svg",
     connect: async (addWallet: (wallet: IWallet) => void) => {
       const keplrWallet = new KeplrWallet();
-      await keplrWallet.connect();
+      await keplrWallet.connect(keplrWallet.supportedChains[0]);
       addWallet(keplrWallet);
     },
   },
@@ -32,7 +32,7 @@ const wallets = [
     icon: "/icons/Cosmostation.svg",
     connect: async (addWallet: (wallet: IWallet) => void) => {
       const cosmostationWallet = new CosmostationWallet();
-      await cosmostationWallet.connect();
+      await cosmostationWallet.connect(cosmostationWallet.supportedChains[0]);
       addWallet(cosmostationWallet);
     },
   },
@@ -41,7 +41,7 @@ const wallets = [
     icon: "/icons/Leap.svg",
     connect: async (addWallet: (wallet: IWallet) => void) => {
       const leapWallet = new LeapWallet();
-      await leapWallet.connect();
+      await leapWallet.connect(leapWallet.supportedChains[0]);
       addWallet(leapWallet);
     },
   },
