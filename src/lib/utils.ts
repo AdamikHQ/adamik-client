@@ -11,3 +11,11 @@ export function amountToSmallestUnit(amount: string, decimals: number): string {
   const computedAmount = parseFloat(amount) * Math.pow(10, decimals);
   return computedAmount.toString();
 }
+
+export function mintscanUrl(chainId: string, hash: string): string {
+  if (chainId === "cosmoshub") {
+    return `https://www.mintscan.io/cosmos/txs/${hash}`;
+  }
+
+  return `https://www.mintscan.io/${chainId}/txs/${hash}`;
+}

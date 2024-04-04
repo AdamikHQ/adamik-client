@@ -6,6 +6,7 @@ import {
   StdSignDoc,
 } from "@keplr-wallet/types";
 import { IWallet } from "../types";
+import { mintscanUrl } from "../utils";
 
 export class KeplrWallet implements IWallet {
   public name = "Keplr";
@@ -75,6 +76,6 @@ export class KeplrWallet implements IWallet {
   }
 
   getExplorerUrl(chainId: string, hash: string): string {
-    return `https://www.mintscan.io/${chainId}/txs/${hash}`;
+    return mintscanUrl(chainId, hash);
   }
 }

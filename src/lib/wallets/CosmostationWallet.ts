@@ -4,6 +4,7 @@ import {
   CosmosSignAminoResponse,
   cosmos,
 } from "@cosmostation/extension";
+import { mintscanUrl } from "../utils";
 
 export class CosmostationWallet implements IWallet {
   public name = "Cosmostation";
@@ -46,6 +47,6 @@ export class CosmostationWallet implements IWallet {
   }
 
   getExplorerUrl(chainId: string, hash: string): string {
-    return `https://www.mintscan.io/${chainId}/txs/${hash}`;
+    return mintscanUrl(chainId, hash);
   }
 }

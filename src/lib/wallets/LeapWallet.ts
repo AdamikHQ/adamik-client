@@ -7,6 +7,7 @@ import {
 } from "@keplr-wallet/types";
 import { IWallet } from "../types";
 import { off } from "process";
+import { mintscanUrl } from "../utils";
 
 export class LeapWallet implements IWallet {
   public name = "Leap";
@@ -80,6 +81,6 @@ export class LeapWallet implements IWallet {
   }
 
   getExplorerUrl(chainId: string, hash: string): string {
-    return `https://www.mintscan.io/${chainId}/txs/${hash}`;
+    return mintscanUrl(chainId, hash);
   }
 }
