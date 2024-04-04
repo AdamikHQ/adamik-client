@@ -87,7 +87,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
                         className={cn(
                           "h-8 gap-1",
                           chain === transaction.chainId &&
-                            "bg-teal-200 dark:bg-teal-600 border-primary text-primary"
+                            "bg-teal-200 dark:bg-teal-600 border-primary text-primary",
                         )}
                         key={chain}
                         onClick={() => changeTargetChain(chain)}

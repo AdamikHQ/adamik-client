@@ -5,10 +5,12 @@ type BroadcastArgs = {
   transaction: Transaction;
   signature: string;
   encodedTransaction?: string;
-}
-export const broadcast = async (
-  { transaction, signature, encodedTransaction }: BroadcastArgs
-) => {
+};
+export const broadcast = async ({
+  transaction,
+  signature,
+  encodedTransaction,
+}: BroadcastArgs) => {
   const response = await fetch(
     `${env.NEXT_PUBLIC_ADAMIK_API_URL}/transaction/broadcast`,
     {
@@ -24,7 +26,7 @@ export const broadcast = async (
           signature,
         },
       }),
-    }
+    },
   );
 
   if (response.status === 200) {

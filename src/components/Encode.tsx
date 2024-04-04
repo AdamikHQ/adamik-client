@@ -44,7 +44,7 @@ export const Encode: React.FC<EncodeProps> = ({
           pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
           amount: amountToSmallestUnit(
             transaction.amount as string,
-            wallet.unit
+            wallet.unit,
           ), //FIXME: Need to put logic in backend see with Hakim
         });
         setResult(data);
@@ -55,13 +55,13 @@ export const Encode: React.FC<EncodeProps> = ({
           pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
           amount: amountToSmallestUnit(
             transaction.amount as string,
-            wallet.unit
+            wallet.unit,
           ), //FIXME: Need to put logic in backend see with Hakim
         });
         setResultJSON(dataJSON);
         if (data) {
           setEncodedTransaction(
-            wallet.signFormat === "hex" ? data.encoded : dataJSON.encoded
+            wallet.signFormat === "hex" ? data.encoded : dataJSON.encoded,
           );
           const fees =
             typeof data?.plain?.fees === "string"
@@ -80,7 +80,7 @@ export const Encode: React.FC<EncodeProps> = ({
         setIsLoading(false);
       }
     },
-    [transaction, wallet, setEncodedTransaction, setTransaction]
+    [transaction, wallet, setEncodedTransaction, setTransaction],
   );
 
   useEffect(() => {

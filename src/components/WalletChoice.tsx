@@ -76,7 +76,7 @@ export const WalletChoice = () => {
                 "opacity-50 hover:opacity-100",
                 activeWallet &&
                   wallet.name === activeWallet.name &&
-                  "opacity-100"
+                  "opacity-100",
               )}
               size="icon"
               onClick={wallet.connect.bind(null, addWallet)}

@@ -9,7 +9,7 @@ export const getChainDetails = async (chainId: string) => {
         "Content-Type": "application/json",
       },
       method: "GET",
-    }
+    },
   );
 
   if (response.status === 200) {

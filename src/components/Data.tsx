@@ -18,10 +18,7 @@ import { Textarea } from "./ui/textarea";
 
 type DataProps = { address: string; chainId: string };
 
-export const Data: React.FC<DataProps> = ({
-  address,
-  chainId,
-}) => {
+export const Data: React.FC<DataProps> = ({ address, chainId }) => {
   const [result, setResult] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const getDataForm = useCallback(
@@ -34,7 +31,7 @@ export const Data: React.FC<DataProps> = ({
         setIsLoading(false);
       }
     },
-    [address, chainId]
+    [address, chainId],
   );
 
   return (

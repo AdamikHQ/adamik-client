@@ -1,21 +1,22 @@
 import { IWallet } from "../types";
-import { CosmosSignAminoDoc, CosmosSignAminoResponse, cosmos } from '@cosmostation/extension';
-
+import {
+  CosmosSignAminoDoc,
+  CosmosSignAminoResponse,
+  cosmos,
+} from "@cosmostation/extension";
 
 export class CosmostationWallet implements IWallet {
   public name = "Cosmostation";
   public supportedChains = ["cosmoshub", "osmosis"];
   public icon = "/icons/Cosmostation.svg";
-  public unit = 6; // TODO: Get from Adamik ? 
+  public unit = 6; // TODO: Get from Adamik ?
   public signFormat = "amino";
   private adamikNameConverted: { [k: string]: string } = {
-    "cosmoshub": "cosmoshub-4",
-    "osmosis": "osmosis-1",
-  }
-  
+    cosmoshub: "cosmoshub-4",
+    osmosis: "osmosis-1",
+  };
 
   private provider: Awaited<ReturnType<typeof cosmos>> | null = null;
-
 
   async connect(chainId: string): Promise<void> {
     await cosmos(this.adamikNameConverted[chainId]);
@@ -23,10 +24,13 @@ export class CosmostationWallet implements IWallet {
 
   async getAddress(chainId: string): Promise<string> {
     this.provider = await cosmos(this.adamikNameConverted[chainId]);
-    return (await  this.provider.requestAccount()).address;
+    return (await this.provider.requestAccount()).address;
   }
 
-  async signMessage(chainId: string, message: CosmosSignAminoDoc): Promise<CosmosSignAminoResponse> {
+  async signMessage(
+    chainId: string,
+    message: CosmosSignAminoDoc,
+  ): Promise<CosmosSignAminoResponse> {
     const provider = await cosmos(this.adamikNameConverted[chainId]);
     const signature = await provider.signAmino(message);
 

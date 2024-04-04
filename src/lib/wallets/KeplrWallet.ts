@@ -1,21 +1,27 @@
-import { AminoSignResponse, Keplr, OfflineAminoSigner, OfflineDirectSigner, StdSignDoc } from "@keplr-wallet/types";
+import {
+  AminoSignResponse,
+  Keplr,
+  OfflineAminoSigner,
+  OfflineDirectSigner,
+  StdSignDoc,
+} from "@keplr-wallet/types";
 import { IWallet } from "../types";
-
 
 export class KeplrWallet implements IWallet {
   public name = "Keplr";
   public supportedChains = ["cosmoshub", "osmosis"];
   public icon = "/icons/Keplr.svg";
-  public unit = 6; // TODO: Get from Adamik ? 
+  public unit = 6; // TODO: Get from Adamik ?
   public signFormat = "amino";
-  private offlineSigner: OfflineAminoSigner & OfflineDirectSigner | null = null;
+  private offlineSigner: (OfflineAminoSigner & OfflineDirectSigner) | null =
+    null;
   private adamikNameConverted: { [k: string]: string } = {
-    "cosmoshub": "cosmoshub-4",
-    "osmosis": "osmosis-1",
-  }
+    cosmoshub: "cosmoshub-4",
+    osmosis: "osmosis-1",
+  };
 
   private checkConnectivity(): Keplr {
-    const { keplr } = window
+    const { keplr } = window;
     if (!keplr) {
       throw new Error("Keplr extension not installed");
     }
@@ -37,15 +43,23 @@ export class KeplrWallet implements IWallet {
   async getAddress(chainId: string): Promise<string> {
     const keplr = this.checkConnectivity();
 
-    this.offlineSigner = keplr.getOfflineSigner((this.adamikNameConverted[chainId]));
+    this.offlineSigner = keplr.getOfflineSigner(
+      this.adamikNameConverted[chainId],
+    );
     const accounts = await this.offlineSigner.getAccounts();
 
     return accounts[0].address;
   }
 
-  async signMessage(chainId: string, message: StdSignDoc): Promise<AminoSignResponse> {
+  async signMessage(
+    chainId: string,
+    message: StdSignDoc,
+  ): Promise<AminoSignResponse> {
     const accounts = await this.offlineSigner!.getAccounts();
-    const signature = await this.offlineSigner!.signAmino(accounts[0].address, message);
+    const signature = await this.offlineSigner!.signAmino(
+      accounts[0].address,
+      message,
+    );
 
     return signature;
   }
@@ -57,7 +71,7 @@ export class KeplrWallet implements IWallet {
   async getPubkey(): Promise<string> {
     const accounts = await this.offlineSigner!.getAccounts();
 
-    return Buffer.from(accounts[0].pubkey).toString('base64');
+    return Buffer.from(accounts[0].pubkey).toString("base64");
   }
 
   getExplorerUrl(chainId: string, hash: string): string {

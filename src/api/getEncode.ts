@@ -11,7 +11,7 @@ export const getEncode = async (plainTransaction: Transaction) => {
       },
       method: "POST",
       body: JSON.stringify({ transaction: plainTransaction }),
-    }
+    },
   );
 
   if (response.status === 200) {

@@ -116,7 +116,7 @@ export const Broadcast: React.FC<BroadcastProps> = ({
                     className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap"
                     href={wallet.getExplorerUrl(
                       transaction.chainId,
-                      result.hash
+                      result.hash,
                     )}
                   >
                     Go to Explorer
