@@ -34,6 +34,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
       setAddress(walletAddress);
       setTransaction({
         ...transaction,
+        mode: "transfer",
         senders: [walletAddress],
         recipients: [],
         amount: "",
@@ -52,6 +53,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
     setTransaction({
       ...transaction,
       chainId,
+      mode: "transfer",
       senders: [walletAddress],
       recipients: [],
       amount: "",

@@ -1,7 +1,7 @@
 export type Chain = "cosmoshub" | "algorand" | "ethereum";
 
 type TransactionCommon = {
-  mode: "transfer" | "stake";
+  mode: "transfer" | "delegate";
   useMaxAmount: boolean;
   chainId: string;
   fees?: string;
@@ -18,7 +18,15 @@ export type TransferTransaction = {
   recipients: string[];
 };
 
-export type Transaction = TransactionCommon & TransferTransaction;
+export type DelegateTransaction = {
+  mode: "delegate";
+  chainId: string;
+  senders: string[];
+  validator: string;
+};
+
+export type Transaction = TransactionCommon &
+  (TransferTransaction | DelegateTransaction);
 
 // TODO refactor this to be more generic without any
 export interface IWallet<T = any, R = any> {

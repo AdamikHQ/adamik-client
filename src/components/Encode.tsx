@@ -1,9 +1,20 @@
 "use client";
 
 import { getEncode } from "@/api/getEncode";
-import { IWallet, Transaction } from "@/lib/types";
+import {
+  DelegateTransaction,
+  IWallet,
+  Transaction,
+  TransferTransaction,
+} from "@/lib/types";
 import { amountToSmallestUnit } from "@/lib/utils";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { Button } from "./ui/button";
 import {
   Card,
@@ -17,6 +28,13 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Loading } from "./ui/loading";
 import { Textarea } from "./ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 type EncodeProps = {
   transaction: Transaction;
@@ -34,6 +52,7 @@ export const Encode: React.FC<EncodeProps> = ({
   const [result, setResult] = useState<any>();
   const [resultJSON, setResultJSON] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [mode, setMode] = useState<string>("transfer");
   const getDataForm = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
@@ -44,7 +63,7 @@ export const Encode: React.FC<EncodeProps> = ({
           pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
           amount: amountToSmallestUnit(
             transaction.amount as string,
-            wallet.unit,
+            wallet.unit
           ), //FIXME: Need to put logic in backend see with Hakim
         });
         setResult(data);
@@ -55,13 +74,13 @@ export const Encode: React.FC<EncodeProps> = ({
           pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
           amount: amountToSmallestUnit(
             transaction.amount as string,
-            wallet.unit,
+            wallet.unit
           ), //FIXME: Need to put logic in backend see with Hakim
         });
         setResultJSON(dataJSON);
         if (data) {
           setEncodedTransaction(
-            wallet.signFormat === "hex" ? data.encoded : dataJSON.encoded,
+            wallet.signFormat === "hex" ? data.encoded : dataJSON.encoded
           );
           const fees =
             typeof data?.plain?.fees === "string"
@@ -80,13 +99,96 @@ export const Encode: React.FC<EncodeProps> = ({
         setIsLoading(false);
       }
     },
-    [transaction, wallet, setEncodedTransaction, setTransaction],
+    [transaction, wallet, setEncodedTransaction, setTransaction]
   );
 
   useEffect(() => {
     setResult(undefined);
     setResultJSON(undefined);
   }, [wallet, transaction.chainId]);
+
+  const form: Record<
+    string,
+    {
+      id: string;
+      label: string;
+      value: string | undefined;
+      onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    }[]
+  > = {
+    transfer: [
+      {
+        id: "senders",
+        label: "Sender",
+        value: transaction.senders[0],
+        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+          setTransaction({
+            ...transaction,
+            senders: [e.target.value],
+          });
+        },
+      },
+      {
+        id: "recipients",
+        label: "Recipient",
+        value: (transaction as TransferTransaction).recipients[0],
+        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+          setTransaction({
+            ...transaction,
+            mode: "transfer",
+            recipients: [e.target.value],
+          });
+        },
+      },
+      {
+        id: "amount",
+        label: "Amount",
+        value: transaction.amount,
+        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+          setTransaction({
+            ...transaction,
+            amount: e.target.value,
+          });
+        },
+      },
+    ],
+    delegate: [
+      {
+        id: "senders",
+        label: "Delegator",
+        value: transaction.senders[0],
+        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+          setTransaction({
+            ...transaction,
+            senders: [e.target.value],
+          });
+        },
+      },
+      {
+        id: "validator",
+        label: "Validator",
+        value: (transaction as DelegateTransaction).validator,
+        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+          setTransaction({
+            ...transaction,
+            mode: "delegate",
+            validator: e.target.value,
+          });
+        },
+      },
+      {
+        id: "amount",
+        label: "Amount",
+        value: transaction.amount,
+        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+          setTransaction({
+            ...transaction,
+            amount: e.target.value,
+          });
+        },
+      },
+    ],
+  };
 
   return (
     transaction && (
@@ -103,44 +205,55 @@ export const Encode: React.FC<EncodeProps> = ({
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid py-4 gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="senders">Sender</Label>
-                <Input
-                  id="senders"
-                  placeholder="Sender"
-                  value={transaction?.senders[0] || ""}
-                  onChange={(e) => {
-                    setTransaction({
-                      ...transaction,
-                      senders: [e.target.value],
-                    });
+            <div className="grid py-4">
+              <div className="flex flex-col space-y-1.5 gap-2">
+                <Label htmlFor="name">Mode</Label>
+                <Select
+                  defaultValue={mode}
+                  onValueChange={(value) => {
+                    setMode(value);
+                    if (value === "transfer") {
+                      setTransaction({
+                        ...transaction,
+                        mode: "transfer",
+                        recipients: [],
+                      });
+                    } else if (value === "delegate") {
+                      setTransaction({
+                        ...transaction,
+                        mode: "delegate",
+                        validator: "",
+                      });
+                    }
                   }}
-                />
-                <Label htmlFor="recipients">Recipient</Label>
-                <Input
-                  id="recipients"
-                  placeholder="Recipient"
-                  value={transaction?.recipients[0] || ""}
-                  onChange={(e) => {
-                    setTransaction({
-                      ...transaction,
-                      recipients: [e.target.value],
-                    });
-                  }}
-                />
-                <Label htmlFor="amount">Amount</Label>
-                <Input
-                  id="amount"
-                  placeholder="Amount"
-                  value={transaction?.amount || ""}
-                  onChange={(e) => {
-                    setTransaction({
-                      ...transaction,
-                      amount: e.target.value,
-                    });
-                  }}
-                />
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder={mode} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.keys(form).map((mode) => {
+                      return (
+                        <SelectItem key={mode} value={mode}>
+                          {mode}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+                {form[mode].map(({ id, label, onChange, value }) => {
+                  return (
+                    <>
+                      <Label htmlFor={id}>{label}</Label>
+                      <Input
+                        id={id}
+                        key={`${id}-${mode}`}
+                        placeholder={label}
+                        value={value}
+                        onChange={onChange}
+                      />
+                    </>
+                  );
+                })}
               </div>
               {isLoading ? (
                 <Loading />
