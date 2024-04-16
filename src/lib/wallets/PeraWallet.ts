@@ -8,6 +8,7 @@ export class PeraWallet implements IWallet {
   public unit = 6; // TODO: Get from Adamik ?
   public signFormat = "hex";
   private addresses: string[] = [];
+  public withoutBroadcast: boolean = false;
 
   private peraWallet: PeraWalletConnect | null = null;
 
@@ -56,5 +57,9 @@ export class PeraWallet implements IWallet {
 
   getExplorerUrl(chainId: string, hash: string): string {
     return `https://algoexplorer.io/tx/${hash}`;
+  }
+
+  getHashFromBroadcast(broadcast: { hash: string }): string {
+    throw new Error("Method not implemented.");
   }
 }

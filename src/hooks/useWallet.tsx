@@ -5,14 +5,14 @@ type WallerContextType = {
   wallets: IWallet[];
   activeWallet: IWallet | null;
   addWallet: (wallet: IWallet) => void;
-  switchWallet: (wallet: IWallet) => void;
+  setActiveWallet: (wallet: IWallet | null) => void;
 };
 
 export const WalletContext = React.createContext<WallerContextType>({
   wallets: [],
   activeWallet: null,
   addWallet: () => {},
-  switchWallet: () => {},
+  setActiveWallet: () => {},
 });
 
 export const useWallet = () => {

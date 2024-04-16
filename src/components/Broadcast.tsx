@@ -15,17 +15,13 @@ import { Label } from "./ui/label";
 import { IWallet, Transaction } from "@/lib/types";
 import { amountToSmallestUnit } from "@/lib/utils";
 import { Loading } from "./ui/loading";
-import Link from "next/link";
 
 type BroadcastProps = {
   signedTransaction: string;
   transaction: Transaction;
   encodedTransaction?: string;
   wallet: IWallet;
-};
-
-type BroadcastResult = {
-  hash: string;
+  setHash: (hash: string) => void;
 };
 
 export const Broadcast: React.FC<BroadcastProps> = ({
@@ -33,29 +29,43 @@ export const Broadcast: React.FC<BroadcastProps> = ({
   transaction,
   encodedTransaction,
   wallet,
+  setHash,
 }) => {
-  const [result, setResult] = useState<BroadcastResult>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<string | undefined>();
+  const [disableBroadcast, setDisableBroadcast] = useState<boolean>(false);
 
   const broadcastOnClick = async () => {
     setIsLoading(true);
-    const broadcastResult: BroadcastResult = await broadcast({
-      transaction: {
-        ...transaction,
-        pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
-        amount: amountToSmallestUnit(transaction.amount as string, wallet.unit), //FIXME: Need to put logic in backend see with Hakim
-      },
-      signature: wallet.extractSignature(signedTransaction),
-      encodedTransaction,
-    });
-    setResult(broadcastResult);
+    try {
+      const broadcastResult = await broadcast({
+        transaction: {
+          ...transaction,
+          pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
+          amount: amountToSmallestUnit(
+            transaction.amount as string,
+            wallet.unit
+          ), //FIXME: Need to put logic in backend see with Hakim
+        },
+        signature: wallet.extractSignature(signedTransaction),
+        encodedTransaction,
+      });
+      if (broadcastResult.error) {
+        throw new Error(JSON.stringify(broadcastResult.error));
+      }
+      setHash(wallet.getHashFromBroadcast(broadcastResult));
+      setDisableBroadcast(true);
+    } catch (error: any) {
+      setErrors(String(error.message));
+    }
     setIsLoading(false);
   };
 
   useEffect(() => {
-    setResult(undefined);
     setIsLoading(false);
-  }, [wallet]);
+    setDisableBroadcast(false);
+    setErrors(undefined);
+  }, [wallet, encodedTransaction]);
 
   return (
     <Card className="overflow-hidden">
@@ -68,63 +78,38 @@ export const Broadcast: React.FC<BroadcastProps> = ({
         </div>
       </CardHeader>
       <CardContent className="p-6 text-sm">
-        <div className="grid gap-3">
-          <div>
-            {isLoading ? (
-              <div className="flex items-center justify-center">
-                <Loading />
-              </div>
-            ) : (
-              <>
-                <Label>Signed Transaction</Label>
-                <Textarea
-                  value={JSON.stringify(signedTransaction, null, 2)}
-                  readOnly={true}
-                />
+        <div className="flex gap-4 flex-col">
+          {isLoading ? (
+            <div className="flex items-center justify-center">
+              <Loading />
+            </div>
+          ) : (
+            <>
+              <Label>Signed Transaction</Label>
+              <Textarea
+                value={JSON.stringify(signedTransaction, null, 2)}
+                readOnly={true}
+              />
 
-                <Label>Signature</Label>
-                <Textarea
-                  value={wallet.extractSignature(signedTransaction)}
-                  readOnly={true}
-                />
+              <Label>Signature</Label>
+              <Textarea
+                value={wallet.extractSignature(signedTransaction)}
+                readOnly={true}
+              />
 
-                <Label>Encoded Transaction</Label>
-                <Textarea
-                  value={JSON.stringify(encodedTransaction, null, 2)}
-                  readOnly={true}
-                />
-              </>
-            )}
-            {result && (
-              <>
-                <Label>Result</Label>
-                <Textarea
-                  value={JSON.stringify(result, null, 2)}
-                  readOnly={true}
-                />
-
-                <Button
-                  size="sm"
-                  className="h-8 gap-1 mt-4 w-full"
-                  onClick={() => broadcastOnClick()}
-                  disabled={
-                    isLoading || !signedTransaction || !encodedTransaction
-                  }
-                >
-                  <LinkIcon className="h-3.5 w-3.5" />
-                  <Link
-                    className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap"
-                    href={wallet.getExplorerUrl(
-                      transaction.chainId,
-                      result.hash,
-                    )}
-                  >
-                    Go to Explorer
-                  </Link>
-                </Button>
-              </>
-            )}
-          </div>
+              <Label>Encoded Transaction</Label>
+              <Textarea
+                value={JSON.stringify(encodedTransaction, null, 2)}
+                readOnly={true}
+              />
+            </>
+          )}
+          {errors && (
+            <>
+              <Label>Errors</Label>
+              <div className="text-red-500">{errors}</div>
+            </>
+          )}
         </div>
       </CardContent>
       <CardFooter className="flex flex-row items-center justify-end border-t bg-muted/50 px-6 py-3">
@@ -133,7 +118,12 @@ export const Broadcast: React.FC<BroadcastProps> = ({
           variant="outline"
           className="h-8 gap-1"
           onClick={() => broadcastOnClick()}
-          disabled={isLoading || !signedTransaction || !encodedTransaction}
+          disabled={
+            isLoading ||
+            !signedTransaction ||
+            !encodedTransaction ||
+            disableBroadcast
+          }
         >
           <Send className="h-3.5 w-3.5" />
           <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">

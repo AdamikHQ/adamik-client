@@ -16,6 +16,7 @@ export class CosmostationWallet implements IWallet {
     cosmoshub: "cosmoshub-4",
     osmosis: "osmosis-1",
   };
+  public withoutBroadcast: boolean = false;
 
   private provider: Awaited<ReturnType<typeof cosmos>> | null = null;
 
@@ -48,5 +49,9 @@ export class CosmostationWallet implements IWallet {
 
   getExplorerUrl(chainId: string, hash: string): string {
     return mintscanUrl(chainId, hash);
+  }
+
+  getHashFromBroadcast(broadcast: { hash: string }): string {
+    throw new Error("Method not implemented.");
   }
 }

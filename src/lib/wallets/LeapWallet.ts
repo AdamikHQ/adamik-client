@@ -6,7 +6,6 @@ import {
   StdSignDoc,
 } from "@keplr-wallet/types";
 import { IWallet } from "../types";
-import { off } from "process";
 import { mintscanUrl } from "../utils";
 
 export class LeapWallet implements IWallet {
@@ -15,6 +14,7 @@ export class LeapWallet implements IWallet {
   public icon = "/icons/Leap.svg";
   public unit = 6; // TODO: Get from Adamik ?
   public signFormat = "amino";
+  public withoutBroadcast: boolean = false;
 
   private adamikNameConverted: { [k: string]: string } = {
     cosmoshub: "cosmoshub-4",
@@ -82,5 +82,9 @@ export class LeapWallet implements IWallet {
 
   getExplorerUrl(chainId: string, hash: string): string {
     return mintscanUrl(chainId, hash);
+  }
+
+  getHashFromBroadcast(broadcast: { hash: string }): string {
+    return broadcast.hash;
   }
 }

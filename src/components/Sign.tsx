@@ -10,13 +10,15 @@ import {
 } from "./ui/card";
 import { Textarea } from "./ui/textarea";
 import { IWallet } from "@/lib/types";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 type SignProps = {
   encodedTransaction?: string;
   wallet: IWallet;
   setSignedTransaction: (signedTransaction: string) => void;
   chainId: string;
+  setOpen: (open: boolean) => void;
+  setHash: (hash: string) => void;
 };
 
 export const Sign: React.FC<SignProps> = ({
@@ -24,15 +26,24 @@ export const Sign: React.FC<SignProps> = ({
   encodedTransaction,
   wallet,
   setSignedTransaction,
+  setOpen,
+  setHash,
 }) => {
   const signWithWallet = useCallback(async () => {
-    if (!encodedTransaction) {
-      alert("Please encode first before signing");
-    } else {
-      const result = await wallet.signMessage(chainId, encodedTransaction);
-      setSignedTransaction(result);
+    const result = await wallet.signMessage(chainId, encodedTransaction);
+    setSignedTransaction(result);
+    if (wallet.withoutBroadcast === true) {
+      setHash(wallet.getHashFromBroadcast(result));
     }
-  }, [wallet, encodedTransaction, setSignedTransaction, chainId]);
+    setOpen(false);
+  }, [
+    wallet,
+    encodedTransaction,
+    setSignedTransaction,
+    chainId,
+    setOpen,
+    setHash,
+  ]);
 
   return (
     <Card className="overflow-hidden">
@@ -69,7 +80,8 @@ export const Sign: React.FC<SignProps> = ({
         >
           <SquarePen className="h-3.5 w-3.5" />
           <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
-            Sign with {wallet.name}
+            Sign {wallet.withoutBroadcast === true ? "and broadcast" : ""} with{" "}
+            {wallet.name}
           </span>
         </Button>
       </CardFooter>

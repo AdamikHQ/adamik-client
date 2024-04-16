@@ -16,48 +16,58 @@ import { CosmostationWallet } from "@/lib/wallets/CosmostationWallet";
 import { cn } from "@/lib/utils";
 import { LeapWallet } from "@/lib/wallets/LeapWallet";
 import { PeraWallet } from "@/lib/wallets/PeraWallet";
+import { Metamask } from "@/lib/wallets/MetamaskWallet";
 
 const wallets = [
   {
+    name: "Metamask",
+    icon: "/icons/Metamask.svg",
+    connect: async (setActiveWallet: (wallet: IWallet) => void) => {
+      const metamaskWallet = new Metamask();
+      await metamaskWallet.connect(metamaskWallet.supportedChains[0]);
+      setActiveWallet(metamaskWallet);
+    },
+  },
+  {
     name: "Keplr",
     icon: "/icons/Keplr.svg",
-    connect: async (addWallet: (wallet: IWallet) => void) => {
+    connect: async (setActiveWallet: (wallet: IWallet) => void) => {
       const keplrWallet = new KeplrWallet();
       await keplrWallet.connect(keplrWallet.supportedChains[0]);
-      addWallet(keplrWallet);
+      setActiveWallet(keplrWallet);
     },
   },
   {
     name: "Cosmostation",
     icon: "/icons/Cosmostation.svg",
-    connect: async (addWallet: (wallet: IWallet) => void) => {
+    connect: async (setActiveWallet: (wallet: IWallet) => void) => {
       const cosmostationWallet = new CosmostationWallet();
       await cosmostationWallet.connect(cosmostationWallet.supportedChains[0]);
-      addWallet(cosmostationWallet);
+      setActiveWallet(cosmostationWallet);
     },
   },
   {
     name: "Leap",
     icon: "/icons/Leap.svg",
-    connect: async (addWallet: (wallet: IWallet) => void) => {
+    connect: async (setActiveWallet: (wallet: IWallet) => void) => {
       const leapWallet = new LeapWallet();
       await leapWallet.connect(leapWallet.supportedChains[0]);
-      addWallet(leapWallet);
+      setActiveWallet(leapWallet);
     },
   },
   {
     name: "Pera",
     icon: "/icons/Pera.svg",
-    connect: async (addWallet: (wallet: IWallet) => void) => {
+    connect: async (setActiveWallet: (wallet: IWallet) => void) => {
       const peraWallet = new PeraWallet();
       await peraWallet.connect();
-      addWallet(peraWallet);
+      setActiveWallet(peraWallet);
     },
   },
 ];
 
 export const WalletChoice = () => {
-  const { addWallet, activeWallet } = useWallet();
+  const { setActiveWallet, activeWallet } = useWallet();
 
   return (
     <Card>
@@ -76,10 +86,10 @@ export const WalletChoice = () => {
                 "opacity-50 hover:opacity-100",
                 activeWallet &&
                   wallet.name === activeWallet.name &&
-                  "opacity-100",
+                  "opacity-100"
               )}
               size="icon"
-              onClick={wallet.connect.bind(null, addWallet)}
+              onClick={wallet.connect.bind(null, setActiveWallet)}
               key={wallet.name}
             >
               <Image

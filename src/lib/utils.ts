@@ -19,3 +19,15 @@ export function mintscanUrl(chainId: string, hash: string): string {
 
   return `https://www.mintscan.io/${chainId}/txs/${hash}`;
 }
+
+export function getEtherscanUrl(chainId: string, hash: string): string {
+  switch (chainId) {
+    case 'sepolia':
+      return `https://sepolia.etherscan.io/tx/${hash}`;
+    case 'ethereum':
+      return `https://etherscan.io/tx/${hash}`;
+    case 'holesky:':
+      return `https://holesky.etherscan.io/tx/${hash}`;
+  }
+  throw new Error(`Chain ${chainId} not supported`);
+}

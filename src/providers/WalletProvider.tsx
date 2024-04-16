@@ -16,13 +16,10 @@ export const WalletProvider: React.FC<React.PropsWithChildren> = ({
     setActiveWallet(wallet);
   };
 
-  const switchWallet = (wallet: IWallet) => {
-    setActiveWallet(wallet);
-  };
 
   return (
     <WalletContext.Provider
-      value={{ wallets, activeWallet, addWallet, switchWallet }}
+      value={{ wallets, activeWallet, addWallet, setActiveWallet }}
     >
       {children}
     </WalletContext.Provider>

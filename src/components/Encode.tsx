@@ -41,6 +41,7 @@ type EncodeProps = {
   setTransaction: (transaction: Transaction) => void;
   setEncodedTransaction: (encodedTransaction: string) => void;
   wallet: IWallet;
+  setOpen: (open: boolean) => void;
 };
 
 export const Encode: React.FC<EncodeProps> = ({
@@ -48,6 +49,7 @@ export const Encode: React.FC<EncodeProps> = ({
   setTransaction,
   setEncodedTransaction,
   wallet,
+  setOpen,
 }) => {
   const [result, setResult] = useState<any>();
   const [resultJSON, setResultJSON] = useState<any>();
@@ -97,9 +99,10 @@ export const Encode: React.FC<EncodeProps> = ({
           });
         }
         setIsLoading(false);
+        setOpen(true);
       }
     },
-    [transaction, wallet, setEncodedTransaction, setTransaction]
+    [transaction, wallet, setEncodedTransaction, setTransaction, setOpen]
   );
 
   useEffect(() => {
@@ -112,7 +115,7 @@ export const Encode: React.FC<EncodeProps> = ({
     {
       id: string;
       label: string;
-      value: string | undefined;
+      value: string;
       onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     }[]
   > = {
@@ -120,7 +123,7 @@ export const Encode: React.FC<EncodeProps> = ({
       {
         id: "senders",
         label: "Sender",
-        value: transaction.senders[0],
+        value: transaction.senders[0] ?? "",
         onChange: (e: ChangeEvent<HTMLInputElement>) => {
           setTransaction({
             ...transaction,
@@ -131,7 +134,7 @@ export const Encode: React.FC<EncodeProps> = ({
       {
         id: "recipients",
         label: "Recipient",
-        value: (transaction as TransferTransaction).recipients[0],
+        value: (transaction as TransferTransaction).recipients[0] ?? "",
         onChange: (e: ChangeEvent<HTMLInputElement>) => {
           setTransaction({
             ...transaction,
@@ -143,7 +146,7 @@ export const Encode: React.FC<EncodeProps> = ({
       {
         id: "amount",
         label: "Amount",
-        value: transaction.amount,
+        value: transaction.amount ?? "0",
         onChange: (e: ChangeEvent<HTMLInputElement>) => {
           setTransaction({
             ...transaction,
@@ -156,7 +159,7 @@ export const Encode: React.FC<EncodeProps> = ({
       {
         id: "senders",
         label: "Delegator",
-        value: transaction.senders[0],
+        value: transaction.senders[0] ?? "",
         onChange: (e: ChangeEvent<HTMLInputElement>) => {
           setTransaction({
             ...transaction,
@@ -167,7 +170,7 @@ export const Encode: React.FC<EncodeProps> = ({
       {
         id: "validator",
         label: "Validator",
-        value: (transaction as DelegateTransaction).validator,
+        value: (transaction as DelegateTransaction).validator ?? "",
         onChange: (e: ChangeEvent<HTMLInputElement>) => {
           setTransaction({
             ...transaction,
@@ -179,7 +182,7 @@ export const Encode: React.FC<EncodeProps> = ({
       {
         id: "amount",
         label: "Amount",
-        value: transaction.amount,
+        value: transaction.amount ?? "0",
         onChange: (e: ChangeEvent<HTMLInputElement>) => {
           setTransaction({
             ...transaction,
@@ -206,9 +209,12 @@ export const Encode: React.FC<EncodeProps> = ({
           </CardHeader>
           <CardContent>
             <div className="grid py-4">
-              <div className="flex flex-col space-y-1.5 gap-2">
-                <Label htmlFor="name">Mode</Label>
+              <div className="flex flex-col space-y-1.5 gap-2" key={"label"}>
+                <Label htmlFor="name" key="label-mode">
+                  Mode
+                </Label>
                 <Select
+                  key="select-mod"
                   defaultValue={mode}
                   onValueChange={(value) => {
                     setMode(value);
@@ -242,16 +248,18 @@ export const Encode: React.FC<EncodeProps> = ({
                 </Select>
                 {form[mode].map(({ id, label, onChange, value }) => {
                   return (
-                    <>
-                      <Label htmlFor={id}>{label}</Label>
+                    <div key={`${id}-${mode}`}>
+                      <Label htmlFor={id} key={`${id}-${mode}-label`}>
+                        {label}
+                      </Label>
                       <Input
                         id={id}
-                        key={`${id}-${mode}`}
+                        key={`${id}-${mode}-input`}
                         placeholder={label}
                         value={value}
                         onChange={onChange}
                       />
-                    </>
+                    </div>
                   );
                 })}
               </div>
