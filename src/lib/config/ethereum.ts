@@ -7,7 +7,7 @@ type ChainConfig = {
 
 const chainConfig: Record<string, ChainConfig> = {
   sepolia: {
-    adamikChainId: "ethereum",
+    adamikChainId: "sepolia",
     chainId: "0xaa36a7",
     chainName: "Sepolia",
     rpcUrls: ["https://ethereum-sepolia-rpc.publicnode.com"],
@@ -23,6 +23,18 @@ const chainConfig: Record<string, ChainConfig> = {
     chainId: "0x1",
     chainName: "Ethereum",
     rpcUrls: ["https://eth.llamarpc.com"],
+  },
+  zksync: {
+    adamikChainId: "zksync",
+    chainId: "0x144",
+    chainName: "zkSync",
+    rpcUrls: ["https://explorer.zksync.io"],
+  },
+  "zksync-testnet": {
+    adamikChainId: "zksync-testnet",
+    chainId: "0x12c",
+    chainName: "zkSync Sepolia",
+    rpcUrls: ["https://sepolia.era.zksync.dev"],
   },
 };
 

@@ -43,7 +43,6 @@ export const Result: React.FC<ResultProps> = ({
             <LinkIcon className="h-3.5 w-3.5" />
             <a
               target="_blank"
-              className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap"
               href={wallet.getExplorerUrl(transaction.chainId, hash)}
             >
               Go to Explorer

@@ -28,6 +28,10 @@ export function getEtherscanUrl(chainId: string, hash: string): string {
       return `https://etherscan.io/tx/${hash}`;
     case 'holesky:':
       return `https://holesky.etherscan.io/tx/${hash}`;
+    case 'zksync':
+      return `https://explorer.zksync.io/tx/${hash}`;
+    case 'zksync-testnet':
+      return `https://sepolia.explorer.zksync.io/tx/${hash}`;
   }
   throw new Error(`Chain ${chainId} not supported`);
 }

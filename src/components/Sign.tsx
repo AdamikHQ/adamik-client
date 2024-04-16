@@ -31,9 +31,10 @@ export const Sign: React.FC<SignProps> = ({
 }) => {
   const signWithWallet = useCallback(async () => {
     const result = await wallet.signMessage(chainId, encodedTransaction);
-    setSignedTransaction(result);
     if (wallet.withoutBroadcast === true) {
       setHash(wallet.getHashFromBroadcast(result));
+    } else {
+      setSignedTransaction(result);
     }
     setOpen(false);
   }, [

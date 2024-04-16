@@ -5,7 +5,13 @@ import { getEtherscanUrl } from "../utils";
 
 export class Metamask implements IWallet {
   public name = "Metamask";
-  public supportedChains = ["sepolia", "holesky", "ethereum"];
+  public supportedChains = [
+    "sepolia",
+    "holesky",
+    "ethereum",
+    "zksync",
+    "zksync-testnet",
+  ];
   public icon = "/icons/Metamask.svg";
   public unit = 18; // TODO: Get from Adamik ?
   public signFormat = "json";
@@ -80,7 +86,8 @@ export class Metamask implements IWallet {
     return getEtherscanUrl(chainId, hash);
   }
 
-  getHashFromBroadcast(broadcast: { result: string }): string {
-    return broadcast.result;
+  getHashFromBroadcast(broadcast: string): string {
+    console.log({ broadcast });
+    return broadcast;
   }
 }
