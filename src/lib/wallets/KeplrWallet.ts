@@ -6,12 +6,12 @@ import {
   OfflineDirectSigner,
   StdSignDoc,
 } from "@keplr-wallet/types";
-import { IWallet } from "../types";
+import { Chain, IWallet } from "../types";
 import { mintscanUrl } from "../utils";
 
 export class KeplrWallet implements IWallet {
   public name = "Keplr";
-  public supportedChains = ["cosmoshub", "osmosis", "cosmoshub-testnet"];
+  public supportedChains: Chain[] = ["cosmoshub", "osmosis"];
   public icon = "/icons/Keplr.svg";
   public unit = 6; // TODO: Get from Adamik ?
   public signFormat = "amino";
@@ -20,7 +20,6 @@ export class KeplrWallet implements IWallet {
   private adamikNameConverted: { [k: string]: string } = {
     cosmoshub: "cosmoshub-4",
     osmosis: "osmosis-1",
-    "cosmoshub-testnet": "theta-testnet-001",
   };
   public withoutBroadcast: boolean = false;
 

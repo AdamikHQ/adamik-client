@@ -5,12 +5,12 @@ import {
   OfflineDirectSigner,
   StdSignDoc,
 } from "@keplr-wallet/types";
-import { IWallet } from "../types";
+import { Chain, IWallet } from "../types";
 import { mintscanUrl } from "../utils";
 
 export class LeapWallet implements IWallet {
   public name = "Leap";
-  public supportedChains = ["cosmoshub", "osmosis"];
+  public supportedChains: Chain[] = ["cosmoshub", "osmosis"];
   public icon = "/icons/Leap.svg";
   public unit = 6; // TODO: Get from Adamik ?
   public signFormat = "amino";

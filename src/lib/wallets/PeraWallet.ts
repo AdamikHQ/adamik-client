@@ -1,9 +1,9 @@
-import { IWallet } from "../types";
+import { Chain, IWallet } from "../types";
 import { PeraWalletConnect } from "@perawallet/connect";
 
 export class PeraWallet implements IWallet {
   public name = "PeraWallet";
-  public supportedChains = ["algorand"];
+  public supportedChains: Chain[] = ["algorand"];
   public icon = "/icons/Pera.svg";
   public unit = 6; // TODO: Get from Adamik ?
   public signFormat = "hex";
