@@ -3,6 +3,11 @@ type ChainConfig = {
   chainId: string;
   chainName: string;
   rpcUrls: string[];
+  nativeCurrency?: {
+    name: string;
+    symbol: string;
+    decimals: number;
+  };
 };
 
 const chainConfig: Record<string, ChainConfig> = {
@@ -28,13 +33,23 @@ const chainConfig: Record<string, ChainConfig> = {
     adamikChainId: "zksync",
     chainId: "0x144",
     chainName: "zkSync",
-    rpcUrls: ["https://explorer.zksync.io"],
+    rpcUrls: ["https://zksync.drpc.org"],
+    nativeCurrency: {
+      name: "Ethereum",
+      symbol: "ETH",
+      decimals: 18,
+    },
   },
   "zksync-testnet": {
     adamikChainId: "zksync-testnet",
     chainId: "0x12c",
     chainName: "zkSync Sepolia",
     rpcUrls: ["https://sepolia.era.zksync.dev"],
+    nativeCurrency: {
+      name: "Ethereum",
+      symbol: "ETH",
+      decimals: 18,
+    },
   },
 };
 
@@ -53,6 +68,7 @@ export const getMetamaskConfig = (
       chainId: chainConfig[chainId].chainId,
       chainName: chainConfig[chainId].chainName,
       rpcUrls: chainConfig[chainId].rpcUrls,
+      nativeCurrency: chainConfig[chainId].nativeCurrency,
     };
   }
   return undefined;

@@ -1,9 +1,19 @@
-export type Chain = "cosmoshub" | "algorand" | "ethereum";
+export type Chain =
+  | "cosmoshub"
+  | "algorand"
+  | "ethereum"
+  | "osmosis"
+  | "sepolia"
+  | "holesky"
+  | "zksync"
+  | "zksync-testnet";
+
+export type Mode = "transfer" | "delegate";
 
 type TransactionCommon = {
-  mode: "transfer" | "delegate";
+  mode: Mode;
   useMaxAmount: boolean;
-  chainId: string;
+  chainId: Chain;
   fees?: string;
   gas?: string;
   amount?: string;
@@ -31,7 +41,7 @@ export type Transaction = TransactionCommon &
 // TODO refactor this to be more generic without any
 export interface IWallet<T = any, R = any, B = any> {
   name: string;
-  supportedChains: string[];
+  supportedChains: Chain[];
   icon: string;
   unit: number;
   signFormat: string;

@@ -6,12 +6,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { IWallet, Transaction } from "@/lib/types";
+import { Chain, IWallet, Transaction } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React, { useEffect, useMemo, useState } from "react";
 import { Data } from "./Data";
-import { Encode } from "./Encode";
+import { Encode } from "./encode/Encode";
 import { Sign } from "./Sign";
 import { Modal } from "./ui/modal";
 import { Broadcast } from "./Broadcast";
@@ -30,7 +30,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
   const [encodedTransaction, setEncodedTransaction] = useState<string>();
   const [signedTransaction, setSignedTransaction] = useState<string>();
   const [hash, setHash] = useState<string>();
-  const [open, setOpen] = useState<boolean>(false);
+  const [openSigner, setOpenSigner] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -55,9 +55,14 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
 
   useEffect(() => {
     setHash(undefined);
-  }, [signedTransaction, encodedTransaction])
+  }, [signedTransaction, encodedTransaction]);
+  
+  useEffect(() => {
+    setEncodedTransaction(undefined);
+    setSignedTransaction(undefined);
+  }, [transaction.chainId])
 
-  const changeTargetChain = async (chainId: string) => {
+  const changeTargetChain = async (chainId: Chain) => {
     try {
       await wallet.connect(chainId);
       const walletAddress = await wallet.getAddress(chainId);
@@ -132,25 +137,10 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
                   transaction={transaction}
                   setEncodedTransaction={setEncodedTransaction}
                   setTransaction={setTransaction}
-                  setOpen={setOpen}
+                  setOpen={setOpenSigner}
                   wallet={wallet}
                 />
               </div>
-              <Modal
-                open={open}
-                setOpen={setOpen}
-                modalTitle="Sign with your wallet"
-                modalContent={
-                  <Sign
-                    chainId={transaction.chainId}
-                    setSignedTransaction={setSignedTransaction}
-                    wallet={wallet}
-                    encodedTransaction={encodedTransaction}
-                    setOpen={setOpen}
-                    setHash={setHash}
-                  />
-                }
-              />
               {!wallet.withoutBroadcast && signedTransaction && (
                 <div className="col-span-2 md:col-span-4">
                   <Broadcast
@@ -171,6 +161,21 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
                   />
                 </div>
               )}
+              <Modal
+                open={openSigner}
+                setOpen={setOpenSigner}
+                modalTitle="Sign with your wallet"
+                modalContent={
+                  <Sign
+                    chainId={transaction.chainId}
+                    setSignedTransaction={setSignedTransaction}
+                    wallet={wallet}
+                    encodedTransaction={encodedTransaction}
+                    setOpen={setOpenSigner}
+                    setHash={setHash}
+                  />
+                }
+              />
             </>
           )}
         </div>

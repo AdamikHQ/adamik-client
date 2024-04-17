@@ -12,7 +12,7 @@ import {
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { getData } from "@/api/getData";
-import React, { FormEvent, useCallback, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { Loading } from "./ui/loading";
 import { Textarea } from "./ui/textarea";
 
@@ -31,8 +31,13 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
         setIsLoading(false);
       }
     },
-    [address, chainId],
+    [address, chainId]
   );
+
+  useEffect(() => {
+    setIsLoading(false);
+    setResult(undefined);
+  }, [address]);
 
   return (
     <Card className="w-full">

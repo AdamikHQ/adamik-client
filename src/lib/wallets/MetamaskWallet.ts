@@ -1,11 +1,11 @@
 import { getMetamaskConfig } from "../config/ethereum";
-import { IWallet } from "../types";
+import { Chain, IWallet } from "../types";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { getEtherscanUrl } from "../utils";
 
 export class Metamask implements IWallet {
   public name = "Metamask";
-  public supportedChains = [
+  public supportedChains: Chain[] = [
     "sepolia",
     "holesky",
     "ethereum",

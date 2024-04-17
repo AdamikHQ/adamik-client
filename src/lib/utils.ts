@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Chain, Mode } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -34,4 +35,13 @@ export function getEtherscanUrl(chainId: string, hash: string): string {
       return `https://sepolia.explorer.zksync.io/tx/${hash}`;
   }
   throw new Error(`Chain ${chainId} not supported`);
+}
+
+export function getChainMode(chainId: Chain): Mode[] {
+  switch (chainId) {
+    case "cosmoshub":
+    case "osmosis": 
+      return ["transfer", "delegate"];
+  }
+  return ["transfer"];
 }

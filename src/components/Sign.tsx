@@ -51,10 +51,15 @@ export const Sign: React.FC<SignProps> = ({
       <CardHeader className="flex flex-row items-start bg-muted/50">
         <div className="grid gap-0.5">
           <CardTitle className="group flex items-center gap-2 text-lg">
-            Wallet Signer
+            Information
           </CardTitle>
           <CardDescription>
-            Once you do your encode try to sign with {wallet.name}
+            Your transaction is now ready to be signed.
+            <br />
+            The signature will be applied by your browser extension.
+            <br />
+            Make sure to review your transaction details before approving.
+            <br />
           </CardDescription>
         </div>
       </CardHeader>
@@ -81,8 +86,7 @@ export const Sign: React.FC<SignProps> = ({
         >
           <SquarePen className="h-3.5 w-3.5" />
           <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
-            Sign {wallet.withoutBroadcast === true ? "and broadcast" : ""} with{" "}
-            {wallet.name}
+            {`Sign ${wallet.withoutBroadcast === true ? "and broadcast" : ""} with ${wallet.name}`}
           </span>
         </Button>
       </CardFooter>
