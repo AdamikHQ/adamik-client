@@ -19,6 +19,7 @@ type TransactionCommon = {
   amount?: string;
   format?: string;
   pubKey?: string;
+  memo?: string;
 };
 
 export type TransferTransaction = {

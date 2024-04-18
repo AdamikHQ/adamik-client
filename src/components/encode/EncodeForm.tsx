@@ -67,6 +67,17 @@ const getForm = (
           });
         },
       },
+      {
+        id: "memo",
+        label: "Memo",
+        value: transaction.memo ?? "",
+        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+          setTransaction({
+            ...transaction,
+            memo: e.target.value,
+          });
+        },
+      },
     ],
     delegate: [
       {

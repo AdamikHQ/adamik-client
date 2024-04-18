@@ -39,8 +39,7 @@ export const Result: React.FC<ResultProps> = ({
           <Textarea value={hash} readOnly={true} />
         </CardContent>
         <CardFooter className="flex flex-row items-center justify-end border-t bg-muted/50 px-6 py-3">
-          <Button size="sm" className="h-8 gap-1 mt-4 w-full">
-            <LinkIcon className="h-3.5 w-3.5" />
+          <Button size="sm" className="h-8 gap-1 mt-4 w-full" asChild>
             <a
               target="_blank"
               href={wallet.getExplorerUrl(transaction.chainId, hash)}

@@ -46,6 +46,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
         chainId: wallet.supportedChains[0],
         recipients: [],
         amount: "",
+        memo: "",
       });
     };
 
@@ -73,6 +74,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
         senders: [walletAddress],
         recipients: [],
         amount: "",
+        memo: "",
       });
 
       setAddress(walletAddress);

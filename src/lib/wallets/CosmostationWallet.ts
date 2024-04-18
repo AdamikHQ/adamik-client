@@ -52,6 +52,6 @@ export class CosmostationWallet implements IWallet {
   }
 
   getHashFromBroadcast(broadcast: { hash: string }): string {
-    throw new Error("Method not implemented.");
+    return broadcast.hash;
   }
 }
