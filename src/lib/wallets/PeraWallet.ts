@@ -41,7 +41,7 @@ export class PeraWallet implements IWallet {
         [
           {
             data: Uint8Array.from(Buffer.from(payload, "hex")),
-            message: "encoded with Adamik !",
+            message: "",
           },
         ],
         this.addresses[0],

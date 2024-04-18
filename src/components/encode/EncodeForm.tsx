@@ -26,7 +26,7 @@ type FormInput = {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
-const getForm = (
+export const getForm = (
   mode: Mode[],
   transaction: Transaction,
   setTransaction: React.Dispatch<React.SetStateAction<Transaction>>

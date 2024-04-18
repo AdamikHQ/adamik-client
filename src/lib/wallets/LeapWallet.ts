@@ -10,7 +10,7 @@ import { mintscanUrl } from "../utils";
 
 export class LeapWallet implements IWallet {
   public name = "Leap";
-  public supportedChains: Chain[] = ["cosmoshub", "osmosis"];
+  public supportedChains: Chain[] = ["cosmoshub"];
   public icon = "/icons/Leap.svg";
   public unit = 6; // TODO: Get from Adamik ?
   public signFormat = "amino";
@@ -43,7 +43,7 @@ export class LeapWallet implements IWallet {
     const leap = this.checkConnectivity();
 
     this.offlineSigner = leap.getOfflineSigner(
-      this.adamikNameConverted[chainId],
+      this.adamikNameConverted[chainId]
     );
     const accounts = await this.offlineSigner.getAccounts();
 
@@ -52,19 +52,19 @@ export class LeapWallet implements IWallet {
 
   async signMessage(
     chainId: string,
-    message: StdSignDoc,
+    message: StdSignDoc
   ): Promise<AminoSignResponse> {
     const leap = this.checkConnectivity();
 
     if (this.offlineSigner === null) {
       this.offlineSigner = leap.getOfflineSigner(
-        this.adamikNameConverted[chainId],
+        this.adamikNameConverted[chainId]
       );
     }
     const accounts = await this.offlineSigner.getAccounts();
     const signature = await this.offlineSigner.signAmino(
       accounts[0].address,
-      message,
+      message
     );
 
     return signature;

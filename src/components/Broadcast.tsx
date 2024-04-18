@@ -126,7 +126,7 @@ export const Broadcast: React.FC<BroadcastProps> = ({
           }
         >
           <Send className="h-3.5 w-3.5" />
-          <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
+          <span>
             Broadcast with Adamik
           </span>
         </Button>

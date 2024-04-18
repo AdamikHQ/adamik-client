@@ -29,21 +29,21 @@ const wallets = [
     },
   },
   {
-    name: "Keplr",
-    icon: "/icons/Keplr.svg",
-    connect: async (setActiveWallet: (wallet: IWallet) => void) => {
-      const keplrWallet = new KeplrWallet();
-      await keplrWallet.connect(keplrWallet.supportedChains[0]);
-      setActiveWallet(keplrWallet);
-    },
-  },
-  {
     name: "Cosmostation",
     icon: "/icons/Cosmostation.svg",
     connect: async (setActiveWallet: (wallet: IWallet) => void) => {
       const cosmostationWallet = new CosmostationWallet();
       await cosmostationWallet.connect(cosmostationWallet.supportedChains[0]);
       setActiveWallet(cosmostationWallet);
+    },
+  },
+  {
+    name: "Keplr",
+    icon: "/icons/Keplr.svg",
+    connect: async (setActiveWallet: (wallet: IWallet) => void) => {
+      const keplrWallet = new KeplrWallet();
+      await keplrWallet.connect(keplrWallet.supportedChains[0]);
+      setActiveWallet(keplrWallet);
     },
   },
   {
@@ -55,15 +55,15 @@ const wallets = [
       setActiveWallet(leapWallet);
     },
   },
-  {
-    name: "Pera",
-    icon: "/icons/Pera.svg",
-    connect: async (setActiveWallet: (wallet: IWallet) => void) => {
-      const peraWallet = new PeraWallet();
-      await peraWallet.connect();
-      setActiveWallet(peraWallet);
-    },
-  },
+  // {
+  //   name: "Pera",
+  //   icon: "/icons/Pera.svg",
+  //   connect: async (setActiveWallet: (wallet: IWallet) => void) => {
+  //     const peraWallet = new PeraWallet();
+  //     await peraWallet.connect();
+  //     setActiveWallet(peraWallet);
+  //   },
+  // },
 ];
 
 export const WalletChoice = () => {

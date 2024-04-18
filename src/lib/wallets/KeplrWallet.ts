@@ -1,22 +1,19 @@
 import {
   AminoSignResponse,
-  ChainInfo,
   Keplr,
   OfflineAminoSigner,
-  OfflineDirectSigner,
-  StdSignDoc,
+  StdSignDoc
 } from "@keplr-wallet/types";
 import { Chain, IWallet } from "../types";
 import { mintscanUrl } from "../utils";
 
 export class KeplrWallet implements IWallet {
   public name = "Keplr";
-  public supportedChains: Chain[] = ["cosmoshub", "osmosis"];
+  public supportedChains: Chain[] = ["cosmoshub"];
   public icon = "/icons/Keplr.svg";
   public unit = 6; // TODO: Get from Adamik ?
   public signFormat = "amino";
-  private offlineSigner: (OfflineAminoSigner & OfflineDirectSigner) | null =
-    null;
+  private offlineSigner: OfflineAminoSigner | null = null;
   private adamikNameConverted: { [k: string]: string } = {
     cosmoshub: "cosmoshub-4",
     osmosis: "osmosis-1",
@@ -46,7 +43,7 @@ export class KeplrWallet implements IWallet {
   async getAddress(chainId: string): Promise<string> {
     const keplr = this.checkConnectivity(chainId);
 
-    this.offlineSigner = keplr.getOfflineSigner(
+    this.offlineSigner = keplr.getOfflineSignerOnlyAmino(
       this.adamikNameConverted[chainId]
     );
     const accounts = await this.offlineSigner.getAccounts();

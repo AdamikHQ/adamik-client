@@ -115,7 +115,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
                         key={chain}
                         onClick={() => changeTargetChain(chain)}
                       >
-                        <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
+                        <span>
                           {chain}
                         </span>
                       </Button>
@@ -171,6 +171,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
                   <Sign
                     chainId={transaction.chainId}
                     setSignedTransaction={setSignedTransaction}
+                    transaction={transaction}
                     wallet={wallet}
                     encodedTransaction={encodedTransaction}
                     setOpen={setOpenSigner}
