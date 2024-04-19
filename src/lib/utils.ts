@@ -23,16 +23,18 @@ export function mintscanUrl(chainId: string, hash: string): string {
 
 export function getEtherscanUrl(chainId: string, hash: string): string {
   switch (chainId) {
-    case 'sepolia':
+    case "sepolia":
       return `https://sepolia.etherscan.io/tx/${hash}`;
-    case 'ethereum':
+    case "ethereum":
       return `https://etherscan.io/tx/${hash}`;
-    case 'holesky:':
+    case "holesky:":
       return `https://holesky.etherscan.io/tx/${hash}`;
-    case 'zksync':
+    case "zksync":
       return `https://explorer.zksync.io/tx/${hash}`;
-    case 'zksync-testnet':
+    case "zksync-testnet":
       return `https://sepolia.explorer.zksync.io/tx/${hash}`;
+    case "injective-testnet":
+      return `https://inevm-testnet.explorer.caldera.xyz/tx/${hash}`;
   }
   throw new Error(`Chain ${chainId} not supported`);
 }
@@ -40,7 +42,7 @@ export function getEtherscanUrl(chainId: string, hash: string): string {
 export function getChainMode(chainId: Chain): Mode[] {
   switch (chainId) {
     case "cosmoshub":
-    case "osmosis": 
+    case "osmosis":
       return ["transfer", "delegate"];
   }
   return ["transfer"];

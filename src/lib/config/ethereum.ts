@@ -51,6 +51,17 @@ const chainConfig: Record<string, ChainConfig> = {
       decimals: 18,
     },
   },
+  "injective-testnet": {
+    adamikChainId: "injective-testnet",
+    chainId: "0x978",
+    chainName: "zkSync Sepolia",
+    rpcUrls: ["https://testnet.rpc.inevm.com/http"],
+    nativeCurrency: {
+      name: "Injective",
+      symbol: "INJ",
+      decimals: 18,
+    },
+  }
 };
 
 export const getAdamikChainId = (chainId: string): string | undefined => {
