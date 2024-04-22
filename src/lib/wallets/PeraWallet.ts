@@ -1,3 +1,4 @@
+import algosdk from "algosdk";
 import { Chain, IWallet } from "../types";
 import { PeraWalletConnect } from "@perawallet/connect";
 
@@ -16,7 +17,10 @@ export class PeraWallet implements IWallet {
   async connect() {
     this.peraWallet = new PeraWalletConnect();
     try {
-      this.addresses = await this.peraWallet.connect();
+      this.addresses = await this.peraWallet.reconnectSession();
+      if (this.addresses.length === 0) {
+        this.addresses = await this.peraWallet.connect();
+      }
     } catch (e) {
       this.disconnect();
       throw e;
@@ -35,18 +39,17 @@ export class PeraWallet implements IWallet {
     throw new Error("PeraWallet not connected");
   }
 
-  async signMessage(payload: string): Promise<Uint8Array[]> {
+  async signMessage(chainId: string, payload: string): Promise<Uint8Array[]> {
     if (this.peraWallet) {
-      return await this.peraWallet.signData(
+      return await this.peraWallet.signTransaction([
         [
           {
-            data: Uint8Array.from(Buffer.from(payload, "hex")),
-            message: "",
+            txn: algosdk.decodeUnsignedTransaction(
+              new Uint8Array(Buffer.from(payload, "hex"))
+            ),
           },
         ],
-        this.addresses[0],
-      );
-      // return await this.peraWallet.signTransaction([payload], this.addresses[0]);
+      ]);
     }
     throw new Error("PeraWallet not connected");
   }
@@ -60,6 +63,6 @@ export class PeraWallet implements IWallet {
   }
 
   getHashFromBroadcast(broadcast: { hash: string }): string {
-    throw new Error("Method not implemented.");
+    return broadcast.hash;
   }
 }
