@@ -44,6 +44,7 @@ export class PeraWallet implements IWallet {
       return await this.peraWallet.signTransaction([
         [
           {
+            // FIXME: The app shouldn't have to use a chain SDK, we could provide an Adamik SDK instead
             txn: algosdk.decodeUnsignedTransaction(
               new Uint8Array(Buffer.from(payload, "hex"))
             ),
