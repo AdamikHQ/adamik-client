@@ -55,15 +55,15 @@ const wallets = [
       setActiveWallet(leapWallet);
     },
   },
-  // {
-  //   name: "Pera",
-  //   icon: "/icons/Pera.svg",
-  //   connect: async (setActiveWallet: (wallet: IWallet) => void) => {
-  //     const peraWallet = new PeraWallet();
-  //     await peraWallet.connect();
-  //     setActiveWallet(peraWallet);
-  //   },
-  // },
+  {
+    name: "Pera",
+    icon: "/icons/Pera.svg",
+    connect: async (setActiveWallet: (wallet: IWallet) => void) => {
+      const peraWallet = new PeraWallet();
+      await peraWallet.connect();
+      setActiveWallet(peraWallet);
+    },
+  },
 ];
 
 export const WalletChoice = () => {
