@@ -21,13 +21,11 @@ type SignProps = {
   wallet: IWallet;
   transaction: Transaction;
   setSignedTransaction: (signedTransaction: string) => void;
-  chainId: string;
   setOpen: (open: boolean) => void;
   setHash: (hash: string) => void;
 };
 
 export const Sign: React.FC<SignProps> = ({
-  chainId,
   encodedTransaction,
   wallet,
   transaction,
@@ -36,7 +34,7 @@ export const Sign: React.FC<SignProps> = ({
   setHash,
 }) => {
   const signWithWallet = useCallback(async () => {
-    const result = await wallet.signMessage(chainId, encodedTransaction);
+    const result = await wallet.signMessage(transaction.chainId, encodedTransaction);
     if (wallet.withoutBroadcast === true) {
       setHash(wallet.getHashFromBroadcast(result));
     } else {
@@ -47,9 +45,9 @@ export const Sign: React.FC<SignProps> = ({
     wallet,
     encodedTransaction,
     setSignedTransaction,
-    chainId,
     setOpen,
     setHash,
+    transaction,
   ]);
 
   const form = getForm([transaction.mode], transaction, () => {});
@@ -100,6 +98,28 @@ export const Sign: React.FC<SignProps> = ({
                     </div>
                   );
                 })}
+              <Label htmlFor="fees" key={`fees-label`}>
+                Fees
+              </Label>
+              <Input
+                disabled={true}
+                id="gees"
+                key={`fees-input`}
+                readOnly={true}
+                placeholder={"Fees"}
+                value={transaction.fees}
+              />
+              <Label htmlFor="gas" key={`gas-label`}>
+                Gas
+              </Label>
+              <Input
+                disabled={true}
+                id={"gas"}
+                key={`gas-input`}
+                readOnly={true}
+                placeholder={"Gas"}
+                value={transaction.gas}
+              />
             </div>
           </CardContent>
         </TabsContent>
@@ -109,9 +129,9 @@ export const Sign: React.FC<SignProps> = ({
               {encodedTransaction && (
                 <Textarea
                   value={
-                    wallet.signFormat === "hex"
-                      ? encodedTransaction
-                      : JSON.stringify(encodedTransaction, null, 2)
+                    wallet.signFormat === "json"
+                      ? JSON.stringify(encodedTransaction, null, 2)
+                      : encodedTransaction
                   }
                   readOnly={true}
                 />

@@ -13,6 +13,11 @@ export function amountToSmallestUnit(amount: string, decimals: number): string {
   return computedAmount.toString();
 }
 
+export function amountToMainUnit(amount: string, decimals: number): string | null {
+  const parsedAmount = parseInt(amount);
+  return Number.isNaN(parsedAmount) ? null : (parsedAmount / Math.pow(10, decimals)).toString();
+}
+
 export function mintscanUrl(chainId: string, hash: string): string {
   if (chainId === "cosmoshub") {
     return `https://www.mintscan.io/cosmos/txs/${hash}`;

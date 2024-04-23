@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Chain, IWallet, Transaction } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Data } from "./Data";
 import { Encode } from "./encode/Encode";
 import { Sign } from "./Sign";
@@ -18,7 +18,7 @@ import { Broadcast } from "./Broadcast";
 import { Result } from "./Result";
 
 export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
-  const [transaction, setTransaction] = useState<Transaction>({
+  const [transactionToSign, setTransactionToSign] = useState<Transaction>({
     chainId: wallet.supportedChains[0],
     senders: [],
     mode: "transfer",
@@ -39,8 +39,8 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
       setHash(undefined);
       const walletAddress = await wallet.getAddress(wallet.supportedChains[0]);
       setAddress(walletAddress);
-      setTransaction({
-        ...transaction,
+      setTransactionToSign({
+        ...transactionToSign,
         mode: "transfer",
         senders: [walletAddress],
         chainId: wallet.supportedChains[0],
@@ -57,18 +57,18 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
   useEffect(() => {
     setHash(undefined);
   }, [signedTransaction, encodedTransaction]);
-  
+
   useEffect(() => {
     setEncodedTransaction(undefined);
     setSignedTransaction(undefined);
-  }, [transaction.chainId])
+  }, [transactionToSign.chainId]);
 
   const changeTargetChain = async (chainId: Chain) => {
     try {
       await wallet.connect(chainId);
       const walletAddress = await wallet.getAddress(chainId);
-      setTransaction({
-        ...transaction,
+      setTransactionToSign({
+        ...transactionToSign,
         chainId,
         mode: "transfer",
         senders: [walletAddress],
@@ -109,15 +109,13 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
                         variant="outline"
                         className={cn(
                           "h-8 gap-1",
-                          chain === transaction.chainId &&
+                          chain === transactionToSign.chainId &&
                             "bg-teal-200 dark:bg-teal-600 border-primary text-primary"
                         )}
                         key={chain}
                         onClick={() => changeTargetChain(chain)}
                       >
-                        <span>
-                          {chain}
-                        </span>
+                        <span>{chain}</span>
                       </Button>
                     );
                   })}
@@ -132,13 +130,13 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
           {address && (
             <>
               <div className="col-span-2 md:col-span-2">
-                <Data address={address} chainId={transaction.chainId} />
+                <Data address={address} chainId={transactionToSign.chainId} />
               </div>
               <div className="col-span-2 md:col-span-2">
                 <Encode
-                  transaction={transaction}
+                  transactionToSign={transactionToSign}
                   setEncodedTransaction={setEncodedTransaction}
-                  setTransaction={setTransaction}
+                  setTransactionToSign={setTransactionToSign}
                   setOpen={setOpenSigner}
                   wallet={wallet}
                 />
@@ -147,7 +145,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
                 <div className="col-span-2 md:col-span-4">
                   <Broadcast
                     signedTransaction={signedTransaction}
-                    transaction={transaction}
+                    transaction={transactionToSign}
                     encodedTransaction={encodedTransaction}
                     setHash={setHash}
                     wallet={wallet}
@@ -159,7 +157,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
                   <Result
                     hash={hash}
                     wallet={wallet}
-                    transaction={transaction}
+                    transaction={transactionToSign}
                   />
                 </div>
               )}
@@ -169,9 +167,8 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
                 modalTitle="Sign with your wallet"
                 modalContent={
                   <Sign
-                    chainId={transaction.chainId}
                     setSignedTransaction={setSignedTransaction}
-                    transaction={transaction}
+                    transaction={transactionToSign}
                     wallet={wallet}
                     encodedTransaction={encodedTransaction}
                     setOpen={setOpenSigner}

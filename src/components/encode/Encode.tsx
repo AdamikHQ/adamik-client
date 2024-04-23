@@ -1,8 +1,8 @@
 "use client";
 
 import { getEncode } from "@/api/getEncode";
-import { IWallet, Transaction } from "@/lib/types";
-import { amountToSmallestUnit } from "@/lib/utils";
+import { Chain, IWallet, Transaction } from "@/lib/types";
+import { amountToMainUnit, amountToSmallestUnit } from "@/lib/utils";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import {
@@ -19,22 +19,23 @@ import { Textarea } from "../ui/textarea";
 import { EncodeForm } from "./EncodeForm";
 
 type EncodeProps = {
-  transaction: Transaction;
-  setTransaction: React.Dispatch<React.SetStateAction<Transaction>>;
+  transactionToSign: Transaction;
+  setTransactionToSign: React.Dispatch<React.SetStateAction<Transaction>>;
   setEncodedTransaction: (encodedTransaction: string) => void;
   wallet: IWallet;
   setOpen: (open: boolean) => void;
 };
 
 export const Encode: React.FC<EncodeProps> = ({
-  transaction,
-  setTransaction,
+  transactionToSign,
+  setTransactionToSign,
   setEncodedTransaction,
   wallet,
   setOpen,
 }) => {
+  const [transaction, setTransaction] =
+    useState<Transaction>(transactionToSign);
   const [result, setResult] = useState<any>();
-  const [resultJSON, setResultJSON] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const getDataForm = useCallback(
     async (e: FormEvent) => {
@@ -43,56 +44,59 @@ export const Encode: React.FC<EncodeProps> = ({
         setIsLoading(true);
         const data = await getEncode({
           ...transaction,
+          chainId: transactionToSign.chainId,
+          format: wallet.signFormat,
           pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
-          amount: amountToSmallestUnit(
-            transaction.amount as string,
-            wallet.unit
-          ), //FIXME: Need to put logic in backend see with Hakim
+          amount: transaction.useMaxAmount
+            ? undefined
+            : amountToSmallestUnit(transaction.amount as string, wallet.unit), //FIXME: Need to put logic in backend see with Hakim
         });
         setResult(data);
         if (!(data.status.errors.length > 0)) {
-          const dataJSON = await getEncode({
+          setEncodedTransaction(data.encoded);
+          const fees =
+            typeof data?.plain?.fees === "string"
+              ? data?.plain?.fees
+              : transaction.fees;
+          const gas =
+            typeof data?.plain?.gas === "string"
+              ? data?.plain?.gas
+              : transaction.gas;
+          const amount =
+            typeof data?.plain?.amount === "string"
+              ? data?.plain?.amount
+              : transaction.amount;
+          setTransactionToSign({
             ...transaction,
-            format: "json",
-            pubKey:
-              (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
-            amount: amountToSmallestUnit(
-              transaction.amount as string,
-              wallet.unit
-            ), //FIXME: Need to put logic in backend see with Hakim
+            amount,
+            fees,
+            gas,
           });
-          setResultJSON(dataJSON);
-          if (data) {
-            setEncodedTransaction(
-              wallet.signFormat === "hex" ? data.encoded : dataJSON.encoded
-            );
-            const fees =
-              typeof data?.plain?.fees === "string"
-                ? data?.plain?.fees
-                : transaction.fees;
-            const gas =
-              typeof data?.plain?.gas === "string"
-                ? data?.plain?.gas
-                : transaction.gas;
-            setTransaction({
-              ...transaction,
-              fees,
-              gas,
-            });
-          }
           setOpen(true);
         }
         setIsLoading(false);
       }
     },
-    [transaction, wallet, setEncodedTransaction, setTransaction, setOpen]
+    [
+      transaction,
+      wallet,
+      setEncodedTransaction,
+      setTransactionToSign,
+      setOpen,
+      transactionToSign.chainId
+    ]
   );
 
   useEffect(() => {
+    setTransaction({
+      ...transactionToSign,
+      amount: transactionToSign.amount
+        ? amountToMainUnit(transactionToSign.amount, wallet.unit) || ""
+        : "",
+    });
     setResult(undefined);
-    setResultJSON(undefined);
     setIsLoading(false);
-  }, [wallet, transaction.chainId]);
+  }, [wallet, transactionToSign]);
 
   return (
     transaction && (
@@ -127,24 +131,14 @@ export const Encode: React.FC<EncodeProps> = ({
                 </>
               ) : (
                 result && (
-                  <>
-                    <div>
-                      <Label htmlFor="name">Result hex</Label>
-                      <Textarea
-                        className="border text-xs p-2 rounded-md"
-                        value={JSON.stringify(result.encoded)}
-                        readOnly={true}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="name">Result JSON</Label>
-                      <Textarea
-                        className="border text-xs p-2 rounded-md"
-                        value={JSON.stringify(resultJSON.encoded)}
-                        readOnly={true}
-                      />
-                    </div>
-                  </>
+                  <div>
+                    <Label htmlFor="name">Result</Label>
+                    <Textarea
+                      className="border text-xs p-2 rounded-md"
+                      value={JSON.stringify(result.encoded)}
+                      readOnly={true}
+                    />
+                  </div>
                 )
               )}
             </div>

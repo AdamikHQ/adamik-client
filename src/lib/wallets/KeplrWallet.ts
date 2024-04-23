@@ -12,7 +12,7 @@ export class KeplrWallet implements IWallet {
   public supportedChains: Chain[] = ["cosmoshub"];
   public icon = "/icons/Keplr.svg";
   public unit = 6; // TODO: Get from Adamik ?
-  public signFormat = "amino";
+  public signFormat = "json";
   private offlineSigner: OfflineAminoSigner | null = null;
   private adamikNameConverted: { [k: string]: string } = {
     cosmoshub: "cosmoshub-4",

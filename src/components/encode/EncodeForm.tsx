@@ -6,7 +6,12 @@ import {
   Transaction,
   TransferTransaction,
 } from "@/lib/types";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import {
@@ -18,13 +23,34 @@ import {
 } from "../ui/select";
 import { getChainMode } from "@/lib/utils";
 import { Validators } from "../Validators";
+import { Checkbox } from "../ui/checkbox";
 
-type FormInput = {
+type FormInputCommon = {
   id: string;
   label: string;
-  value: string;
+  value: any;
+  disabled?: boolean;
+};
+
+type FormInputText = FormInputCommon & {
+  type: "text";
+  onCheck?: undefined;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
+
+type FormInputCheckbox = FormInputCommon & {
+  type: "checkbox";
+  onChange?: undefined;
+  onCheck: (value: boolean) => void;
+};
+
+type FormInputValidator = FormInputCommon & {
+  type: "validator";
+  onCheck?: undefined;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+};
+
+type FormInput = FormInputText | FormInputCheckbox | FormInputValidator;
 
 export const getForm = (
   mode: Mode[],
@@ -36,8 +62,9 @@ export const getForm = (
       {
         id: "senders",
         label: "Sender",
+        type: "text",
         value: transaction.senders[0] ?? "",
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+        onChange: (e) => {
           setTransaction({
             ...transaction,
             senders: [e.target.value],
@@ -47,8 +74,9 @@ export const getForm = (
       {
         id: "recipients",
         label: "Recipient",
+        type: "text",
         value: (transaction as TransferTransaction).recipients[0] ?? "",
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+        onChange: (e) => {
           setTransaction({
             ...transaction,
             mode: "transfer",
@@ -59,8 +87,10 @@ export const getForm = (
       {
         id: "amount",
         label: "Amount",
+        type: "text",
         value: transaction.amount ?? "0",
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+        disabled: transaction.useMaxAmount === true,
+        onChange: (e) => {
           setTransaction({
             ...transaction,
             amount: e.target.value,
@@ -68,10 +98,24 @@ export const getForm = (
         },
       },
       {
+        id: "sendMax",
+        label: "Send Max",
+        type: "checkbox",
+        value: transaction.useMaxAmount,
+        onCheck: (value) => {
+          console.log(value);
+          setTransaction({
+            ...transaction,
+            useMaxAmount: !value,
+          });
+        },
+      },
+      {
         id: "memo",
         label: "Memo",
+        type: "text",
         value: transaction.memo ?? "",
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+        onChange: (e) => {
           setTransaction({
             ...transaction,
             memo: e.target.value,
@@ -83,8 +127,9 @@ export const getForm = (
       {
         id: "senders",
         label: "Delegator",
+        type: "text",
         value: transaction.senders[0] ?? "",
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+        onChange: (e) => {
           setTransaction({
             ...transaction,
             senders: [e.target.value],
@@ -94,8 +139,9 @@ export const getForm = (
       {
         id: "validator",
         label: "Validator",
+        type: "validator",
         value: (transaction as DelegateTransaction).validator ?? "",
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+        onChange: (e) => {
           setTransaction({
             ...transaction,
             mode: "delegate",
@@ -106,8 +152,10 @@ export const getForm = (
       {
         id: "amount",
         label: "Amount",
+        type: "text",
         value: transaction.amount ?? "0",
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+        disabled: transaction.useMaxAmount === true,
+        onChange: (e) => {
           setTransaction({
             ...transaction,
             amount: e.target.value,
@@ -141,7 +189,55 @@ export const EncodeForm: React.FC<EncodeFormProps> = ({
 
   useEffect(() => {
     setMode("transfer");
-  }, [transaction.chainId])
+  }, [transaction.chainId]);
+
+  const renderSwitch = ({
+    type,
+    id,
+    label,
+    value,
+    onChange,
+    onCheck,
+    disabled,
+  }: FormInput) => {
+    switch (type) {
+      case "validator":
+        if (transaction.mode === "delegate") {
+          return (
+            <Validators
+              key={id}
+              chainId={transaction.chainId}
+              setTransaction={setTransaction}
+              validatorAddress={transaction.validator}
+            />
+          );
+        }
+      case "checkbox":
+        return (
+          <Checkbox
+            className="ml-4"
+            id={id}
+            key={`${id}-${mode}-checkbox`}
+            checked={value}
+            onCheckedChange={(checked) => {
+              onCheck && onCheck(!checked as boolean);
+            }}
+          />
+        );
+      case "text":
+      default:
+        return (
+          <Input
+            id={id}
+            key={`${id}-${mode}-input`}
+            placeholder={label}
+            disabled={disabled}
+            value={value}
+            onChange={onChange}
+          />
+        );
+    }
+  };
 
   return (
     <div className="flex flex-col space-y-1.5 gap-2" key={"label"}>
@@ -183,28 +279,14 @@ export const EncodeForm: React.FC<EncodeFormProps> = ({
         </SelectContent>
       </Select>
       {Object.keys(form).length > 0 &&
-        form[mode].map(({ id, label, onChange, value }) => {
+        form[mode].map((input) => {
+          const { id, label } = input;
           return (
             <div key={`${id}-${mode}`}>
               <Label htmlFor={id} key={`${id}-${mode}-label`}>
                 {label}
               </Label>
-              {id === "validator" && transaction.mode === "delegate" ? (
-                <Validators
-                  key={id}
-                  chainId={transaction.chainId}
-                  setTransaction={setTransaction}
-                  validatorAddress={transaction.validator}
-                />
-              ) : (
-                <Input
-                  id={id}
-                  key={`${id}-${mode}-input`}
-                  placeholder={label}
-                  value={value}
-                  onChange={onChange}
-                />
-              )}
+              {renderSwitch(input)}
             </div>
           );
         })}

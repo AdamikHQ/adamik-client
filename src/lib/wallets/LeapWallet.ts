@@ -13,7 +13,7 @@ export class LeapWallet implements IWallet {
   public supportedChains: Chain[] = ["cosmoshub"];
   public icon = "/icons/Leap.svg";
   public unit = 6; // TODO: Get from Adamik ?
-  public signFormat = "amino";
+  public signFormat = "json";
   public withoutBroadcast: boolean = false;
 
   private adamikNameConverted: { [k: string]: string } = {
