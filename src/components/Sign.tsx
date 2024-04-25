@@ -34,7 +34,10 @@ export const Sign: React.FC<SignProps> = ({
   setHash,
 }) => {
   const signWithWallet = useCallback(async () => {
-    const result = await wallet.signMessage(transaction.chainId, encodedTransaction);
+    const result = await wallet.signMessage(
+      transaction.chainId,
+      encodedTransaction
+    );
     if (wallet.withoutBroadcast === true) {
       setHash(wallet.getHashFromBroadcast(result));
     } else {
@@ -103,10 +106,10 @@ export const Sign: React.FC<SignProps> = ({
               </Label>
               <Input
                 disabled={true}
-                id="gees"
-                key={`fees-input`}
+                id="fees"
+                key="fees-input"
                 readOnly={true}
-                placeholder={"Fees"}
+                placeholder="Fees"
                 value={transaction.fees}
               />
               <Label htmlFor="gas" key={`gas-label`}>
@@ -114,10 +117,10 @@ export const Sign: React.FC<SignProps> = ({
               </Label>
               <Input
                 disabled={true}
-                id={"gas"}
-                key={`gas-input`}
+                id="gas"
+                key="gas-input"
                 readOnly={true}
-                placeholder={"Gas"}
+                placeholder="Gas"
                 value={transaction.gas}
               />
             </div>
