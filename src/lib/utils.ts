@@ -35,6 +35,10 @@ export function getEtherscanUrl(chainId: string, hash: string): string {
       return `https://sepolia.explorer.zksync.io/tx/${hash}`;
     case "injective-testnet":
       return `https://inevm-testnet.explorer.caldera.xyz/tx/${hash}`;
+    case "base":
+      return `https://basescan.org/tx/${hash}`;
+    case "base-sepolia":
+      return `https://sepolia.basescan.org/tx/${hash}`;
   }
   throw new Error(`Chain ${chainId} not supported`);
 }

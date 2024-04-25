@@ -11,7 +11,9 @@ export class Metamask implements IWallet {
     "ethereum",
     "zksync",
     "zksync-testnet",
-    "injective-testnet"
+    "injective-testnet",
+    "base",
+    "base-sepolia"
   ];
   public icon = "/icons/Metamask.svg";
   public unit = 18; // TODO: Get from Adamik ?
