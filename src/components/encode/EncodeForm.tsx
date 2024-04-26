@@ -6,7 +6,12 @@ import {
   Transaction,
   TransferTransaction,
 } from "@/lib/types";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import {
@@ -18,28 +23,50 @@ import {
 } from "../ui/select";
 import { getChainMode } from "@/lib/utils";
 import { Validators } from "../Validators";
+import { Checkbox } from "../ui/checkbox";
 
-type FormInput = {
+type FormInputCommon = {
   id: string;
   label: string;
-  value: string;
+  value: any;
+  disabled?: boolean;
+};
+
+type FormInputText = FormInputCommon & {
+  type: "text";
+  onCheck?: undefined;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
+type FormInputCheckbox = FormInputCommon & {
+  type: "checkbox";
+  onChange?: undefined;
+  onCheck: (value: boolean) => void;
+};
+
+type FormInputValidator = FormInputCommon & {
+  type: "validator";
+  onCheck?: undefined;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+};
+
+type FormInput = FormInputText | FormInputCheckbox | FormInputValidator;
+
 export const getForm = (
   mode: Mode[],
-  transaction: Transaction,
-  setTransaction: React.Dispatch<React.SetStateAction<Transaction>>
+  transactionInputs: Transaction,
+  setTransactionInputs: React.Dispatch<React.SetStateAction<Transaction>>
 ): Record<Mode, FormInput[]> => {
   const form: Record<Mode, FormInput[]> = {
     transfer: [
       {
         id: "senders",
         label: "Sender",
-        value: transaction.senders[0] ?? "",
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
-          setTransaction({
-            ...transaction,
+        type: "text",
+        value: transactionInputs.senders[0] ?? "",
+        onChange: (e) => {
+          setTransactionInputs({
+            ...transactionInputs,
             senders: [e.target.value],
           });
         },
@@ -47,10 +74,11 @@ export const getForm = (
       {
         id: "recipients",
         label: "Recipient",
-        value: (transaction as TransferTransaction).recipients[0] ?? "",
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
-          setTransaction({
-            ...transaction,
+        type: "text",
+        value: (transactionInputs as TransferTransaction).recipients[0] ?? "",
+        onChange: (e) => {
+          setTransactionInputs({
+            ...transactionInputs,
             mode: "transfer",
             recipients: [e.target.value],
           });
@@ -59,21 +87,36 @@ export const getForm = (
       {
         id: "amount",
         label: "Amount",
-        value: transaction.amount ?? "0",
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
-          setTransaction({
-            ...transaction,
+        type: "text",
+        value: transactionInputs.amount ?? "0",
+        disabled: transactionInputs.useMaxAmount === true,
+        onChange: (e) => {
+          setTransactionInputs({
+            ...transactionInputs,
             amount: e.target.value,
+          });
+        },
+      },
+      {
+        id: "sendMax",
+        label: "Send Max",
+        type: "checkbox",
+        value: transactionInputs.useMaxAmount,
+        onCheck: (value) => {
+          setTransactionInputs({
+            ...transactionInputs,
+            useMaxAmount: !value,
           });
         },
       },
       {
         id: "memo",
         label: "Memo",
-        value: transaction.memo ?? "",
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
-          setTransaction({
-            ...transaction,
+        type: "text",
+        value: transactionInputs.memo ?? "",
+        onChange: (e) => {
+          setTransactionInputs({
+            ...transactionInputs,
             memo: e.target.value,
           });
         },
@@ -83,10 +126,11 @@ export const getForm = (
       {
         id: "senders",
         label: "Delegator",
-        value: transaction.senders[0] ?? "",
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
-          setTransaction({
-            ...transaction,
+        type: "text",
+        value: transactionInputs.senders[0] ?? "",
+        onChange: (e) => {
+          setTransactionInputs({
+            ...transactionInputs,
             senders: [e.target.value],
           });
         },
@@ -94,10 +138,11 @@ export const getForm = (
       {
         id: "validator",
         label: "Validator",
-        value: (transaction as DelegateTransaction).validator ?? "",
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
-          setTransaction({
-            ...transaction,
+        type: "validator",
+        value: (transactionInputs as DelegateTransaction).validator ?? "",
+        onChange: (e) => {
+          setTransactionInputs({
+            ...transactionInputs,
             mode: "delegate",
             validator: e.target.value,
           });
@@ -106,10 +151,12 @@ export const getForm = (
       {
         id: "amount",
         label: "Amount",
-        value: transaction.amount ?? "0",
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
-          setTransaction({
-            ...transaction,
+        type: "text",
+        value: transactionInputs.amount ?? "0",
+        disabled: transactionInputs.useMaxAmount === true,
+        onChange: (e) => {
+          setTransactionInputs({
+            ...transactionInputs,
             amount: e.target.value,
           });
         },
@@ -124,24 +171,72 @@ export const getForm = (
 };
 
 type EncodeFormProps = {
-  transaction: Transaction;
-  setTransaction: React.Dispatch<React.SetStateAction<Transaction>>;
+  transactionInputs: Transaction;
+  setTransactionInputs: React.Dispatch<React.SetStateAction<Transaction>>;
 };
 export const EncodeForm: React.FC<EncodeFormProps> = ({
-  transaction,
-  setTransaction,
+  transactionInputs,
+  setTransactionInputs,
 }) => {
   // FIXME: Chain Details need to contains mode. atm do it manually
   const form = getForm(
-    getChainMode(transaction.chainId),
-    transaction,
-    setTransaction
+    getChainMode(transactionInputs.chainId),
+    transactionInputs,
+    setTransactionInputs
   );
   const [mode, setMode] = useState<Mode>("transfer");
 
   useEffect(() => {
     setMode("transfer");
-  }, [transaction.chainId])
+  }, [transactionInputs.chainId]);
+
+  const renderSwitch = ({
+    type,
+    id,
+    label,
+    value,
+    onChange,
+    onCheck,
+    disabled,
+  }: FormInput) => {
+    switch (type) {
+      case "validator":
+        if (transactionInputs.mode === "delegate") {
+          return (
+            <Validators
+              key={id}
+              chainId={transactionInputs.chainId}
+              setTransactionInputs={setTransactionInputs}
+              validatorAddress={transactionInputs.validator}
+            />
+          );
+        }
+      case "checkbox":
+        return (
+          <Checkbox
+            className="ml-4"
+            id={id}
+            key={`${id}-${mode}-checkbox`}
+            checked={value}
+            onCheckedChange={(checked) => {
+              onCheck && onCheck(!checked as boolean);
+            }}
+          />
+        );
+      case "text":
+      default:
+        return (
+          <Input
+            id={id}
+            key={`${id}-${mode}-input`}
+            placeholder={label}
+            disabled={disabled}
+            value={value}
+            onChange={onChange}
+          />
+        );
+    }
+  };
 
   return (
     <div className="flex flex-col space-y-1.5 gap-2" key={"label"}>
@@ -155,14 +250,14 @@ export const EncodeForm: React.FC<EncodeFormProps> = ({
         onValueChange={(value: Mode) => {
           setMode(value);
           if (value === "transfer") {
-            setTransaction({
-              ...transaction,
+            setTransactionInputs({
+              ...transactionInputs,
               mode: "transfer",
               recipients: [],
             });
           } else if (value === "delegate") {
-            setTransaction({
-              ...transaction,
+            setTransactionInputs({
+              ...transactionInputs,
               mode: "delegate",
               validator: "",
             });
@@ -183,28 +278,14 @@ export const EncodeForm: React.FC<EncodeFormProps> = ({
         </SelectContent>
       </Select>
       {Object.keys(form).length > 0 &&
-        form[mode].map(({ id, label, onChange, value }) => {
+        form[mode].map((input) => {
+          const { id, label } = input;
           return (
             <div key={`${id}-${mode}`}>
               <Label htmlFor={id} key={`${id}-${mode}-label`}>
                 {label}
               </Label>
-              {id === "validator" && transaction.mode === "delegate" ? (
-                <Validators
-                  key={id}
-                  chainId={transaction.chainId}
-                  setTransaction={setTransaction}
-                  validatorAddress={transaction.validator}
-                />
-              ) : (
-                <Input
-                  id={id}
-                  key={`${id}-${mode}-input`}
-                  placeholder={label}
-                  value={value}
-                  onChange={onChange}
-                />
-              )}
+              {renderSwitch(input)}
             </div>
           );
         })}

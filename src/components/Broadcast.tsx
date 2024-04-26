@@ -42,10 +42,7 @@ export const Broadcast: React.FC<BroadcastProps> = ({
         transaction: {
           ...transaction,
           pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
-          amount: amountToSmallestUnit(
-            transaction.amount as string,
-            wallet.unit
-          ), //FIXME: Need to put logic in backend see with Hakim
+          amount: transaction.amount as string,
         },
         signature: wallet.extractSignature(signedTransaction),
         encodedTransaction,
@@ -126,9 +123,7 @@ export const Broadcast: React.FC<BroadcastProps> = ({
           }
         >
           <Send className="h-3.5 w-3.5" />
-          <span>
-            Broadcast with Adamik
-          </span>
+          <span>Broadcast with Adamik</span>
         </Button>
       </CardFooter>
     </Card>

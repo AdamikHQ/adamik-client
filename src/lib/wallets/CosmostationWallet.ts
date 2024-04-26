@@ -11,7 +11,7 @@ export class CosmostationWallet implements IWallet {
   public supportedChains: Chain[] = ["cosmoshub", "osmosis"];
   public icon = "/icons/Cosmostation.svg";
   public unit = 6; // TODO: Get from Adamik ?
-  public signFormat = "amino";
+  public signFormat = "json";
   private adamikNameConverted: { [k: string]: string } = {
     cosmoshub: "cosmoshub-4",
     osmosis: "osmosis-1",
