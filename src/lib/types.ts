@@ -7,7 +7,9 @@ export type Chain =
   | "holesky"
   | "zksync"
   | "zksync-testnet"
-  | "injective-testnet";
+  | "injective-testnet"
+  | "base"
+  | "base-sepolia";
 
 export type Mode = "transfer" | "delegate";
 

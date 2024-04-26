@@ -61,6 +61,28 @@ const chainConfig: Record<string, ChainConfig> = {
       symbol: "INJ",
       decimals: 18,
     },
+  },
+  "base": {
+    adamikChainId: "base",
+    chainId: "0x2105",
+    chainName: "Base",
+    rpcUrls: ["https://mainnet.base.org"],
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+    },
+  },
+  "base-sepolia": {
+    adamikChainId: "base-sepolia",
+    chainId: "0x14A34",
+    chainName: "Base Sepolia",
+    rpcUrls: ["https://sepolia.base.org"],
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+    },
   }
 };
 
