@@ -49,7 +49,7 @@ export const Encode: React.FC<EncodeProps> = ({
           pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
           amount: transactionInputs.useMaxAmount
             ? undefined
-            : amountToSmallestUnit(transactionInputs.amount as string, wallet.unit), //FIXME: Need to put logic in backend see with Hakim
+            : amountToSmallestUnit(transactionInputs.amount as string, wallet.unit), //FIXME: Unit conversion should be handled on server-side
         });
         setResult(data);
         if (!(data.status.errors.length > 0)) {
