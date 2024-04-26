@@ -115,8 +115,8 @@ export const Encode: React.FC<EncodeProps> = ({
           <CardContent>
             <div className="grid py-4">
               <EncodeForm
-                setTransaction={setTransactionInputs}
-                transaction={transactionInputs}
+                setTransactionInputs={setTransactionInputs}
+                transactionInputs={transactionInputs}
               />
               {isLoading ? (
                 <Loading />
