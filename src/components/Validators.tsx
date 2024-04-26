@@ -25,7 +25,7 @@ import { Transaction } from "@/lib/types";
 
 type ValidatorsProps = {
   chainId: string;
-  setTransaction: React.Dispatch<React.SetStateAction<Transaction>>,
+  setTransactionInputs: React.Dispatch<React.SetStateAction<Transaction>>,
   validatorAddress: string;
 };
 
@@ -39,7 +39,7 @@ type Validator = {
 
 export const Validators: React.FC<ValidatorsProps> = ({
   chainId,
-  setTransaction,
+  setTransactionInputs,
   validatorAddress,
 }) => {
   const [validators, setValidators] = useState<Validator[]>([]);
@@ -82,7 +82,7 @@ export const Validators: React.FC<ValidatorsProps> = ({
                     key={validator.name}
                     value={validator.name}
                     onSelect={() => {
-                      setTransaction((transaction: Transaction) => ({
+                      setTransactionInputs((transaction: Transaction) => ({
                         ...transaction,
                         validator: validator.address,
                       }));

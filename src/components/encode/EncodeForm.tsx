@@ -54,8 +54,8 @@ type FormInput = FormInputText | FormInputCheckbox | FormInputValidator;
 
 export const getForm = (
   mode: Mode[],
-  transaction: Transaction,
-  setTransaction: React.Dispatch<React.SetStateAction<Transaction>>
+  transactionInputs: Transaction,
+  setTransactionInputs: React.Dispatch<React.SetStateAction<Transaction>>
 ): Record<Mode, FormInput[]> => {
   const form: Record<Mode, FormInput[]> = {
     transfer: [
@@ -63,10 +63,10 @@ export const getForm = (
         id: "senders",
         label: "Sender",
         type: "text",
-        value: transaction.senders[0] ?? "",
+        value: transactionInputs.senders[0] ?? "",
         onChange: (e) => {
-          setTransaction({
-            ...transaction,
+          setTransactionInputs({
+            ...transactionInputs,
             senders: [e.target.value],
           });
         },
@@ -75,10 +75,10 @@ export const getForm = (
         id: "recipients",
         label: "Recipient",
         type: "text",
-        value: (transaction as TransferTransaction).recipients[0] ?? "",
+        value: (transactionInputs as TransferTransaction).recipients[0] ?? "",
         onChange: (e) => {
-          setTransaction({
-            ...transaction,
+          setTransactionInputs({
+            ...transactionInputs,
             mode: "transfer",
             recipients: [e.target.value],
           });
@@ -88,11 +88,11 @@ export const getForm = (
         id: "amount",
         label: "Amount",
         type: "text",
-        value: transaction.amount ?? "0",
-        disabled: transaction.useMaxAmount === true,
+        value: transactionInputs.amount ?? "0",
+        disabled: transactionInputs.useMaxAmount === true,
         onChange: (e) => {
-          setTransaction({
-            ...transaction,
+          setTransactionInputs({
+            ...transactionInputs,
             amount: e.target.value,
           });
         },
@@ -101,11 +101,10 @@ export const getForm = (
         id: "sendMax",
         label: "Send Max",
         type: "checkbox",
-        value: transaction.useMaxAmount,
+        value: transactionInputs.useMaxAmount,
         onCheck: (value) => {
-          console.log(value);
-          setTransaction({
-            ...transaction,
+          setTransactionInputs({
+            ...transactionInputs,
             useMaxAmount: !value,
           });
         },
@@ -114,10 +113,10 @@ export const getForm = (
         id: "memo",
         label: "Memo",
         type: "text",
-        value: transaction.memo ?? "",
+        value: transactionInputs.memo ?? "",
         onChange: (e) => {
-          setTransaction({
-            ...transaction,
+          setTransactionInputs({
+            ...transactionInputs,
             memo: e.target.value,
           });
         },
@@ -128,10 +127,10 @@ export const getForm = (
         id: "senders",
         label: "Delegator",
         type: "text",
-        value: transaction.senders[0] ?? "",
+        value: transactionInputs.senders[0] ?? "",
         onChange: (e) => {
-          setTransaction({
-            ...transaction,
+          setTransactionInputs({
+            ...transactionInputs,
             senders: [e.target.value],
           });
         },
@@ -140,10 +139,10 @@ export const getForm = (
         id: "validator",
         label: "Validator",
         type: "validator",
-        value: (transaction as DelegateTransaction).validator ?? "",
+        value: (transactionInputs as DelegateTransaction).validator ?? "",
         onChange: (e) => {
-          setTransaction({
-            ...transaction,
+          setTransactionInputs({
+            ...transactionInputs,
             mode: "delegate",
             validator: e.target.value,
           });
@@ -153,11 +152,11 @@ export const getForm = (
         id: "amount",
         label: "Amount",
         type: "text",
-        value: transaction.amount ?? "0",
-        disabled: transaction.useMaxAmount === true,
+        value: transactionInputs.amount ?? "0",
+        disabled: transactionInputs.useMaxAmount === true,
         onChange: (e) => {
-          setTransaction({
-            ...transaction,
+          setTransactionInputs({
+            ...transactionInputs,
             amount: e.target.value,
           });
         },
@@ -172,24 +171,24 @@ export const getForm = (
 };
 
 type EncodeFormProps = {
-  transaction: Transaction;
-  setTransaction: React.Dispatch<React.SetStateAction<Transaction>>;
+  transactionInputs: Transaction;
+  setTransactionInputs: React.Dispatch<React.SetStateAction<Transaction>>;
 };
 export const EncodeForm: React.FC<EncodeFormProps> = ({
-  transaction,
-  setTransaction,
+  transactionInputs,
+  setTransactionInputs,
 }) => {
   // FIXME: Chain Details need to contains mode. atm do it manually
   const form = getForm(
-    getChainMode(transaction.chainId),
-    transaction,
-    setTransaction
+    getChainMode(transactionInputs.chainId),
+    transactionInputs,
+    setTransactionInputs
   );
   const [mode, setMode] = useState<Mode>("transfer");
 
   useEffect(() => {
     setMode("transfer");
-  }, [transaction.chainId]);
+  }, [transactionInputs.chainId]);
 
   const renderSwitch = ({
     type,
@@ -202,13 +201,13 @@ export const EncodeForm: React.FC<EncodeFormProps> = ({
   }: FormInput) => {
     switch (type) {
       case "validator":
-        if (transaction.mode === "delegate") {
+        if (transactionInputs.mode === "delegate") {
           return (
             <Validators
               key={id}
-              chainId={transaction.chainId}
-              setTransaction={setTransaction}
-              validatorAddress={transaction.validator}
+              chainId={transactionInputs.chainId}
+              setTransactionInputs={setTransactionInputs}
+              validatorAddress={transactionInputs.validator}
             />
           );
         }
@@ -251,14 +250,14 @@ export const EncodeForm: React.FC<EncodeFormProps> = ({
         onValueChange={(value: Mode) => {
           setMode(value);
           if (value === "transfer") {
-            setTransaction({
-              ...transaction,
+            setTransactionInputs({
+              ...transactionInputs,
               mode: "transfer",
               recipients: [],
             });
           } else if (value === "delegate") {
-            setTransaction({
-              ...transaction,
+            setTransactionInputs({
+              ...transactionInputs,
               mode: "delegate",
               validator: "",
             });
