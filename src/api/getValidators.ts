@@ -6,20 +6,28 @@ const getValidatorsCall = async (
   offset?: number,
   limit?: number
 ) => {
-  const url = new URL(`${env.NEXT_PUBLIC_ADAMIK_API_URL}/data/validators`)
-  url.searchParams.append("chainId", chainId);
-  url.searchParams.append("offset", offset?.toString() || "0");
-  url.searchParams.append("limit", limit?.toString() || "50");
-  const response = await fetch(
-    url,
-    {
-      headers: {
-        "X-API-KEY": env.NEXT_PUBLIC_ADAMIK_API_KEY,
-        "Content-Type": "application/json",
-      },
-      method: "GET",
-    }
-  );
+  const url = new URL(`${env.NEXT_PUBLIC_ADAMIK_API_URL}/data/validators`);
+  const body: {
+    chainId: string;
+    offset?: string;
+    limit?: string;
+  } = {
+    chainId,
+  };
+  if (offset) {
+    body.offset = offset.toString();
+  }
+  if (limit) {
+    body.limit = limit.toString();
+  }
+  const response = await fetch(url, {
+    headers: {
+      "X-API-KEY": env.NEXT_PUBLIC_ADAMIK_API_KEY,
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(body),
+  });
 
   if (response.status === 200) {
     const data = await response.json();

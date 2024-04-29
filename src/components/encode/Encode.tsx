@@ -49,22 +49,26 @@ export const Encode: React.FC<EncodeProps> = ({
           pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
           amount: transactionInputs.useMaxAmount
             ? undefined
-            : amountToSmallestUnit(transactionInputs.amount as string, wallet.unit), //FIXME: Unit conversion should be handled on server-side
+            : amountToSmallestUnit(
+                transactionInputs.amount as string,
+                wallet.unit
+              ), //FIXME: Unit conversion should be handled on server-side
         });
-        setResult(data);
-        if (!(data.status.errors.length > 0)) {
-          setEncodedTransaction(data.encoded);
+        const result = data.transaction;
+        setResult(result);
+        if (!(result.status.errors.length > 0)) {
+          setEncodedTransaction(result.encoded);
           const fees =
-            typeof data?.plain?.fees === "string"
-              ? data?.plain?.fees
+            typeof result?.plain?.fees === "string"
+              ? result?.plain?.fees
               : transactionInputs.fees;
           const gas =
-            typeof data?.plain?.gas === "string"
-              ? data?.plain?.gas
+            typeof result?.plain?.gas === "string"
+              ? result?.plain?.gas
               : transactionInputs.gas;
           const amount =
-            typeof data?.plain?.amount === "string"
-              ? data?.plain?.amount
+            typeof result?.plain?.amount === "string"
+              ? result?.plain?.amount
               : transactionInputs.amount;
           setTransactionToSign({
             ...transactionInputs,
@@ -83,7 +87,7 @@ export const Encode: React.FC<EncodeProps> = ({
       setEncodedTransaction,
       setTransactionToSign,
       setOpen,
-      transactionToSign.chainId
+      transactionToSign.chainId,
     ]
   );
 

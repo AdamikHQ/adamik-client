@@ -10,8 +10,8 @@ export const getEncode = async (plainTransaction: Transaction) => {
         "Content-Type": "application/json",
       },
       method: "POST",
-      body: JSON.stringify({ transaction: plainTransaction }),
-    },
+      body: JSON.stringify({ transaction: { plain: plainTransaction } }),
+    }
   );
 
   if (response.status === 200) {
