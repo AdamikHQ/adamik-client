@@ -1,7 +1,6 @@
-import { getMetamaskConfig } from "../config/ethereum";
+import { getEtherscanUrl, getMetamaskConfig } from "../config/ethereum";
 import { Chain, IWallet } from "../types";
 import detectEthereumProvider from "@metamask/detect-provider";
-import { getEtherscanUrl } from "../utils";
 
 export class Metamask implements IWallet {
   public name = "Metamask";
@@ -13,7 +12,9 @@ export class Metamask implements IWallet {
     "zksync-testnet",
     "injective-testnet",
     "base",
-    "base-sepolia"
+    "base-sepolia",
+    "optimism",
+    "optimism-sepolia",
   ];
   public icon = "/icons/Metamask.svg";
   public unit = 18; // TODO: Get from Adamik ?

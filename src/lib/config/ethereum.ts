@@ -83,6 +83,28 @@ const chainConfig: Record<string, ChainConfig> = {
       symbol: "ETH",
       decimals: 18,
     },
+  },
+  "optimism": {
+    adamikChainId: "optimism",
+    chainId: "0xA",
+    chainName: "Optimism",
+    rpcUrls: ["https://mainnet.optimism.io"],
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+    },
+  },
+  "optimism-sepolia": {
+    adamikChainId: "optimism-sepolia",
+    chainId: "0xAA37DC",
+    chainName: "Optimism Sepolia",
+    rpcUrls: ["https://sepolia.optimism.io"],
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+    },
   }
 };
 
@@ -106,3 +128,29 @@ export const getMetamaskConfig = (
   }
   return undefined;
 };
+
+export function getEtherscanUrl(chainId: string, hash: string): string {
+  switch (chainId) {
+    case "sepolia":
+      return `https://sepolia.etherscan.io/tx/${hash}`;
+    case "ethereum":
+      return `https://etherscan.io/tx/${hash}`;
+    case "holesky:":
+      return `https://holesky.etherscan.io/tx/${hash}`;
+    case "zksync":
+      return `https://explorer.zksync.io/tx/${hash}`;
+    case "zksync-testnet":
+      return `https://sepolia.explorer.zksync.io/tx/${hash}`;
+    case "injective-testnet":
+      return `https://inevm-testnet.explorer.caldera.xyz/tx/${hash}`;
+    case "base":
+      return `https://basescan.org/tx/${hash}`;
+    case "base-sepolia":
+      return `https://sepolia.basescan.org/tx/${hash}`;
+    case "optimism":
+      return `https://optimistic.etherscan.io/tx/${hash}`;
+    case "optimism-sepolia":
+      return `https://sepolia-optimistic.etherscan.io/tx/${hash}`
+  }
+  throw new Error(`Chain ${chainId} not supported`);
+}

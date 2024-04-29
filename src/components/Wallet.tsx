@@ -99,27 +99,23 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
                 />{" "}
                 - {wallet.name}
               </CardTitle>
-              <CardDescription className="max-w-lg text-balance leading-relaxed">
-                <span className="flex flex-row gap-2 items-center">
-                  Supported chains :
-                  {wallet.supportedChains.map((chain) => {
-                    return (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className={cn(
-                          "h-8 gap-1",
-                          chain === transactionToSign.chainId &&
-                            "bg-teal-200 dark:bg-teal-600 border-primary text-primary"
-                        )}
-                        key={chain}
-                        onClick={() => changeTargetChain(chain)}
-                      >
-                        <span>{chain}</span>
-                      </Button>
-                    );
-                  })}
-                </span>
+              <CardDescription className="text-balance leading-relaxed">
+                {wallet.supportedChains.map((chain) => {
+                  return (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className={cn(
+                        chain === transactionToSign.chainId &&
+                          "bg-teal-200 dark:bg-teal-600 border-primary text-primary"
+                      )}
+                      key={chain}
+                      onClick={() => changeTargetChain(chain)}
+                    >
+                      <span>{chain}</span>
+                    </Button>
+                  );
+                })}
               </CardDescription>
             </CardHeader>
           </Card>
