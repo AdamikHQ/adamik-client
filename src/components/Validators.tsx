@@ -25,7 +25,7 @@ import { Transaction } from "@/lib/types";
 
 type ValidatorsProps = {
   chainId: string;
-  setTransactionInputs: React.Dispatch<React.SetStateAction<Transaction>>,
+  setTransactionInputs: React.Dispatch<React.SetStateAction<Transaction>>;
   validatorAddress: string;
 };
 
@@ -79,7 +79,7 @@ export const Validators: React.FC<ValidatorsProps> = ({
               {validators &&
                 validators.map((validator: Validator) => (
                   <CommandItem
-                    key={validator.name}
+                    key={validator.address}
                     value={validator.name}
                     onSelect={() => {
                       setTransactionInputs((transaction: Transaction) => ({
