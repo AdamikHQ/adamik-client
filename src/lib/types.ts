@@ -9,7 +9,9 @@ export type Chain =
   | "zksync-testnet"
   | "injective-testnet"
   | "base"
-  | "base-sepolia";
+  | "base-sepolia"
+  | "optimism"
+  | "optimism-sepolia";
 
 export type Mode = "transfer" | "delegate";
 
