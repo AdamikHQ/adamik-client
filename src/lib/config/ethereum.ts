@@ -1,3 +1,5 @@
+import { Chain, EVMChain } from "../types";
+
 type ChainConfig = {
   adamikChainId: string;
   chainId: string;
@@ -8,65 +10,80 @@ type ChainConfig = {
     symbol: string;
     decimals: number;
   };
+  explorerUrl?: (hash: string) => string;
+  isTestnet?: boolean;
 };
 
-const chainConfig: Record<string, ChainConfig> = {
+const chainConfig: Record<EVMChain, ChainConfig> = {
   sepolia: {
     adamikChainId: "sepolia",
     chainId: "0xaa36a7",
     chainName: "Sepolia",
     rpcUrls: ["https://ethereum-sepolia-rpc.publicnode.com"],
+    explorerUrl: (hash: string) => `https://sepolia.etherscan.io/tx/${hash}`,
+    isTestnet: true,
   },
   holesky: {
     adamikChainId: "holesky",
     chainId: "0x4268",
     chainName: "Holesky",
     rpcUrls: ["https://ethereum-holesky-rpc.publicnode.com"],
+    explorerUrl: (hash: string) => `https://holesky.etherscan.io/tx/${hash}`,
+    isTestnet: true,
   },
   ethereum: {
     adamikChainId: "ethereum",
     chainId: "0x1",
     chainName: "Ethereum",
     rpcUrls: ["https://eth.llamarpc.com"],
+    explorerUrl: (hash: string) => `https://etherscan.io/tx/${hash}`,
   },
   zksync: {
     adamikChainId: "zksync",
     chainId: "0x144",
     chainName: "zkSync",
     rpcUrls: ["https://zksync.drpc.org"],
+    explorerUrl: (hash: string) => `https://explorer.zksync.io/tx/${hash}`,
     nativeCurrency: {
       name: "Ethereum",
       symbol: "ETH",
       decimals: 18,
     },
   },
-  "zksync-testnet": {
-    adamikChainId: "zksync-testnet",
+  "zksync-sepolia": {
+    adamikChainId: "zksync-sepolia",
     chainId: "0x12c",
     chainName: "zkSync Sepolia",
     rpcUrls: ["https://sepolia.era.zksync.dev"],
+    explorerUrl: (hash: string) =>
+      `https://sepolia.explorer.zksync.io/tx/${hash}`,
     nativeCurrency: {
       name: "Ethereum",
       symbol: "ETH",
       decimals: 18,
     },
+    isTestnet: true,
   },
   "injective-testnet": {
     adamikChainId: "injective-testnet",
     chainId: "0x978",
     chainName: "zkSync Sepolia",
     rpcUrls: ["https://testnet.rpc.inevm.com/http"],
+    explorerUrl: (hash: string) =>
+      `https://inevm-testnet.explorer.caldera.xyz/tx/${hash}`,
     nativeCurrency: {
       name: "Injective",
       symbol: "INJ",
       decimals: 18,
     },
+    isTestnet: true,
   },
-  "base": {
+  base: {
     adamikChainId: "base",
     chainId: "0x2105",
     chainName: "Base",
     rpcUrls: ["https://mainnet.base.org"],
+    explorerUrl: (hash: string) => `https://basescan.org/tx/${hash}`,
     nativeCurrency: {
       name: "Ether",
       symbol: "ETH",
@@ -78,17 +95,20 @@ const chainConfig: Record<string, ChainConfig> = {
     chainId: "0x14A34",
     chainName: "Base Sepolia",
     rpcUrls: ["https://sepolia.base.org"],
+    explorerUrl: (hash: string) => `https://sepolia.basescan.org/tx/${hash}`,
     nativeCurrency: {
       name: "Ether",
       symbol: "ETH",
       decimals: 18,
     },
+    isTestnet: true,
   },
-  "optimism": {
+  optimism: {
     adamikChainId: "optimism",
     chainId: "0xA",
     chainName: "Optimism",
     rpcUrls: ["https://mainnet.optimism.io"],
+    explorerUrl: (hash: string) => `https://optimistic.etherscan.io/tx/${hash}`,
     nativeCurrency: {
       name: "Ether",
       symbol: "ETH",
@@ -100,23 +120,51 @@ const chainConfig: Record<string, ChainConfig> = {
     chainId: "0xAA37DC",
     chainName: "Optimism Sepolia",
     rpcUrls: ["https://sepolia.optimism.io"],
+    explorerUrl: (hash: string) =>
+      `https://sepolia-optimistic.etherscan.io/tx/${hash}`,
     nativeCurrency: {
       name: "Ether",
       symbol: "ETH",
       decimals: 18,
     },
-  }
+    isTestnet: true,
+  },
+  arbitrum: {
+    adamikChainId: "arbitrum",
+    chainId: "0xa4b1",
+    chainName: "Arbitrum One",
+    rpcUrls: ["https://arbitrum-mainnet.infura.io"],
+    explorerUrl: (hash: string) => `https://arbiscan.io/tx/${hash}`,
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+    },
+  },
+  "arbitrum-sepolia": {
+    adamikChainId: "arbitrum-sepolia",
+    chainId: "0x66eee",
+    chainName: "Arbitrum Sepolia",
+    rpcUrls: ["https://arbitrum-sepolia.blockpi.network/v1/rpc/public"],
+    explorerUrl: (hash: string) => `https://sepolia.arbiscan.io/tx/${hash}`,
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+    },
+    isTestnet: true,
+  },
 };
 
-export const getAdamikChainId = (chainId: string): string | undefined => {
+export const getAdamikChainId = (chainId: EVMChain): string | undefined => {
   if (chainConfig[chainId]) {
     return chainConfig[chainId].adamikChainId;
   }
   return undefined;
 };
 
-export const getMetamaskConfig = (
-  chainId: string
+const getMetamaskConfig = (
+  chainId: EVMChain
 ): Omit<ChainConfig, "adamikChainId"> | undefined => {
   if (chainConfig[chainId]) {
     return {
@@ -129,28 +177,33 @@ export const getMetamaskConfig = (
   return undefined;
 };
 
-export function getEtherscanUrl(chainId: string, hash: string): string {
-  switch (chainId) {
-    case "sepolia":
-      return `https://sepolia.etherscan.io/tx/${hash}`;
-    case "ethereum":
-      return `https://etherscan.io/tx/${hash}`;
-    case "holesky:":
-      return `https://holesky.etherscan.io/tx/${hash}`;
-    case "zksync":
-      return `https://explorer.zksync.io/tx/${hash}`;
-    case "zksync-testnet":
-      return `https://sepolia.explorer.zksync.io/tx/${hash}`;
-    case "injective-testnet":
-      return `https://inevm-testnet.explorer.caldera.xyz/tx/${hash}`;
-    case "base":
-      return `https://basescan.org/tx/${hash}`;
-    case "base-sepolia":
-      return `https://sepolia.basescan.org/tx/${hash}`;
-    case "optimism":
-      return `https://optimistic.etherscan.io/tx/${hash}`;
-    case "optimism-sepolia":
-      return `https://sepolia-optimistic.etherscan.io/tx/${hash}`
+function getEtherscanUrl(chainId: EVMChain, hash: string): string {
+  if (chainConfig[chainId].explorerUrl) {
+    return chainConfig[chainId].explorerUrl?.(hash) as string;
   }
   throw new Error(`Chain ${chainId} not supported`);
 }
+
+function getEVMChains(withoutTestnet = false): Chain[] {
+  const chains = Object.entries(chainConfig);
+
+  if (withoutTestnet) {
+    return chains
+      .filter(([, config]) => !config.isTestnet)
+      .map(([chainId]) => chainId as Chain);
+  }
+  return chains
+    .sort(([, aConfig], [, bConfig]) => {
+      // Sort testnet at the end
+      if (aConfig.isTestnet === bConfig.isTestnet) {
+        return 0;
+      } else if (aConfig.isTestnet) {
+        return 1;
+      } else {
+        return -1;
+      }
+    })
+    .map(([chainId]) => chainId as Chain);
+}
+
+export { getEtherscanUrl, getEVMChains, getMetamaskConfig };
