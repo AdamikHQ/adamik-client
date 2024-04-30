@@ -1,17 +1,18 @@
-export type Chain =
-  | "cosmoshub"
-  | "algorand"
+export type Chain = "cosmoshub" | "algorand" | "osmosis" | EVMChain;
+
+export type EVMChain =
   | "ethereum"
-  | "osmosis"
   | "sepolia"
   | "holesky"
   | "zksync"
-  | "zksync-testnet"
+  | "zksync-sepolia"
   | "injective-testnet"
   | "base"
   | "base-sepolia"
   | "optimism"
-  | "optimism-sepolia";
+  | "optimism-sepolia"
+  | "arbitrum"
+  | "arbitrum-sepolia";
 
 export type Mode = "transfer" | "delegate";
 
@@ -52,11 +53,11 @@ export interface IWallet<T = any, R = any, B = any> {
   unit: number;
   signFormat: string;
   withoutBroadcast: boolean;
-  connect: (chainId: string) => Promise<void>;
+  connect: (chainId: Chain) => Promise<void>;
   getAddress: (chainId: string) => Promise<string>;
   signMessage: (chainId: string, payload: T) => Promise<R>;
   extractSignature: (signature: R) => string;
   getPubkey?: () => Promise<string>;
-  getExplorerUrl: (chainId: string, hash: string) => string;
+  getExplorerUrl: (chainId: Chain, hash: string) => string;
   getHashFromBroadcast: (broadcast: B) => string;
 }

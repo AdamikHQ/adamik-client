@@ -20,7 +20,7 @@ export class CosmostationWallet implements IWallet {
 
   private provider: Awaited<ReturnType<typeof cosmos>> | null = null;
 
-  async connect(chainId: string): Promise<void> {
+  async connect(chainId: Chain): Promise<void> {
     await cosmos(this.adamikNameConverted[chainId]);
   }
 
@@ -47,7 +47,7 @@ export class CosmostationWallet implements IWallet {
     return (await this.provider!.requestAccount()).public_key.value;
   }
 
-  getExplorerUrl(chainId: string, hash: string): string {
+  getExplorerUrl(chainId: Chain, hash: string): string {
     return mintscanUrl(chainId, hash);
   }
 

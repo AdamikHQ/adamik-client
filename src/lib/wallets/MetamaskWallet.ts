@@ -1,21 +1,14 @@
-import { getEtherscanUrl, getMetamaskConfig } from "../config/ethereum";
-import { Chain, IWallet } from "../types";
+import {
+  getEVMChains,
+  getEtherscanUrl,
+  getMetamaskConfig,
+} from "../config/ethereum";
+import { Chain, EVMChain, IWallet } from "../types";
 import detectEthereumProvider from "@metamask/detect-provider";
 
 export class Metamask implements IWallet {
   public name = "Metamask";
-  public supportedChains: Chain[] = [
-    "sepolia",
-    "holesky",
-    "ethereum",
-    "zksync",
-    "zksync-testnet",
-    "injective-testnet",
-    "base",
-    "base-sepolia",
-    "optimism",
-    "optimism-sepolia",
-  ];
+  public supportedChains: Chain[] = [...getEVMChains()];
   public icon = "/icons/Metamask.svg";
   public unit = 18; // TODO: Get from Adamik ?
   public signFormat = "json";
@@ -33,8 +26,8 @@ export class Metamask implements IWallet {
     }
   }
 
-  async connect(chainId: string): Promise<void> {
-    const ethChainConfig = getMetamaskConfig(chainId);
+  async connect(chainId: Chain): Promise<void> {
+    const ethChainConfig = getMetamaskConfig(chainId as EVMChain);
 
     if (!ethChainConfig) {
       throw new Error("Chain not configured in @lib/ethereum/config.ts");
@@ -86,12 +79,11 @@ export class Metamask implements IWallet {
     throw new Error("Metamask does not support signing messages");
   }
 
-  getExplorerUrl(chainId: string, hash: string): string {
-    return getEtherscanUrl(chainId, hash);
+  getExplorerUrl(chainId: Chain, hash: string): string {
+    return getEtherscanUrl(chainId as EVMChain, hash);
   }
 
   getHashFromBroadcast(broadcast: string): string {
-    console.log({ broadcast });
     return broadcast;
   }
 }
