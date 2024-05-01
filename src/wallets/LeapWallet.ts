@@ -6,7 +6,7 @@ import {
   StdSignDoc,
 } from "@keplr-wallet/types";
 import { Chain, IWallet } from "../types";
-import { mintscanUrl } from "../utils";
+import { mintscanUrl } from "../utils/utils";
 
 export class LeapWallet implements IWallet {
   public name = "Leap";
@@ -21,8 +21,7 @@ export class LeapWallet implements IWallet {
     osmosis: "osmosis-1",
   };
 
-  private offlineSigner: (OfflineAminoSigner & OfflineDirectSigner) | null =
-    null;
+  private offlineSigner: (OfflineAminoSigner & OfflineDirectSigner) | null = null;
 
   private checkConnectivity(): Keplr {
     const { leap } = window;
@@ -42,30 +41,20 @@ export class LeapWallet implements IWallet {
   async getAddress(chainId: string): Promise<string> {
     const leap = this.checkConnectivity();
 
-    this.offlineSigner = leap.getOfflineSigner(
-      this.adamikNameConverted[chainId]
-    );
+    this.offlineSigner = leap.getOfflineSigner(this.adamikNameConverted[chainId]);
     const accounts = await this.offlineSigner.getAccounts();
 
     return accounts[0].address;
   }
 
-  async signMessage(
-    chainId: string,
-    message: StdSignDoc
-  ): Promise<AminoSignResponse> {
+  async signMessage(chainId: string, message: StdSignDoc): Promise<AminoSignResponse> {
     const leap = this.checkConnectivity();
 
     if (this.offlineSigner === null) {
-      this.offlineSigner = leap.getOfflineSigner(
-        this.adamikNameConverted[chainId]
-      );
+      this.offlineSigner = leap.getOfflineSigner(this.adamikNameConverted[chainId]);
     }
     const accounts = await this.offlineSigner.getAccounts();
-    const signature = await this.offlineSigner.signAmino(
-      accounts[0].address,
-      message
-    );
+    const signature = await this.offlineSigner.signAmino(accounts[0].address, message);
 
     return signature;
   }

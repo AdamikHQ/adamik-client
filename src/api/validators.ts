@@ -1,11 +1,7 @@
-import { env } from "@/env";
-import { cache } from "@/lib/cache";
+import { env } from "~/env";
+import { cache } from "~/utils/cache";
 
-const getValidatorsCall = async (
-  chainId: string,
-  offset?: number,
-  limit?: number
-) => {
+const getValidatorsCall = async (chainId: string, offset?: number, limit?: number) => {
   const url = new URL(`${env.NEXT_PUBLIC_ADAMIK_API_URL}/data/validators`);
   const body: {
     chainId: string;
@@ -37,11 +33,7 @@ const getValidatorsCall = async (
   }
 };
 
-export const getValidators = async (
-  chainId: string,
-  offset?: number,
-  limit?: number
-) => {
+export const getValidators = async (chainId: string, offset?: number, limit?: number) => {
   const cacheValidators = cache.get(`validators-${chainId}-${offset}-${limit}`);
 
   if (!cacheValidators) {

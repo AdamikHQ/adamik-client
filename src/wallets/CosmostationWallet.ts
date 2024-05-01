@@ -1,10 +1,6 @@
 import { Chain, IWallet } from "../types";
-import {
-  CosmosSignAminoDoc,
-  CosmosSignAminoResponse,
-  cosmos,
-} from "@cosmostation/extension";
-import { mintscanUrl } from "../utils";
+import { CosmosSignAminoDoc, CosmosSignAminoResponse, cosmos } from "@cosmostation/extension";
+import { mintscanUrl } from "../utils/utils";
 
 export class CosmostationWallet implements IWallet {
   public name = "Cosmostation";
@@ -29,10 +25,7 @@ export class CosmostationWallet implements IWallet {
     return (await this.provider.requestAccount()).address;
   }
 
-  async signMessage(
-    chainId: string,
-    message: CosmosSignAminoDoc,
-  ): Promise<CosmosSignAminoResponse> {
+  async signMessage(chainId: string, message: CosmosSignAminoDoc): Promise<CosmosSignAminoResponse> {
     const provider = await cosmos(this.adamikNameConverted[chainId]);
     const signature = await provider.signAmino(message);
 

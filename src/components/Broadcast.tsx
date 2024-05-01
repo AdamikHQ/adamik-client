@@ -1,19 +1,12 @@
 import { Link as LinkIcon, Send } from "lucide-react";
 import { Button } from "./ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Textarea } from "./ui/textarea";
-import { broadcast } from "@/api/postBroadcast";
+import { broadcast } from "~/api/broadcast";
 import { useEffect, useState } from "react";
 import { Label } from "./ui/label";
-import { IWallet, Transaction } from "@/lib/types";
-import { amountToSmallestUnit } from "@/lib/utils";
+import { IWallet, Transaction } from "~/types";
+import { amountToSmallestUnit } from "~/utils/utils";
 import { Loading } from "./ui/loading";
 
 type BroadcastProps = {
@@ -83,22 +76,13 @@ export const Broadcast: React.FC<BroadcastProps> = ({
           ) : (
             <>
               <Label>Signed Transaction</Label>
-              <Textarea
-                value={JSON.stringify(signedTransaction, null, 2)}
-                readOnly={true}
-              />
+              <Textarea value={JSON.stringify(signedTransaction, null, 2)} readOnly={true} />
 
               <Label>Signature</Label>
-              <Textarea
-                value={wallet.extractSignature(signedTransaction)}
-                readOnly={true}
-              />
+              <Textarea value={wallet.extractSignature(signedTransaction)} readOnly={true} />
 
               <Label>Encoded Transaction</Label>
-              <Textarea
-                value={JSON.stringify(encodedTransaction, null, 2)}
-                readOnly={true}
-              />
+              <Textarea value={JSON.stringify(encodedTransaction, null, 2)} readOnly={true} />
             </>
           )}
           {errors && (
@@ -115,12 +99,7 @@ export const Broadcast: React.FC<BroadcastProps> = ({
           variant="outline"
           className="h-8 gap-1"
           onClick={() => broadcastOnClick()}
-          disabled={
-            isLoading ||
-            !signedTransaction ||
-            !encodedTransaction ||
-            disableBroadcast
-          }
+          disabled={isLoading || !signedTransaction || !encodedTransaction || disableBroadcast}
         >
           <Send className="h-3.5 w-3.5" />
           <span>Broadcast with Adamik</span>

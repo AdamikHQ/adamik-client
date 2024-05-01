@@ -1,27 +1,11 @@
 "use client";
 
-import {
-  DelegateTransaction,
-  Mode,
-  Transaction,
-  TransferTransaction,
-} from "@/lib/types";
-import React, {
-  ChangeEvent,
-  FormEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import { DelegateTransaction, Mode, Transaction, TransferTransaction } from "~/types";
+import React, { ChangeEvent, FormEventHandler, useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { getChainMode } from "@/lib/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { getChainMode } from "~/utils/utils";
 import { Validators } from "../Validators";
 import { Checkbox } from "../ui/checkbox";
 
@@ -174,31 +158,16 @@ type EncodeFormProps = {
   transactionInputs: Transaction;
   setTransactionInputs: React.Dispatch<React.SetStateAction<Transaction>>;
 };
-export const EncodeForm: React.FC<EncodeFormProps> = ({
-  transactionInputs,
-  setTransactionInputs,
-}) => {
+export const EncodeForm: React.FC<EncodeFormProps> = ({ transactionInputs, setTransactionInputs }) => {
   // FIXME: Chain Details need to contains mode. atm do it manually
-  const form = getForm(
-    getChainMode(transactionInputs.chainId),
-    transactionInputs,
-    setTransactionInputs
-  );
+  const form = getForm(getChainMode(transactionInputs.chainId), transactionInputs, setTransactionInputs);
   const [mode, setMode] = useState<Mode>("transfer");
 
   useEffect(() => {
     setMode("transfer");
   }, [transactionInputs.chainId]);
 
-  const renderSwitch = ({
-    type,
-    id,
-    label,
-    value,
-    onChange,
-    onCheck,
-    disabled,
-  }: FormInput) => {
+  const renderSwitch = ({ type, id, label, value, onChange, onCheck, disabled }: FormInput) => {
     switch (type) {
       case "validator":
         if (transactionInputs.mode === "delegate") {

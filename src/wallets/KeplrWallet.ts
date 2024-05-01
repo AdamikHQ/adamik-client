@@ -1,11 +1,6 @@
-import {
-  AminoSignResponse,
-  Keplr,
-  OfflineAminoSigner,
-  StdSignDoc
-} from "@keplr-wallet/types";
+import { AminoSignResponse, Keplr, OfflineAminoSigner, StdSignDoc } from "@keplr-wallet/types";
 import { Chain, IWallet } from "../types";
-import { mintscanUrl } from "../utils";
+import { mintscanUrl } from "../utils/utils";
 
 export class KeplrWallet implements IWallet {
   public name = "Keplr";
@@ -43,23 +38,15 @@ export class KeplrWallet implements IWallet {
   async getAddress(chainId: string): Promise<string> {
     const keplr = this.checkConnectivity(chainId);
 
-    this.offlineSigner = keplr.getOfflineSignerOnlyAmino(
-      this.adamikNameConverted[chainId]
-    );
+    this.offlineSigner = keplr.getOfflineSignerOnlyAmino(this.adamikNameConverted[chainId]);
     const accounts = await this.offlineSigner.getAccounts();
 
     return accounts[0].address;
   }
 
-  async signMessage(
-    chainId: string,
-    message: StdSignDoc
-  ): Promise<AminoSignResponse> {
+  async signMessage(chainId: string, message: StdSignDoc): Promise<AminoSignResponse> {
     const accounts = await this.offlineSigner!.getAccounts();
-    const signature = await this.offlineSigner!.signAmino(
-      accounts[0].address,
-      message
-    );
+    const signature = await this.offlineSigner!.signAmino(accounts[0].address, message);
 
     return signature;
   }

@@ -1,10 +1,6 @@
-import {
-  getEVMChains,
-  getEtherscanUrl,
-  getMetamaskConfig,
-} from "../config/ethereum";
-import { Chain, EVMChain, IWallet } from "../types";
 import detectEthereumProvider from "@metamask/detect-provider";
+import { getEVMChains, getEtherscanUrl, getMetamaskConfig } from "~/config/ethereum";
+import { Chain, EVMChain, IWallet } from "../types";
 
 export class Metamask implements IWallet {
   public name = "Metamask";
@@ -30,7 +26,7 @@ export class Metamask implements IWallet {
     const ethChainConfig = getMetamaskConfig(chainId as EVMChain);
 
     if (!ethChainConfig) {
-      throw new Error("Chain not configured in @lib/ethereum/config.ts");
+      throw new Error("Chain not configured in ~/config/ethereum.ts");
     }
 
     try {

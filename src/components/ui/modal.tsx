@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { useMediaQuery } from "usehooks-ts";
-import { Button } from "@/components/ui/button";
+import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "~/components/ui/dialog";
 import {
   Drawer,
   DrawerClose,
@@ -19,7 +19,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
+} from "~/components/ui/drawer";
 
 type ModalProps = {
   trigger?: React.ReactNode;
@@ -47,9 +47,7 @@ export function Modal({
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>{modalTitle}</DialogTitle>
-            {modalTitleDescription && (
-              <DialogDescription>{modalTitleDescription}</DialogDescription>
-            )}
+            {modalTitleDescription && <DialogDescription>{modalTitleDescription}</DialogDescription>}
           </DialogHeader>
           {modalContent}
         </DialogContent>
@@ -63,9 +61,7 @@ export function Modal({
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>{modalTitle}</DrawerTitle>
-          {modalTitleDescription && (
-            <DrawerDescription>{modalTitleDescription}</DrawerDescription>
-          )}
+          {modalTitleDescription && <DrawerDescription>{modalTitleDescription}</DrawerDescription>}
         </DrawerHeader>
         {modalContent}
         <DrawerFooter className="pt-2">

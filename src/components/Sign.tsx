@@ -1,16 +1,9 @@
 import { SquarePen } from "lucide-react";
 import { Button } from "./ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Textarea } from "./ui/textarea";
-import { IWallet, Transaction } from "@/lib/types";
+import { IWallet, Transaction } from "~/types";
 import { useCallback } from "react";
 import { getForm } from "./encode/EncodeForm";
 import { Label } from "./ui/label";
@@ -34,24 +27,14 @@ export const Sign: React.FC<SignProps> = ({
   setHash,
 }) => {
   const signWithWallet = useCallback(async () => {
-    const result = await wallet.signMessage(
-      transaction.chainId,
-      encodedTransaction
-    );
+    const result = await wallet.signMessage(transaction.chainId, encodedTransaction);
     if (wallet.withoutBroadcast === true) {
       setHash(wallet.getHashFromBroadcast(result));
     } else {
       setSignedTransaction(result);
     }
     setOpen(false);
-  }, [
-    wallet,
-    encodedTransaction,
-    setSignedTransaction,
-    setOpen,
-    setHash,
-    transaction,
-  ]);
+  }, [wallet, encodedTransaction, setSignedTransaction, setOpen, setHash, transaction]);
 
   const form = getForm([transaction.mode], transaction, () => {});
 
@@ -64,9 +47,7 @@ export const Sign: React.FC<SignProps> = ({
       <Card className="overflow-hidden">
         <CardHeader className="flex flex-row items-start bg-muted/50">
           <div className="grid gap-0.5">
-            <CardTitle className="group flex items-center gap-2 text-lg">
-              Information
-            </CardTitle>
+            <CardTitle className="group flex items-center gap-2 text-lg">Information</CardTitle>
             <CardDescription>
               Your transaction is now ready to be signed.
               <br />
@@ -84,10 +65,7 @@ export const Sign: React.FC<SignProps> = ({
                 form[transaction.mode].map(({ id, label, value }) => {
                   return (
                     <div key={`${id}-${transaction.mode}`}>
-                      <Label
-                        htmlFor={id}
-                        key={`${id}-${transaction.mode}-label`}
-                      >
+                      <Label htmlFor={id} key={`${id}-${transaction.mode}-label`}>
                         {label}
                       </Label>
                       <Input
@@ -143,12 +121,7 @@ export const Sign: React.FC<SignProps> = ({
           </CardContent>
         </TabsContent>
         <CardFooter className="flex flex-row items-center justify-end border-t bg-muted/50 px-6 py-3">
-          <Button
-            size="sm"
-            variant="outline"
-            className="h-8 gap-1"
-            onClick={() => signWithWallet()}
-          >
+          <Button size="sm" variant="outline" className="h-8 gap-1" onClick={() => signWithWallet()}>
             <SquarePen className="h-3.5 w-3.5" />
             <span className="">
               {`Sign ${wallet.withoutBroadcast === true ? "and broadcast" : ""} with ${wallet.name}`}
