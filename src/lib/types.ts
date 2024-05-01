@@ -1,4 +1,9 @@
-export type Chain = "cosmoshub" | "algorand" | "osmosis" | EVMChain;
+export type Chain =
+  | "cosmoshub"
+  | "algorand"
+  | "osmosis"
+  | "celestia"
+  | EVMChain;
 
 export type EVMChain =
   | "ethereum"

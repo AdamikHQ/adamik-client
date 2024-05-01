@@ -9,7 +9,7 @@ import { mintscanUrl } from "../utils";
 
 export class KeplrWallet implements IWallet {
   public name = "Keplr";
-  public supportedChains: Chain[] = ["cosmoshub"];
+  public supportedChains: Chain[] = ["cosmoshub", "celestia"];
   public icon = "/icons/Keplr.svg";
   public unit = 6; // TODO: Get from Adamik ?
   public signFormat = "json";
@@ -17,6 +17,7 @@ export class KeplrWallet implements IWallet {
   private adamikNameConverted: { [k: string]: string } = {
     cosmoshub: "cosmoshub-4",
     osmosis: "osmosis-1",
+    celestia: "celestia",
   };
   public withoutBroadcast: boolean = false;
 
@@ -34,6 +35,7 @@ export class KeplrWallet implements IWallet {
 
     await keplr.enable(this.adamikNameConverted[chainId]);
     const chains = await keplr.getChainInfosWithoutEndpoints();
+    console.log({chains});
     const chain = chains.find((chain) => {
       return chain.chainId === this.adamikNameConverted[chainId];
     });
