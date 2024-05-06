@@ -1,9 +1,9 @@
 "use client";
-import { Wallet } from "@/components/Wallet";
-import { WalletChoice } from "@/components/WalletChoice";
-import { Separator } from "@/components/ui/separator";
-import { useWallet } from "@/hooks/useWallet";
-import { cn } from "@/lib/utils";
+import { Wallet } from "~/components/Wallet";
+import { WalletChoice } from "~/components/WalletChoice";
+import { Separator } from "~/components/ui/separator";
+import { useWallet } from "~/hooks/useWallet";
+import { cn } from "~/utils/utils";
 
 export default function Home() {
   const { activeWallet } = useWallet();

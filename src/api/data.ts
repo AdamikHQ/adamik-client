@@ -1,4 +1,4 @@
-import { env } from "@/env";
+import { env } from "~/env";
 
 export const getData = async (chainId: string, address: string) => {
   const response = await fetch(`${env.NEXT_PUBLIC_ADAMIK_API_URL}/data/state`, {

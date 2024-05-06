@@ -15,7 +15,6 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_ADAMIK_API_URL: z.string().url(),
     NEXT_PUBLIC_ADAMIK_API_KEY: z.string().min(1),
-    NEXT_PUBLIC_DYNAMIC_ENV_KEY: z.string().min(1),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -26,6 +25,5 @@ export const env = createEnv({
   runtimeEnv: {
     NEXT_PUBLIC_ADAMIK_API_URL: process.env.NEXT_PUBLIC_ADAMIK_API_URL,
     NEXT_PUBLIC_ADAMIK_API_KEY: process.env.NEXT_PUBLIC_ADAMIK_API_KEY,
-    NEXT_PUBLIC_DYNAMIC_ENV_KEY: process.env.NEXT_PUBLIC_DYNAMIC_ENV_KEY,
   },
 });

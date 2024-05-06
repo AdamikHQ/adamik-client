@@ -1,18 +1,11 @@
 "use client";
 
-import { getEncode } from "@/api/getEncode";
-import { Chain, IWallet, Transaction } from "@/lib/types";
-import { amountToMainUnit, amountToSmallestUnit } from "@/lib/utils";
+import { getEncode } from "~/api/encode";
+import { Chain, IWallet, Transaction } from "~/types";
+import { amountToMainUnit, amountToSmallestUnit } from "~/utils/utils";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Label } from "../ui/label";
 import { Loading } from "../ui/loading";
 import { Textarea } from "../ui/textarea";
@@ -33,8 +26,7 @@ export const Encode: React.FC<EncodeProps> = ({
   wallet,
   setOpen,
 }) => {
-  const [transactionInputs, setTransactionInputs] =
-    useState<Transaction>(transactionToSign);
+  const [transactionInputs, setTransactionInputs] = useState<Transaction>(transactionToSign);
   const [result, setResult] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const getDataForm = useCallback(
@@ -49,27 +41,16 @@ export const Encode: React.FC<EncodeProps> = ({
           pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
           amount: transactionInputs.useMaxAmount
             ? undefined
-            : amountToSmallestUnit(
-                transactionInputs.amount as string,
-                wallet.unit
-              ), //FIXME: Unit conversion should be handled on server-side
+            : amountToSmallestUnit(transactionInputs.amount as string, wallet.unit), //FIXME: Unit conversion should be handled on server-side
         });
         const result = data.transaction;
         setResult(result);
         if (!(result.status.errors.length > 0)) {
           setEncodedTransaction(result.encoded);
-          const fees =
-            typeof result?.plain?.fees === "string"
-              ? result?.plain?.fees
-              : transactionInputs.fees;
-          const gas =
-            typeof result?.plain?.gas === "string"
-              ? result?.plain?.gas
-              : transactionInputs.gas;
+          const fees = typeof result?.plain?.fees === "string" ? result?.plain?.fees : transactionInputs.fees;
+          const gas = typeof result?.plain?.gas === "string" ? result?.plain?.gas : transactionInputs.gas;
           const amount =
-            typeof result?.plain?.amount === "string"
-              ? result?.plain?.amount
-              : transactionInputs.amount;
+            typeof result?.plain?.amount === "string" ? result?.plain?.amount : transactionInputs.amount;
           setTransactionToSign({
             ...transactionInputs,
             amount,
@@ -94,9 +75,7 @@ export const Encode: React.FC<EncodeProps> = ({
   useEffect(() => {
     setTransactionInputs({
       ...transactionToSign,
-      amount: transactionToSign.amount
-        ? amountToMainUnit(transactionToSign.amount, wallet.unit) || ""
-        : "",
+      amount: transactionToSign.amount ? amountToMainUnit(transactionToSign.amount, wallet.unit) || "" : "",
     });
     setResult(undefined);
     setIsLoading(false);
@@ -118,10 +97,7 @@ export const Encode: React.FC<EncodeProps> = ({
           </CardHeader>
           <CardContent>
             <div className="grid py-4">
-              <EncodeForm
-                setTransactionInputs={setTransactionInputs}
-                transactionInputs={transactionInputs}
-              />
+              <EncodeForm setTransactionInputs={setTransactionInputs} transactionInputs={transactionInputs} />
               {isLoading ? (
                 <Loading />
               ) : result && result.status.errors.length > 0 ? (

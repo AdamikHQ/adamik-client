@@ -1,10 +1,8 @@
-import { WalletContext } from "@/hooks/useWallet";
-import { IWallet } from "@/lib/types";
+import { WalletContext } from "~/hooks/useWallet";
+import { IWallet } from "~/types";
 import React, { useState } from "react";
 
-export const WalletProvider: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+export const WalletProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [wallets, setWallets] = useState<IWallet[]>([]);
   const [activeWallet, setActiveWallet] = useState<IWallet | null>(null);
 
@@ -16,11 +14,8 @@ export const WalletProvider: React.FC<React.PropsWithChildren> = ({
     setActiveWallet(wallet);
   };
 
-
   return (
-    <WalletContext.Provider
-      value={{ wallets, activeWallet, addWallet, setActiveWallet }}
-    >
+    <WalletContext.Provider value={{ wallets, activeWallet, addWallet, setActiveWallet }}>
       {children}
     </WalletContext.Provider>
   );

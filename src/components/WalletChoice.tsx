@@ -1,22 +1,16 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { useWallet } from "@/hooks/useWallet";
-import { KeplrWallet } from "@/lib/wallets/KeplrWallet";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import { useWallet } from "~/hooks/useWallet";
+import { KeplrWallet } from "~/wallets/KeplrWallet";
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { IWallet } from "@/lib/types";
-import { CosmostationWallet } from "@/lib/wallets/CosmostationWallet";
-import { cn } from "@/lib/utils";
-import { LeapWallet } from "@/lib/wallets/LeapWallet";
-import { PeraWallet } from "@/lib/wallets/PeraWallet";
-import { Metamask } from "@/lib/wallets/MetamaskWallet";
+import { IWallet } from "~/types";
+import { CosmostationWallet } from "~/wallets/CosmostationWallet";
+import { cn } from "~/utils/utils";
+import { LeapWallet } from "~/wallets/LeapWallet";
+import { PeraWallet } from "~/wallets/PeraWallet";
+import { Metamask } from "~/wallets/MetamaskWallet";
 
 const wallets = [
   {
@@ -73,9 +67,7 @@ export const WalletChoice = () => {
     <Card>
       <CardHeader>
         <CardTitle>Connect your wallet</CardTitle>
-        <CardDescription>
-          Choose a wallet to connect to the Adamik API.
-        </CardDescription>
+        <CardDescription>Choose a wallet to connect to the Adamik API.</CardDescription>
       </CardHeader>
       <CardContent className="flex items-center">
         {wallets.map((wallet) => {
@@ -84,20 +76,13 @@ export const WalletChoice = () => {
               variant="ghost"
               className={cn(
                 "opacity-50 hover:opacity-100",
-                activeWallet &&
-                  wallet.name === activeWallet.name &&
-                  "opacity-100"
+                activeWallet && wallet.name === activeWallet.name && "opacity-100"
               )}
               size="icon"
               onClick={wallet.connect.bind(null, setActiveWallet)}
               key={wallet.name}
             >
-              <Image
-                src={wallet.icon}
-                alt={wallet.name}
-                height={32}
-                width={32}
-              />
+              <Image src={wallet.icon} alt={wallet.name} height={32} width={32} />
             </Button>
           );
         })}

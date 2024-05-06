@@ -1,13 +1,8 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Chain, IWallet, Transaction } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { Button } from "~/components/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import { Separator } from "~/components/ui/separator";
+import { Chain, IWallet, Transaction } from "~/types";
+import { cn } from "~/utils/utils";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { Data } from "./Data";
@@ -79,7 +74,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
 
       setAddress(walletAddress);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -90,13 +85,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
           <Card className="col-span-2 md:col-span-4 py-4">
             <CardHeader className="pb-3">
               <CardTitle>
-                <Image
-                  src={wallet.icon}
-                  alt={wallet.name}
-                  width={24}
-                  height={24}
-                  className="inline-block"
-                />{" "}
+                <Image src={wallet.icon} alt={wallet.name} width={24} height={24} className="inline-block" />{" "}
                 - {wallet.name}
               </CardTitle>
               <CardDescription className="text-balance leading-relaxed">
@@ -119,10 +108,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
               </CardDescription>
             </CardHeader>
           </Card>
-          <Separator
-            orientation="horizontal"
-            className="col-span-2 md:col-span-4"
-          />
+          <Separator orientation="horizontal" className="col-span-2 md:col-span-4" />
           {address && (
             <>
               <div className="col-span-2 md:col-span-2">
@@ -150,11 +136,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
               )}
               {hash && (
                 <div className="col-span-2 md:col-span-4">
-                  <Result
-                    hash={hash}
-                    wallet={wallet}
-                    transaction={transactionToSign}
-                  />
+                  <Result hash={hash} wallet={wallet} transaction={transactionToSign} />
                 </div>
               )}
               <Modal

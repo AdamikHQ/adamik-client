@@ -3,7 +3,7 @@
 import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "~/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -11,17 +11,13 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+} from "~/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
+import { cn } from "~/utils/utils";
 
-import { getValidators } from "@/api/getValidators";
+import { getValidators } from "~/api/validators";
 import { useEffect, useState } from "react";
-import { Transaction } from "@/lib/types";
+import { Transaction } from "~/types";
 
 type ValidatorsProps = {
   chainId: string;
@@ -63,9 +59,7 @@ export const Validators: React.FC<ValidatorsProps> = ({
           className="w-[300px] justify-between flex"
         >
           {validatorAddress && validators
-            ? validators.find(
-                (validator) => validator.address === validatorAddress
-              )?.name
+            ? validators.find((validator) => validator.address === validatorAddress)?.name
             : "Select a validator..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -92,9 +86,7 @@ export const Validators: React.FC<ValidatorsProps> = ({
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        validatorAddress === validator.address
-                          ? "opacity-100"
-                          : "opacity-0"
+                        validatorAddress === validator.address ? "opacity-100" : "opacity-0"
                       )}
                     />
                     {validator.name}

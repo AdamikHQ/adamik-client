@@ -1,4 +1,4 @@
-import { IWallet } from "@/lib/types";
+import { IWallet } from "~/types";
 import React from "react";
 
 type WallerContextType = {
