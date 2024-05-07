@@ -38,7 +38,7 @@ export const Encode: React.FC<EncodeProps> = ({
           ...transactionInputs,
           chainId: transactionToSign.chainId,
           format: wallet.signFormat,
-          pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
+          //pubKey: (wallet.getPubkey && (await wallet.getPubkey(transactionToSign.chainId))) || undefined,
           amount: transactionInputs.useMaxAmount
             ? undefined
             : amountToSmallestUnit(transactionInputs.amount as string, wallet.unit), //FIXME: Unit conversion should be handled on server-side

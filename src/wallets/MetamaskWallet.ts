@@ -2,7 +2,7 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import { getEVMChains, getEtherscanUrl, getMetamaskConfig } from "~/config/ethereum";
 import { Chain, EVMChain, IWallet } from "../types";
 
-export class Metamask implements IWallet {
+export class MetamaskWallet implements IWallet {
   public name = "Metamask";
   public supportedChains: Chain[] = [...getEVMChains()];
   public icon = "/icons/Metamask.svg";

@@ -34,7 +34,7 @@ export const Broadcast: React.FC<BroadcastProps> = ({
       const broadcastResult = await broadcast({
         transaction: {
           ...transaction,
-          pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
+          pubKey: (wallet.getPubkey && (await wallet.getPubkey(transaction.chainId))) || undefined,
           amount: transaction.amount as string,
         },
         signature: wallet.extractSignature(signedTransaction),
