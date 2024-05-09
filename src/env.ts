@@ -3,11 +3,6 @@ import { z } from "zod";
 
 export const env = createEnv({
   /*
-   * Serverside Environment variables, not available on the client.
-   * Will throw if you access these variables on the client.
-   */
-  server: {},
-  /*
    * Environment variables available on the client (and server).
    *
    * 💡 You'll get type errors if these are not prefixed with NEXT_PUBLIC_.

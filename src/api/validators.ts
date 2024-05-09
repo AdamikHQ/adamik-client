@@ -18,7 +18,7 @@ const getValidatorsCall = async (chainId: string, offset?: number, limit?: numbe
   }
   const response = await fetch(url, {
     headers: {
-      "X-API-KEY": env.NEXT_PUBLIC_ADAMIK_API_KEY,
+      Authorization: env.NEXT_PUBLIC_ADAMIK_API_KEY,
       "Content-Type": "application/json",
     },
     method: "POST",
