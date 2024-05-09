@@ -3,7 +3,7 @@ import { env } from "~/env";
 export const getData = async (chainId: string, address: string) => {
   const response = await fetch(`${env.NEXT_PUBLIC_ADAMIK_API_URL}/data/state`, {
     headers: {
-      "X-API-KEY": env.NEXT_PUBLIC_ADAMIK_API_KEY,
+      Authorization: env.NEXT_PUBLIC_ADAMIK_API_KEY,
       "Content-Type": "application/json",
     },
     method: "POST",
