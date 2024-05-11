@@ -1,7 +1,7 @@
-import { env } from "~/env";
+import { env, ADAMIK_API_URL } from "~/env";
 
 export const getData = async (chainId: string, address: string) => {
-  const response = await fetch(`${env.NEXT_PUBLIC_ADAMIK_API_URL}/data/state`, {
+  const response = await fetch(`${ADAMIK_API_URL}/data/state`, {
     headers: {
       Authorization: env.NEXT_PUBLIC_ADAMIK_API_KEY,
       "Content-Type": "application/json",

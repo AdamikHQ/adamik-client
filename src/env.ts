@@ -1,14 +1,22 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
-export const env = createEnv({
+const ADAMIK_API_URL =
+  // Custom URL that can be defined in an env var, locally or in Vercel
+  process.env.NEXT_PUBLIC_ADAMIK_API_TEST_URL ||
+  // Prod URL when running in a Vercel deployment
+  (process.env.NEXT_PUBLIC_VERCEL_URL
+    ? `https://adamik.vercel.app/api`
+    : // localhost as a fallback
+      "http://localhost:3000/api");
+
+const env = createEnv({
   /*
    * Environment variables available on the client (and server).
    *
    * 💡 You'll get type errors if these are not prefixed with NEXT_PUBLIC_.
    */
   client: {
-    NEXT_PUBLIC_ADAMIK_API_URL: z.string().url(),
     NEXT_PUBLIC_ADAMIK_API_KEY: z.string().min(1),
   },
   /*
@@ -18,7 +26,8 @@ export const env = createEnv({
    * 💡 You'll get type errors if not all variables from `server` & `client` are included here.
    */
   runtimeEnv: {
-    NEXT_PUBLIC_ADAMIK_API_URL: process.env.NEXT_PUBLIC_ADAMIK_API_URL,
     NEXT_PUBLIC_ADAMIK_API_KEY: process.env.NEXT_PUBLIC_ADAMIK_API_KEY,
   },
 });
+
+export { env, ADAMIK_API_URL };
