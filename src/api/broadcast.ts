@@ -1,3 +1,5 @@
+"use server";
+
 import { env, ADAMIK_API_URL } from "~/env";
 import { Transaction } from "~/types";
 
@@ -9,7 +11,7 @@ type BroadcastArgs = {
 export const broadcast = async ({ transaction, signature, encodedTransaction }: BroadcastArgs) => {
   const response = await fetch(`${ADAMIK_API_URL}/transaction/broadcast`, {
     headers: {
-      Authorization: env.NEXT_PUBLIC_ADAMIK_API_KEY,
+      Authorization: env.ADAMIK_API_KEY,
       "Content-Type": "application/json",
     },
     method: "POST",

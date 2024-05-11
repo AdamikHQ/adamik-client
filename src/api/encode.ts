@@ -1,10 +1,12 @@
+"use server";
+
 import { env, ADAMIK_API_URL } from "~/env";
 import { Transaction } from "~/types";
 
 export const getEncode = async (plainTransaction: Transaction) => {
   const response = await fetch(`${ADAMIK_API_URL}/transaction/encode`, {
     headers: {
-      Authorization: env.NEXT_PUBLIC_ADAMIK_API_KEY,
+      Authorization: env.ADAMIK_API_KEY,
       "Content-Type": "application/json",
     },
     method: "POST",
