@@ -23,10 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn("min-h-screen bg-secondary font-sans antialiased", fontSans.variable)}>
+      <body className={cn("min-h-screen bg-secondary font-sans antialiased flex flex-col", fontSans.variable)}>
         <AppProviders>
           <SiteHeader />
-          <main className="mx-auto max-w-[59rem] flex-1 auto-rows-max gap-4 p-4 md:p-8">{children}</main>
+          <main className="flex-1 mx-auto max-w-[59rem] w-full flex flex-col auto-rows-max gap-4 p-4 md:p-8">
+            {children}
+          </main>
           <SiteFooter />
         </AppProviders>
       </body>
