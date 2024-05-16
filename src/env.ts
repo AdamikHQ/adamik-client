@@ -6,7 +6,7 @@ const ADAMIK_API_URL =
   process.env.NEXT_PUBLIC_ADAMIK_API_TEST_URL ||
   // Prod URL when running in a Vercel deployment
   (process.env.NEXT_PUBLIC_VERCEL_URL
-    ? `https://adamik.vercel.app/api`
+    ? `https://api.adamik.io/api`
     : // localhost as a fallback
       "http://localhost:3000/api");
 
