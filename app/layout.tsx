@@ -1,4 +1,5 @@
 import { SiteHeader } from "~/components/ui/site-header";
+import { SiteFooter } from "~/components/ui/site-footer";
 import { cn } from "~/utils/utils";
 import { AppProviders } from "~/providers";
 import type { Metadata } from "next";
@@ -26,6 +27,7 @@ export default function RootLayout({
         <AppProviders>
           <SiteHeader />
           <main className="mx-auto max-w-[59rem] flex-1 auto-rows-max gap-4 p-4 md:p-8">{children}</main>
+          <SiteFooter />
         </AppProviders>
       </body>
     </html>
