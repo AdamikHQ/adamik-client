@@ -3,7 +3,7 @@ import { FiBookOpen } from "react-icons/fi";
 
 export function SiteFooter() {
   return (
-    <footer className="flex justify-center items-center py-4 bg-background text-foreground border-t border-border">
+    <footer className="flex justify-center items-center py-4 bg-transparent text-foreground border-t border-border">
       <div className="flex space-x-4">
         <a
           href="https://github.com/AdamikHQ/adamik-client"
