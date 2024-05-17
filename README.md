@@ -3,6 +3,13 @@
 The Adamik-Client application is a boilerplate implementation of the main Adamik API endpoints. It serves as a starting point for developers looking to integrate with the Adamik API, providing essential functionalities and example usages of the API. 
 As a truly open-source project licensed under the MIT License, Adamik-Client encourages community contributions and collaboration to enhance and expand its capabilities.
 
+### Useful links
+- [Adamik website](https://adamik.io)
+- [Adamik Developer Documentation](https://docs.adamik.io)
+- [Adamik Application Demo](https://app.adamik.io)
+
+
+
 The Adamik-Client application is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 
@@ -16,11 +23,6 @@ The Adamik-Client application is a [Next.js](https://nextjs.org/) project bootst
 - [Deploy on Vercel](#deploy-on-vercel)
 - [Contributing](#contributing)
 - [License](#license)
-
-## Useful links
-- [Adamik website](https://adamik.io)
-- [Adamik Developer Documentation](https://docs.adamik.io)
-- [Adamik Application Demo](https://app.adamik.io)
 
 ## Getting Started
 
