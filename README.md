@@ -8,14 +8,8 @@ As a truly open-source project licensed under the MIT License, Adamik-Client enc
 - [Adamik Developer Documentation](https://docs.adamik.io)
 - [Adamik Application Demo](https://app.adamik.io)
 
-
-
-The Adamik-Client application is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-
 ## Table of Contents
 
-- [Useful links](#useful-links)
 - [Getting Started](#getting-started)
 - [Project Structure](#project-structure)
 - [Available Scripts](#available-scripts)
@@ -25,6 +19,8 @@ The Adamik-Client application is a [Next.js](https://nextjs.org/) project bootst
 - [License](#license)
 
 ## Getting Started
+
+The Adamik-Client application is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 To get a local copy up and running, follow these simple steps.
 
