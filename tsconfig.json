@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
+    "allowJs": false,
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "es2020"
     ],
     "skipLibCheck": true,
     "strict": true,
@@ -11,7 +12,7 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "esModuleInterop": true,
-    "module": "esnext",
+    "module": "es2020",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -29,8 +30,7 @@
       "~/*": [
         "./src/*"
       ]
-    },
-    "allowJs": true
+    }
   },
   "include": [
     "next-env.d.ts",
