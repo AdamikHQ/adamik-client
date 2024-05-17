@@ -7,13 +7,13 @@ As a truly open-source project licensed under the MIT License, Adamik-Client enc
 - [Adamik website](https://adamik.io)
 - [Adamik Developer Documentation](https://docs.adamik.io)
 - [Adamik Application Demo](https://app.adamik.io)
+- [Discord](https://discord.com/invite/gsZJR2JfMR) 
 
 ## Table of Contents
 
 - [Getting Started](#getting-started)
 - [Project Structure](#project-structure)
 - [Available Scripts](#available-scripts)
-- [Learn More](#learn-more)
 - [Deploy on Vercel](#deploy-on-vercel)
 - [Contributing](#contributing)
 - [License](#license)
@@ -93,14 +93,6 @@ In the project directory, you can run:
 - `npm start` - Runs the built app in production mode.
 - `npm run lint` - Runs the linter to check for code issues.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - An interactive Next.js tutorial.
-
-You can check out the [Next.js GitHub repository](https://github.com/vercel/next.js/) - Your feedback and contributions are welcome!
 
 ## Deploy on Vercel
 
@@ -110,7 +102,8 @@ Check out the [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## Contributing
 
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Any contributions you make to the Adamik App are **greatly appreciated**.
+Feel free to also contact us through [Discord](https://discord.com/invite/gsZJR2JfMR) to report bugs or express feature requests.
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
