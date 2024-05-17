@@ -8,7 +8,7 @@ The Adamik-Client application is a [Next.js](https://nextjs.org/) project bootst
 
 ## Table of Contents
 
-- [Useful links](#useful links)
+- [Useful links](#useful-links)
 - [Getting Started](#getting-started)
 - [Project Structure](#project-structure)
 - [Available Scripts](#available-scripts)
