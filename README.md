@@ -29,7 +29,7 @@ To get a local copy up and running, follow these simple steps.
 Make sure you have the following installed on your development machine:
 
 - [Node.js](https://nodejs.org/en/)
-- npm (comes with Node.js) or [Yarn](https://yarnpkg.com/) or [pnpm](https://pnpm.io/) or [bun](https://bun.sh/)
+- [pnpm](https://pnpm.io/)
 
 ### Installation
 
@@ -43,13 +43,7 @@ Make sure you have the following installed on your development machine:
 
     ```bash
     cd adamik-client
-    npm install
-    # or
-    yarn install
-    # or
     pnpm install
-    # or
-    bun install
     ```
 
 ### Running the Development Server
@@ -57,20 +51,13 @@ Make sure you have the following installed on your development machine:
 First, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
 ## Project Structure
 
@@ -83,22 +70,6 @@ A brief description of the project's structure:
   - **/public**: Static files
 - **/styles**: CSS and styling files
 - **/utils**: Utility functions
-
-## Available Scripts
-
-In the project directory, you can run:
-
-- `npm run dev` - Runs the app in development mode.
-- `npm run build` - Builds the app for production.
-- `npm start` - Runs the built app in production mode.
-- `npm run lint` - Runs the linter to check for code issues.
-
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## Contributing
 
