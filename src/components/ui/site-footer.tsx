@@ -5,7 +5,7 @@ export function SiteFooter() {
   return (
     <footer className="flex flex-col items-center py-4 bg-transparent text-foreground border-t border-border">
       <p className="mb-4 text-center">
-        The Adamik Demo Application is open source. Fork it and get started in minutes.
+      Explore the open-source Adamik Demo Application and start building in minutes.
       </p>
       <div className="flex space-x-4">
         <a
