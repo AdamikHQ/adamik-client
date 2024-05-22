@@ -1,11 +1,11 @@
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaDiscord } from "react-icons/fa";
 import { FiBookOpen } from "react-icons/fi";
 
 export function SiteFooter() {
   return (
     <footer className="flex flex-col items-center py-4 bg-transparent text-foreground border-t border-border">
       <p className="mb-4 text-center">
-      Explore the open-source Adamik Demo Application and start building in minutes.
+        Explore the open-source Adamik Demo Application and start building in minutes.
       </p>
       <div className="flex space-x-4">
         <a
@@ -25,6 +25,15 @@ export function SiteFooter() {
         >
           <FiBookOpen size={20} />
           <span>Documentation</span>
+        </a>
+        <a
+          href="https://discord.com/invite/gsZJR2JfMR"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center space-x-2 hover:text-primary"
+        >
+          <FaDiscord size={20} />
+          <span>Support</span>
         </a>
       </div>
     </footer>
