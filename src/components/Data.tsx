@@ -58,8 +58,8 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
                 <div>
                   <Label htmlFor="name">Result</Label>
                   <Textarea
-                    className="border text-xs p-2 rounded-md"
-                    value={JSON.stringify(result)}
+                    className="border text-xs p-2 rounded-md h-fit"
+                    value={JSON.stringify(result, null, 2)}
                     readOnly={true}
                   />
                 </div>
