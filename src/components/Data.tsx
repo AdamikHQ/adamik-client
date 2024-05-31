@@ -11,6 +11,7 @@ import { Loading } from "./ui/loading";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs"; // Import the Tabs components
+import { Tooltip } from "./ui/tooltip"; // Import the Tooltip component
 
 type DataProps = { address: string; chainId: string };
 
@@ -69,9 +70,9 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
     <Card className="w-full">
       <CardHeader className="flex flex-row items-start bg-muted/80">
         <div className="flex-1 grid gap-0.5">
-          <CardTitle className="group flex items-center gap-2 text-lg">Adamik - Get Data</CardTitle>
+          <CardTitle className="group flex items-center gap-2 text-lg">Account Overview</CardTitle>
           <CardDescription>
-            <span className="font-light">/data/state</span>
+            <span className="font-light"> Data retrieved from Adamik Read API</span>
           </CardDescription>
         </div>
       </CardHeader>
@@ -110,19 +111,46 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
 
               <TabsContent value="developerMode">
                 <div className="mt-4">
-                  <Label htmlFor="name">Chain Details JSON</Label>
+                  <div className="flex items-center">
+                    <Label htmlFor="name">Chain Details JSON</Label>
+                    <Tooltip text="Click to view the API documentation for retrieving chain details">
+                      <a href="https://docs.adamik.io/api-reference/endpoint/get-apichains-chainid" target="_blank" rel="noopener noreferrer">
+                        <svg className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9 2a7 7 0 100 14A7 7 0 009 2zM8 10V7h2v3H8zm0 4v-2h2v2H8z" />
+                        </svg>
+                      </a>
+                    </Tooltip>
+                  </div>
                   <Textarea
                     className="border text-xs p-2 rounded-md h-fit"
                     value={JSON.stringify(chainDetails, null, 2)}
                     readOnly={true}
                   />
-                  <Label htmlFor="name" className="mt-4">Data State JSON</Label>
+                  <div className="flex items-center mt-4">
+                    <Label htmlFor="name">Data State JSON</Label>
+                    <Tooltip text="Click to view the API documentation for data state endpoint">
+                      <a href="https://docs.adamik.io/api-reference/endpoint/post-apidatastate" target="_blank" rel="noopener noreferrer">
+                        <svg className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9 2a7 7 0 100 14A7 7 0 009 2zM8 10V7h2v3H8zm0 4v-2h2v2H8z" />
+                        </svg>
+                      </a>
+                    </Tooltip>
+                  </div>
                   <Textarea
                     className="border text-xs p-2 rounded-md h-fit"
                     value={JSON.stringify(result, null, 2)}
                     readOnly={true}
                   />
-                  <Label htmlFor="name" className="mt-4">Token Details JSON</Label>
+                  <div className="flex items-center mt-4">
+                    <Label htmlFor="name">Token Details JSON</Label>
+                    <Tooltip text="Click to view the API documentation for token information endpoint">
+                      <a href="https://docs.adamik.io/api-reference/endpoint/get-apichains-chainid-token-tokenid" target="_blank" rel="noopener noreferrer">
+                        <svg className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9 2a7 7 0 100 14A7 7 0 009 2zM8 10V7h2v3H8zm0 4v-2h2v2H8z" />
+                        </svg>
+                      </a>
+                    </Tooltip>
+                  </div>
                   <Textarea
                     className="border text-xs p-2 rounded-md h-fit"
                     value={JSON.stringify(tokenDetails, null, 2)}

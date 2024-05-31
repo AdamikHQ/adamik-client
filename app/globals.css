@@ -83,3 +83,27 @@
     background-position: center;
   }
 }
+
+.tooltip-content {
+  pointer-events: none;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 4px 8px;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  visibility: hidden;
+}
+
+.relative:hover .tooltip-content {
+  opacity: 1;
+  visibility: visible;
+}
