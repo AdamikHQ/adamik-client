@@ -26,11 +26,18 @@ export function mintscanUrl(chainId: string, hash: string): string {
   return `https://www.mintscan.io/${chainId}/txs/${hash}`;
 }
 
-export function getChainMode(chainId: Chain): Mode[] {
+// FIXME: API could provide supported modes for a given chain
+export function getChainModes(chainId: Chain): Mode[] {
   switch (chainId) {
     case "cosmoshub":
     case "osmosis":
       return ["transfer", "delegate"];
+    case "algorand":
+    case "ethereum":
+    case "sepolia":
+    case "holesky":
+      return ["transfer", "transferToken"];
+    default:
+      return ["transfer"];
   }
-  return ["transfer"];
 }

@@ -1,13 +1,21 @@
 "use client";
 
-import { DelegateTransaction, Mode, Transaction, TransferTransaction } from "~/types";
+import {
+  DelegateTransaction,
+  Mode,
+  TokenTransferTransaction,
+  Transaction,
+  TransferTransaction,
+} from "~/types";
 import React, { ChangeEvent, FormEventHandler, useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { getChainMode } from "~/utils/utils";
+import { getChainModes } from "~/utils/utils";
 import { Validators } from "../Validators";
 import { Checkbox } from "../ui/checkbox";
+import { Tokens } from "../Tokens";
+import { getData } from "~/api/data";
 
 type FormInputCommon = {
   id: string;
@@ -34,7 +42,13 @@ type FormInputValidator = FormInputCommon & {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
-type FormInput = FormInputText | FormInputCheckbox | FormInputValidator;
+type FormInputToken = FormInputCommon & {
+  type: "token";
+  onCheck?: undefined;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+};
+
+type FormInput = FormInputText | FormInputCheckbox | FormInputValidator | FormInputToken;
 
 export const getForm = (
   mode: Mode[],
@@ -64,6 +78,84 @@ export const getForm = (
           setTransactionInputs({
             ...transactionInputs,
             mode: "transfer",
+            recipients: [e.target.value],
+          });
+        },
+      },
+      {
+        id: "amount",
+        label: "Amount",
+        type: "text",
+        value: transactionInputs.amount ?? "0",
+        disabled: transactionInputs.useMaxAmount === true,
+        onChange: (e) => {
+          setTransactionInputs({
+            ...transactionInputs,
+            amount: e.target.value,
+          });
+        },
+      },
+      {
+        id: "sendMax",
+        label: "Send Max",
+        type: "checkbox",
+        value: transactionInputs.useMaxAmount,
+        onCheck: (value) => {
+          setTransactionInputs({
+            ...transactionInputs,
+            useMaxAmount: !value,
+          });
+        },
+      },
+      {
+        id: "memo",
+        label: "Memo",
+        type: "text",
+        value: transactionInputs.memo ?? "",
+        onChange: (e) => {
+          setTransactionInputs({
+            ...transactionInputs,
+            memo: e.target.value,
+          });
+        },
+      },
+    ],
+    transferToken: [
+      {
+        id: "token",
+        label: "Token",
+        type: "token",
+        value: (transactionInputs as TokenTransferTransaction).tokenId ?? "",
+        onChange: (e) => {
+          setTransactionInputs({
+            ...transactionInputs,
+            mode: "transferToken",
+            tokenId: e.target.value,
+          } as TokenTransferTransaction);
+        },
+      },
+      {
+        id: "senders",
+        label: "Sender",
+        type: "text",
+        value: transactionInputs.senders[0] ?? "",
+        onChange: (e) => {
+          setTransactionInputs({
+            ...transactionInputs,
+            senders: [e.target.value],
+          });
+        },
+      },
+      {
+        id: "recipients",
+        label: "Recipient",
+        type: "text",
+        value: (transactionInputs as TokenTransferTransaction).recipients[0] ?? "",
+        onChange: (e) => {
+          setTransactionInputs({
+            ...transactionInputs,
+            mode: "transferToken",
+            tokenId: (transactionInputs as TokenTransferTransaction).tokenId,
             recipients: [e.target.value],
           });
         },
@@ -158,28 +250,27 @@ type EncodeFormProps = {
   transactionInputs: Transaction;
   setTransactionInputs: React.Dispatch<React.SetStateAction<Transaction>>;
 };
+
 export const EncodeForm: React.FC<EncodeFormProps> = ({ transactionInputs, setTransactionInputs }) => {
   // FIXME: Chain Details need to contains mode. atm do it manually
-  const form = getForm(getChainMode(transactionInputs.chainId), transactionInputs, setTransactionInputs);
+  const form = getForm(getChainModes(transactionInputs.chainId), transactionInputs, setTransactionInputs);
   const [mode, setMode] = useState<Mode>("transfer");
+  const [tokenIds, setTokenIds] = useState<string[]>([]);
 
   useEffect(() => {
+    const getTokenIds = async () => {
+      const state = await getData(transactionInputs.chainId, transactionInputs.senders[0]);
+
+      const tokenIds = state?.balances?.tokens?.map((tokenAmount: any) => tokenAmount.tokenId);
+      setTokenIds(tokenIds || []);
+    };
+
     setMode("transfer");
-  }, [transactionInputs.chainId]);
+    getTokenIds();
+  }, [transactionInputs.chainId, transactionInputs.senders]);
 
   const renderSwitch = ({ type, id, label, value, onChange, onCheck, disabled }: FormInput) => {
     switch (type) {
-      case "validator":
-        if (transactionInputs.mode === "delegate") {
-          return (
-            <Validators
-              key={id}
-              chainId={transactionInputs.chainId}
-              setTransactionInputs={setTransactionInputs}
-              validatorAddress={transactionInputs.validator}
-            />
-          );
-        }
       case "checkbox":
         return (
           <Checkbox
@@ -192,6 +283,29 @@ export const EncodeForm: React.FC<EncodeFormProps> = ({ transactionInputs, setTr
             }}
           />
         );
+      case "token":
+        if (transactionInputs.mode === "transferToken") {
+          return (
+            <Tokens
+              key={id}
+              chainId={transactionInputs.chainId}
+              tokenIds={tokenIds}
+              selectedTokenId={transactionInputs.tokenId}
+              setTransactionInputs={setTransactionInputs}
+            />
+          );
+        }
+      case "validator":
+        if (transactionInputs.mode === "delegate") {
+          return (
+            <Validators
+              key={id}
+              chainId={transactionInputs.chainId}
+              setTransactionInputs={setTransactionInputs}
+              validatorAddress={transactionInputs.validator}
+            />
+          );
+        }
       case "text":
       default:
         return (
@@ -222,6 +336,13 @@ export const EncodeForm: React.FC<EncodeFormProps> = ({ transactionInputs, setTr
             setTransactionInputs({
               ...transactionInputs,
               mode: "transfer",
+              recipients: [],
+            });
+          } else if (value === "transferToken") {
+            setTransactionInputs({
+              ...transactionInputs,
+              mode: "transferToken",
+              tokenId: "",
               recipients: [],
             });
           } else if (value === "delegate") {

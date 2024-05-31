@@ -1,7 +1,7 @@
 "use client";
 
 import { getEncode } from "~/api/encode";
-import { Chain, IWallet, Transaction } from "~/types";
+import { IWallet, Transaction } from "~/types";
 import { amountToMainUnit, amountToSmallestUnit } from "~/utils/utils";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";

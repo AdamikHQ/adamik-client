@@ -14,10 +14,11 @@ export type EVMChain =
   | "arbitrum"
   | "arbitrum-sepolia";
 
-export type Mode = "transfer" | "delegate";
+export type Mode = "transfer" | "transferToken" | "delegate";
 
 type TransactionCommon = {
   mode: Mode;
+  senders: string[];
   useMaxAmount: boolean;
   chainId: Chain;
   fees?: string;
@@ -28,22 +29,23 @@ type TransactionCommon = {
   memo?: string;
 };
 
-export type TransferTransaction = {
+export type TransferTransaction = TransactionCommon & {
   mode: "transfer";
-  chainId: string;
-  senders: string[];
   recipients: string[];
 };
 
-export type DelegateTransaction = {
+export type TokenTransferTransaction = TransactionCommon & {
+  mode: "transferToken";
+  tokenId: string;
+  recipients: string[];
+};
+
+export type DelegateTransaction = TransactionCommon & {
   mode: "delegate";
-  chainId: string;
-  senders: string[];
   validator: string;
 };
 
-export type Transaction = TransactionCommon &
-  (TransferTransaction | DelegateTransaction);
+export type Transaction = TransferTransaction | TokenTransferTransaction | DelegateTransaction;
 
 // TODO refactor this to be more generic without any
 export interface IWallet<T = any, R = any, B = any> {

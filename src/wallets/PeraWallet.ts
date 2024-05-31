@@ -45,9 +45,7 @@ export class PeraWallet implements IWallet {
         [
           {
             // FIXME: The app shouldn't have to use a chain SDK, we could provide an Adamik SDK instead
-            txn: algosdk.decodeUnsignedTransaction(
-              new Uint8Array(Buffer.from(payload, "hex"))
-            ),
+            txn: algosdk.decodeUnsignedTransaction(new Uint8Array(Buffer.from(payload, "hex"))),
           },
         ],
       ]);
@@ -60,7 +58,7 @@ export class PeraWallet implements IWallet {
   }
 
   getExplorerUrl(chainId: string, hash: string): string {
-    return `https://algoexplorer.io/tx/${hash}`;
+    return `https://explorer.perawallet.app/tx/${hash}`;
   }
 
   getHashFromBroadcast(broadcast: { hash: string }): string {
