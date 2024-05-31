@@ -91,7 +91,7 @@ export const Encode: React.FC<EncodeProps> = ({
                Perform a Transaction
               </CardTitle>
               <CardDescription>
-                <span className="font-light">Use the Adamik Write API to prepare a transaction</span>
+                <span className="font-light">Transaction prepared using the Adamik Write API</span>
               </CardDescription>
             </div>
           </CardHeader>
