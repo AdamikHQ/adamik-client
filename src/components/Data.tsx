@@ -123,6 +123,9 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
                       value={JSON.stringify(tokenDetails, null, 2)}
                       readOnly={true}
                     />
+                <Button onClick={fetchData} className="mt-4">
+                  Refresh Data
+                </Button>
                   </div>
                 )}
               </div>
