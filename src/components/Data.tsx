@@ -12,6 +12,7 @@ import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs"; // Import the Tabs components
 import { Tooltip } from "./ui/tooltip"; // Import the Tooltip component
+import { amountToMainUnit } from "~/utils/utils"; // Import amountToMainUnit function
 
 type DataProps = { address: string; chainId: string };
 
@@ -62,8 +63,7 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
   }, [address]);
 
   const formatBalance = (balance: string, decimals: number) => {
-    const balanceInUnits = parseFloat(balance) / Math.pow(10, decimals);
-    return balanceInUnits.toFixed(decimals).replace(/\.?0+$/, '');
+    return amountToMainUnit(balance, decimals);
   };
 
   return (
@@ -77,7 +77,7 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
         </div>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="userMode">
+        <Tabs className="mt-4" defaultValue="userMode">
           <TabsList>
             <TabsTrigger value="userMode">User Mode</TabsTrigger>
             <TabsTrigger value="developerMode">Developer Mode</TabsTrigger>
