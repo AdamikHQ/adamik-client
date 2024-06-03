@@ -88,10 +88,10 @@ export const Encode: React.FC<EncodeProps> = ({
           <CardHeader className="flex flex-row items-start bg-muted/80">
             <div className="grid gap-0.5">
               <CardTitle className="group flex items-center gap-2 text-lg">
-                Adamik - Transaction Encoder
+               Perform a Transaction
               </CardTitle>
               <CardDescription>
-                <span className="font-light">/transaction/encode</span>
+                <span className="font-light">Transaction prepared using the Adamik Write API</span>
               </CardDescription>
             </div>
           </CardHeader>
