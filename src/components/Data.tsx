@@ -5,7 +5,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { getData } from "~/api/data";
 import { getChainDetails } from "~/api/chainDetails"; // Import the function
-import { getTokenInfo } from "~/api/TokenDetails"; // Import the TokenInfo function
+import { getToken } from "~/api/token"; // Import the TokenInfo function
 import React, { useEffect, useState, useCallback } from "react";
 import { Loading } from "./ui/loading";
 import { Textarea } from "./ui/textarea";
@@ -33,7 +33,7 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
       // Fetch token details
       if (data?.balances?.tokens) {
         const tokenDetailsPromises = data.balances.tokens.map(async (token: any) => {
-          const tokenInfo = await getTokenInfo(chainId, token.tokenId);
+          const tokenInfo = await getToken(chainId, token.tokenId);
           return { ...token, ...tokenInfo };
         });
         const tokens = await Promise.all(tokenDetailsPromises);
