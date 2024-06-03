@@ -13,6 +13,8 @@ import { Button } from "./ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs"; // Import the Tabs components
 import { Tooltip } from "./ui/tooltip"; // Import the Tooltip component
 import { amountToMainUnit } from "~/utils/utils"; // Import amountToMainUnit function
+import { Info } from "lucide-react"; // Import icon for tooltip
+
 
 type DataProps = { address: string; chainId: string };
 
@@ -115,9 +117,7 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
                     <Label htmlFor="name">Chain Details JSON</Label>
                     <Tooltip text="Click to view the API documentation for retrieving chain details">
                       <a href="https://docs.adamik.io/api-reference/endpoint/get-apichains-chainid" target="_blank" rel="noopener noreferrer">
-                        <svg className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9 2a7 7 0 100 14A7 7 0 009 2zM8 10V7h2v3H8zm0 4v-2h2v2H8z" />
-                        </svg>
+                      <Info className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" />
                       </a>
                     </Tooltip>
                   </div>
@@ -130,9 +130,7 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
                     <Label htmlFor="name">Data State JSON</Label>
                     <Tooltip text="Click to view the API documentation for data state endpoint">
                       <a href="https://docs.adamik.io/api-reference/endpoint/post-apidatastate" target="_blank" rel="noopener noreferrer">
-                        <svg className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9 2a7 7 0 100 14A7 7 0 009 2zM8 10V7h2v3H8zm0 4v-2h2v2H8z" />
-                        </svg>
+                      <Info className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" />
                       </a>
                     </Tooltip>
                   </div>
@@ -145,9 +143,7 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
                     <Label htmlFor="name">Token Details JSON</Label>
                     <Tooltip text="Click to view the API documentation for token information endpoint">
                       <a href="https://docs.adamik.io/api-reference/endpoint/get-apichains-chainid-token-tokenid" target="_blank" rel="noopener noreferrer">
-                        <svg className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9 2a7 7 0 100 14A7 7 0 009 2zM8 10V7h2v3H8zm0 4v-2h2v2H8z" />
-                        </svg>
+                      <Info className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" />
                       </a>
                     </Tooltip>
                   </div>
