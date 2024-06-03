@@ -42,10 +42,9 @@ export type DelegateTransaction = {
   validator: string;
 };
 
-export type Transaction = TransactionCommon &
-  (TransferTransaction | DelegateTransaction);
+export type Transaction = TransactionCommon & (TransferTransaction | DelegateTransaction);
 
-// TODO refactor this to be more generic without any
+// FIXME refactor this to be more generic without any
 export interface IWallet<T = any, R = any, B = any> {
   name: string;
   supportedChains: Chain[];
@@ -57,7 +56,7 @@ export interface IWallet<T = any, R = any, B = any> {
   getAddress: (chainId: string) => Promise<string>;
   signMessage: (chainId: string, payload: T) => Promise<R>;
   extractSignature: (signature: R) => string;
-  getPubkey?: () => Promise<string>;
-  getExplorerUrl: (chainId: Chain, hash: string) => string;
+  getPubkey?: (chainId: string) => Promise<string>;
+  getExplorerUrl: (chainId: Chain, hash: string) => string; // FIXME explorer URL is per chain not per wallet
   getHashFromBroadcast: (broadcast: B) => string;
 }

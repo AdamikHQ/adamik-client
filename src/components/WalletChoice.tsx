@@ -10,14 +10,15 @@ import { CosmostationWallet } from "~/wallets/CosmostationWallet";
 import { cn } from "~/utils/utils";
 import { LeapWallet } from "~/wallets/LeapWallet";
 import { PeraWallet } from "~/wallets/PeraWallet";
-import { Metamask } from "~/wallets/MetamaskWallet";
+import { MetamaskWallet } from "~/wallets/MetamaskWallet";
+import { LedgerWallet } from "~/wallets/LedgerWallet";
 
-const wallets = [
+const WALLETS = [
   {
     name: "Metamask",
     icon: "/icons/Metamask.svg",
     connect: async (setActiveWallet: (wallet: IWallet) => void) => {
-      const metamaskWallet = new Metamask();
+      const metamaskWallet = new MetamaskWallet();
       await metamaskWallet.connect(metamaskWallet.supportedChains[0]);
       setActiveWallet(metamaskWallet);
     },
@@ -58,6 +59,15 @@ const wallets = [
       setActiveWallet(peraWallet);
     },
   },
+  {
+    name: "Ledger",
+    icon: "/icons/Ledger.svg",
+    connect: async (setActiveWallet: (wallet: IWallet) => void) => {
+      const ledgerWallet = new LedgerWallet();
+      await ledgerWallet.connect();
+      setActiveWallet(ledgerWallet);
+    },
+  },
 ];
 
 export const WalletChoice = () => {
@@ -70,7 +80,7 @@ export const WalletChoice = () => {
         <CardDescription>Choose a wallet to connect to the Adamik API.</CardDescription>
       </CardHeader>
       <CardContent className="flex items-center">
-        {wallets.map((wallet) => {
+        {WALLETS.map((wallet) => {
           return (
             <Button
               variant="ghost"
