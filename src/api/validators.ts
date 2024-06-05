@@ -35,6 +35,7 @@ const getValidatorsCall = async (chainId: string, offset?: number, limit?: numbe
   }
 };
 
+// TODO Missing return type
 export const getValidators = async (chainId: string, offset?: number, limit?: number) => {
   const cacheValidators = cache.get(`validators-${chainId}-${offset}-${limit}`);
 

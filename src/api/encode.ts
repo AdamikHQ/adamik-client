@@ -3,6 +3,7 @@
 import { env, ADAMIK_API_URL } from "~/env";
 import { Transaction } from "~/types";
 
+// TODO Missing return type
 export const getEncode = async (plainTransaction: Transaction) => {
   const response = await fetch(`${ADAMIK_API_URL}/transaction/encode`, {
     headers: {

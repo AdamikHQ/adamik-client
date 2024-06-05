@@ -8,6 +8,7 @@ type BroadcastArgs = {
   signature: string;
   encodedTransaction?: string;
 };
+// TODO Missing return type
 export const broadcast = async ({ transaction, signature, encodedTransaction }: BroadcastArgs) => {
   const response = await fetch(`${ADAMIK_API_URL}/transaction/broadcast`, {
     headers: {
