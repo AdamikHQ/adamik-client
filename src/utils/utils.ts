@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 // Helpers to convert from/to user-convenient format in main unit, and smallest unit of the chain
 // FIXME Magnitude could be a server-side concern (+1)
-// --> https://adamik.atlassian.net/browse/ADV-131
+// https://adamik.atlassian.net/browse/ADV-131
 export function amountToSmallestUnit(amount: string, decimals: number): string {
   const computedAmount = parseFloat(amount) * Math.pow(10, decimals);
   return computedAmount.toString();
@@ -28,6 +28,7 @@ export function mintscanUrl(chainId: string, hash: string): string {
 }
 
 // FIXME: API could provide supported modes for a given chain
+// https://adamik.atlassian.net/browse/ADV-151
 export function getChainModes(chainId: Chain): Mode[] {
   switch (chainId) {
     case "cosmoshub":
