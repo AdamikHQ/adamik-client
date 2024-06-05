@@ -335,8 +335,11 @@ export const EncodeForm: React.FC<EncodeFormProps> = ({ transactionInputs, setTr
           if (value === "transfer") {
             setTransactionInputs({
               ...transactionInputs,
+              // @ts-ignore
               mode: "transfer",
               recipients: [],
+              tokenId: "",
+              validator: "",
             });
           } else if (value === "transferToken") {
             setTransactionInputs({

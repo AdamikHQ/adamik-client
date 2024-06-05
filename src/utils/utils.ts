@@ -8,6 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 // Helpers to convert from/to user-convenient format in main unit, and smallest unit of the chain
 // FIXME Magnitude could be a server-side concern (+1)
+// --> https://adamik.atlassian.net/browse/ADV-131
 export function amountToSmallestUnit(amount: string, decimals: number): string {
   const computedAmount = parseFloat(amount) * Math.pow(10, decimals);
   return computedAmount.toString();
@@ -36,6 +37,15 @@ export function getChainModes(chainId: Chain): Mode[] {
     case "ethereum":
     case "sepolia":
     case "holesky":
+    case "zksync":
+    case "zksync-sepolia":
+    case "injective-testnet":
+    case "base":
+    case "base-sepolia":
+    case "optimism":
+    case "optimism-sepolia":
+    case "arbitrum":
+    case "arbitrum-sepolia":
       return ["transfer", "transferToken"];
     default:
       return ["transfer"];
