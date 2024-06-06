@@ -12,8 +12,9 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "Adamik App",
-  description: "Adamik App showcasing Adamik API",
+  title: "Adamik Application",
+  description: "See all your assets in a single application leveraging the Adamik API",
+  
 };
 
 export default function RootLayout({
