@@ -15,13 +15,16 @@ import { Tooltip } from "./ui/tooltip"; // Import the Tooltip component
 import { amountToMainUnit } from "~/utils/utils"; // Import amountToMainUnit function
 import { Info } from "lucide-react"; // Import icon for tooltip
 
+type DataProps = {
+  address: string;
+  chainId: string;
+  tokenDetails: any[];
+  setTokenDetails: React.Dispatch<React.SetStateAction<any[]>>;
+};
 
-type DataProps = { address: string; chainId: string };
-
-export const Data: React.FC<DataProps> = ({ address, chainId }) => {
+export const Data: React.FC<DataProps> = ({ address, chainId, tokenDetails, setTokenDetails }) => {
   const [result, setResult] = useState<any>();
   const [chainDetails, setChainDetails] = useState<any>();
-  const [tokenDetails, setTokenDetails] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchData = useCallback(async () => {
@@ -46,7 +49,7 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
 
       setIsLoading(false);
     }
-  }, [address, chainId]);
+  }, [address, chainId, setTokenDetails]);
 
   useEffect(() => {
     fetchData();
@@ -62,7 +65,7 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
     setResult(undefined);
     setChainDetails(undefined);
     setTokenDetails([]);
-  }, [address]);
+  }, [address, setTokenDetails]);
 
   const formatBalance = (balance: string, decimals: number) => {
     return amountToMainUnit(balance, decimals);
@@ -94,12 +97,15 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
                   <div>
                     <div className="mt-4">
                       <div>
-                        <strong>Balance:</strong> {formatBalance(result.balances?.native?.available, chainDetails.decimals)} {chainDetails.ticker}
+                        <strong>Balance:</strong>{" "}
+                        {formatBalance(result.balances?.native?.available, chainDetails.decimals)}{" "}
+                        {chainDetails.ticker}
                       </div>
                       <div className="ml-4">
                         {tokenDetails.map((token, index) => (
                           <div key={index}>
-                            <strong>{token.name} Balance:</strong> {formatBalance(token.value, token.decimals)} {token.ticker}
+                            <strong>{token.name} Balance:</strong>{" "}
+                            {formatBalance(token.value, token.decimals)} {token.ticker}
                           </div>
                         ))}
                       </div>
@@ -116,8 +122,12 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
                   <div className="flex items-center">
                     <Label htmlFor="name">Chain Details JSON</Label>
                     <Tooltip text="Click to view the API documentation for retrieving chain details">
-                      <a href="https://docs.adamik.io/api-reference/endpoint/get-apichains-chainid" target="_blank" rel="noopener noreferrer">
-                      <Info className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" />
+                      <a
+                        href="https://docs.adamik.io/api-reference/endpoint/get-apichains-chainid"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Info className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" />
                       </a>
                     </Tooltip>
                   </div>
@@ -129,8 +139,12 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
                   <div className="flex items-center mt-4">
                     <Label htmlFor="name">Data State JSON</Label>
                     <Tooltip text="Click to view the API documentation for data state endpoint">
-                      <a href="https://docs.adamik.io/api-reference/endpoint/post-apidatastate" target="_blank" rel="noopener noreferrer">
-                      <Info className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" />
+                      <a
+                        href="https://docs.adamik.io/api-reference/endpoint/post-apidatastate"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Info className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" />
                       </a>
                     </Tooltip>
                   </div>
@@ -142,8 +156,12 @@ export const Data: React.FC<DataProps> = ({ address, chainId }) => {
                   <div className="flex items-center mt-4">
                     <Label htmlFor="name">Token Details JSON</Label>
                     <Tooltip text="Click to view the API documentation for token information endpoint">
-                      <a href="https://docs.adamik.io/api-reference/endpoint/get-apichains-chainid-token-tokenid" target="_blank" rel="noopener noreferrer">
-                      <Info className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" />
+                      <a
+                        href="https://docs.adamik.io/api-reference/endpoint/get-apichains-chainid-token-tokenid"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Info className="w-4 h-4 ml-2 text-gray-500 cursor-pointer" />
                       </a>
                     </Tooltip>
                   </div>

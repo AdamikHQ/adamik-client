@@ -2,7 +2,9 @@
 
 import {
   DelegateTransaction,
+  IWallet,
   Mode,
+  Token,
   TokenTransferTransaction,
   Transaction,
   TransferTransaction,
@@ -11,11 +13,10 @@ import React, { ChangeEvent, FormEventHandler, useEffect, useState } from "react
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { getChainModes } from "~/utils/utils";
+import { amountToSmallestUnit, getChainModes } from "~/utils/utils";
 import { Validators } from "../Validators";
 import { Checkbox } from "../ui/checkbox";
 import { Tokens } from "../Tokens";
-import { getData } from "~/api/data";
 
 type FormInputCommon = {
   id: string;
@@ -53,7 +54,9 @@ type FormInput = FormInputText | FormInputCheckbox | FormInputValidator | FormIn
 export const getForm = (
   mode: Mode[],
   transactionInputs: Transaction,
-  setTransactionInputs: React.Dispatch<React.SetStateAction<Transaction>>
+  setTransactionInputs: React.Dispatch<React.SetStateAction<Transaction>>,
+  wallet: IWallet,
+  tokenDetails: Token[]
 ): Record<Mode, FormInput[]> => {
   const form: Record<Mode, FormInput[]> = {
     transfer: [
@@ -92,6 +95,7 @@ export const getForm = (
           setTransactionInputs({
             ...transactionInputs,
             amount: e.target.value,
+            formattedAmount: amountToSmallestUnit(e.target.value, wallet.unit),
           });
         },
       },
@@ -167,9 +171,13 @@ export const getForm = (
         value: transactionInputs.amount ?? "0",
         disabled: transactionInputs.useMaxAmount === true,
         onChange: (e) => {
+          const tokenUnit = tokenDetails.find(
+            (token) => token.id === (transactionInputs as TokenTransferTransaction).tokenId
+          )!.decimals;
           setTransactionInputs({
             ...transactionInputs,
             amount: e.target.value,
+            formattedAmount: amountToSmallestUnit(e.target.value, tokenUnit),
           });
         },
       },
@@ -249,25 +257,36 @@ export const getForm = (
 type EncodeFormProps = {
   transactionInputs: Transaction;
   setTransactionInputs: React.Dispatch<React.SetStateAction<Transaction>>;
+  wallet: IWallet;
+  tokenDetails: Token[];
 };
 
-export const EncodeForm: React.FC<EncodeFormProps> = ({ transactionInputs, setTransactionInputs }) => {
+export const EncodeForm: React.FC<EncodeFormProps> = ({
+  transactionInputs,
+  setTransactionInputs,
+  wallet,
+  tokenDetails,
+}) => {
   // FIXME: Chain Details need to contains mode. atm do it manually
-  const form = getForm(getChainModes(transactionInputs.chainId), transactionInputs, setTransactionInputs);
+  const form = getForm(
+    getChainModes(transactionInputs.chainId),
+    transactionInputs,
+    setTransactionInputs,
+    wallet,
+    tokenDetails
+  );
   const [mode, setMode] = useState<Mode>("transfer");
   const [tokenIds, setTokenIds] = useState<string[]>([]);
 
   useEffect(() => {
     const getTokenIds = async () => {
-      const state = await getData(transactionInputs.chainId, transactionInputs.senders[0]);
-
-      const tokenIds = state?.balances?.tokens?.map((tokenAmount: any) => tokenAmount.tokenId);
+      const tokenIds = tokenDetails?.map((token: any) => token.id);
       setTokenIds(tokenIds || []);
     };
 
     setMode("transfer");
     getTokenIds();
-  }, [transactionInputs.chainId, transactionInputs.senders]);
+  }, [transactionInputs.chainId, transactionInputs.senders, tokenDetails]);
 
   const renderSwitch = ({ type, id, label, value, onChange, onCheck, disabled }: FormInput) => {
     switch (type) {

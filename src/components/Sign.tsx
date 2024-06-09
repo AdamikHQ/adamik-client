@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Textarea } from "./ui/textarea";
-import { IWallet, Transaction } from "~/types";
+import { IWallet, Token, Transaction } from "~/types";
 import { useCallback } from "react";
 import { getForm } from "./encode/EncodeForm";
 import { Label } from "./ui/label";
@@ -14,6 +14,7 @@ type SignProps = {
   wallet: IWallet;
   transaction: Transaction;
   setSignedTransaction: (signedTransaction: string) => void;
+  tokenDetails: Token[];
   setOpen: (open: boolean) => void;
   setHash: (hash: string) => void;
 };
@@ -23,6 +24,7 @@ export const Sign: React.FC<SignProps> = ({
   wallet,
   transaction,
   setSignedTransaction,
+  tokenDetails,
   setOpen,
   setHash,
 }) => {
@@ -36,7 +38,7 @@ export const Sign: React.FC<SignProps> = ({
     setOpen(false);
   }, [wallet, encodedTransaction, setSignedTransaction, setOpen, setHash, transaction]);
 
-  const form = getForm([transaction.mode], transaction, () => {});
+  const form = getForm([transaction.mode], transaction, () => {}, wallet, tokenDetails);
 
   return (
     <Tabs defaultValue="account">

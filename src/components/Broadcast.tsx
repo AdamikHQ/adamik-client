@@ -6,7 +6,6 @@ import { broadcast } from "~/api/broadcast";
 import { useEffect, useState } from "react";
 import { Label } from "./ui/label";
 import { IWallet, Transaction } from "~/types";
-import { amountToSmallestUnit } from "~/utils/utils";
 import { Loading } from "./ui/loading";
 
 type BroadcastProps = {
