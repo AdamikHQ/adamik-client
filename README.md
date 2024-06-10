@@ -46,6 +46,12 @@ Make sure you have the following installed on your development machine:
     pnpm install
     ```
 
+3. [Get your API key](https://dashboard.adamik.io/) if you don't already have one and set it in a file named `.env` at the root of the project
+
+    ```
+    ADAMIK_API_KEY=<your Adamik API key>
+    ```
+
 ### Running the Development Server
 
 First, run the development server:
