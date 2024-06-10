@@ -26,6 +26,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
   const [signedTransaction, setSignedTransaction] = useState<string>();
   const [hash, setHash] = useState<string>();
   const [openSigner, setOpenSigner] = useState<boolean>(false);
+  const [tokenDetails, setTokenDetails] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -112,7 +113,12 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
           {address && (
             <>
               <div className="col-span-2 md:col-span-2">
-                <Data address={address} chainId={transactionToSign.chainId} />
+                <Data
+                  address={address}
+                  chainId={transactionToSign.chainId}
+                  tokenDetails={tokenDetails}
+                  setTokenDetails={setTokenDetails}
+                />
               </div>
               <div className="col-span-2 md:col-span-2">
                 <Encode
@@ -121,6 +127,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
                   setTransactionToSign={setTransactionToSign}
                   setOpen={setOpenSigner}
                   wallet={wallet}
+                  tokenDetails={tokenDetails}
                 />
               </div>
               {!wallet.withoutBroadcast && signedTransaction && (
@@ -149,6 +156,7 @@ export const Wallet: React.FC<{ wallet: IWallet }> = ({ wallet }) => {
                     transaction={transactionToSign}
                     wallet={wallet}
                     encodedTransaction={encodedTransaction}
+                    tokenDetails={tokenDetails}
                     setOpen={setOpenSigner}
                     setHash={setHash}
                   />

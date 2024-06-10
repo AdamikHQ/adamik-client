@@ -14,6 +14,15 @@ export type EVMChain =
   | "arbitrum"
   | "arbitrum-sepolia";
 
+export type Token = {
+  chainId: Chain;
+  id: string;
+  name: string;
+  ticker: string;
+  decimals: number;
+  contractAddress?: string;
+};
+
 export type Mode = "transfer" | "transferToken" | "delegate";
 
 type TransactionCommon = {
@@ -24,6 +33,7 @@ type TransactionCommon = {
   fees?: string;
   gas?: string;
   amount?: string;
+  formattedAmount?: string; // amount converted to smallest unit
   format?: string;
   pubKey?: string;
   memo?: string;

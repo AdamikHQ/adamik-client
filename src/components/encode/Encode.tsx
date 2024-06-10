@@ -1,8 +1,8 @@
 "use client";
 
 import { getEncode } from "~/api/encode";
-import { IWallet, Transaction } from "~/types";
-import { amountToMainUnit, amountToSmallestUnit } from "~/utils/utils";
+import { IWallet, Token, Transaction } from "~/types";
+import { amountToMainUnit } from "~/utils/utils";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
@@ -16,6 +16,7 @@ type EncodeProps = {
   setTransactionToSign: React.Dispatch<React.SetStateAction<Transaction>>;
   setEncodedTransaction: (encodedTransaction: string) => void;
   wallet: IWallet;
+  tokenDetails: Token[];
   setOpen: (open: boolean) => void;
 };
 
@@ -24,6 +25,7 @@ export const Encode: React.FC<EncodeProps> = ({
   setTransactionToSign,
   setEncodedTransaction,
   wallet,
+  tokenDetails,
   setOpen,
 }) => {
   const [transactionInputs, setTransactionInputs] = useState<Transaction>(transactionToSign);
@@ -39,9 +41,7 @@ export const Encode: React.FC<EncodeProps> = ({
           chainId: transactionToSign.chainId,
           format: wallet.signFormat,
           pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
-          amount: transactionInputs.useMaxAmount
-            ? undefined
-            : amountToSmallestUnit(transactionInputs.amount as string, wallet.unit), //FIXME: Unit conversion should be handled on server-side
+          amount: transactionInputs.useMaxAmount ? undefined : transactionInputs.formattedAmount,
         });
         const result = data.transaction;
         setResult(result);
@@ -87,9 +87,7 @@ export const Encode: React.FC<EncodeProps> = ({
         <form onSubmit={getDataForm}>
           <CardHeader className="flex flex-row items-start bg-muted/80">
             <div className="grid gap-0.5">
-              <CardTitle className="group flex items-center gap-2 text-lg">
-               Perform a Transaction
-              </CardTitle>
+              <CardTitle className="group flex items-center gap-2 text-lg">Perform a Transaction</CardTitle>
               <CardDescription>
                 <span className="font-light">Transaction prepared using the Adamik Write API</span>
               </CardDescription>
@@ -97,7 +95,12 @@ export const Encode: React.FC<EncodeProps> = ({
           </CardHeader>
           <CardContent>
             <div className="grid py-4">
-              <EncodeForm setTransactionInputs={setTransactionInputs} transactionInputs={transactionInputs} />
+              <EncodeForm
+                setTransactionInputs={setTransactionInputs}
+                transactionInputs={transactionInputs}
+                wallet={wallet}
+                tokenDetails={tokenDetails}
+              />
               {isLoading ? (
                 <Loading />
               ) : result && result.status.errors.length > 0 ? (
