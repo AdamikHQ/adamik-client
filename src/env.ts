@@ -5,9 +5,7 @@ const ADAMIK_API_URL =
   // Custom URL that can be defined in an env var, locally or in Vercel
   process.env.NEXT_PUBLIC_ADAMIK_API_TEST_URL ||
   // Prod URL when running in a Vercel deployment
-  (process.env.NEXT_PUBLIC_VERCEL_URL
-    ? `https://localhost:3000/api` // localhost as a fallback
-    : "https://api.adamik.io/api");
+  "https://api.adamik.io/api";
 
 const env = createEnv({
   /*
