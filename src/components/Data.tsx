@@ -1,19 +1,18 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { getData } from "~/api/data";
+import { Info } from "lucide-react"; // Import icon for tooltip
+import React, { useCallback, useEffect, useState } from "react";
 import { getChainDetails } from "~/api/chainDetails"; // Import the function
 import { getToken } from "~/api/token"; // Import the TokenInfo function
-import React, { useEffect, useState, useCallback } from "react";
-import { Loading } from "./ui/loading";
-import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs"; // Import the Tabs components
-import { Tooltip } from "./ui/tooltip"; // Import the Tooltip component
 import { amountToMainUnit } from "~/utils/utils"; // Import amountToMainUnit function
-import { Info } from "lucide-react"; // Import icon for tooltip
+import { Button } from "./ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { Label } from "./ui/label";
+import { Loading } from "./ui/loading";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"; // Import the Tabs components
+import { Textarea } from "./ui/textarea";
+import { Tooltip } from "./ui/tooltip"; // Import the Tooltip component
+import { getAddressState } from "~/api/addressState";
 
 type DataProps = {
   address: string;
@@ -30,7 +29,7 @@ export const Data: React.FC<DataProps> = ({ address, chainId, tokenDetails, setT
   const fetchData = useCallback(async () => {
     if (address) {
       setIsLoading(true);
-      const data = await getData(chainId, address);
+      const data = await getAddressState(chainId, address);
       setResult(data);
       const details = await getChainDetails(chainId);
       setChainDetails(details);
