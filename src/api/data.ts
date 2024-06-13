@@ -13,11 +13,9 @@ export const getData = async (chainId: string, address: string) => {
     body: JSON.stringify({ chainId, address }),
   });
 
-  if (response.status === 200) {
-    const data = await response.json();
-    return data;
-  } else {
+  if (response.status !== 200) {
     console.error("state - backend error:", response.statusText);
-    return null;
   }
+
+  return response.json();
 };

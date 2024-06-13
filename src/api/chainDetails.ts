@@ -12,7 +12,9 @@ export const getChainDetails = async (chainId: string) => {
     method: "GET",
   });
 
-  if (response.status === 200) {
-    return await response.json();
+  if (response.status !== 200) {
+    console.error("chainDetails - backend error:", response.statusText);
   }
+
+  return response.json();
 };

@@ -8,6 +8,7 @@ type BroadcastArgs = {
   signature: string;
   encodedTransaction?: string;
 };
+
 // TODO Missing return type
 export const broadcast = async ({ transaction, signature, encodedTransaction }: BroadcastArgs) => {
   const response = await fetch(`${ADAMIK_API_URL}/transaction/broadcast`, {
@@ -25,7 +26,9 @@ export const broadcast = async ({ transaction, signature, encodedTransaction }: 
     }),
   });
 
-  if (response.status === 200) {
-    return await response.json();
+  if (response.status !== 200) {
+    console.error("broadcast - backend error:", response.statusText);
   }
+
+  return response.json();
 };

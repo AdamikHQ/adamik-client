@@ -12,11 +12,9 @@ export const getSupportedChainsIds = async () => {
     method: "GET",
   });
 
-  if (response.status === 200) {
-    const data = await response.json();
-
-    return data;
+  if (response.status !== 200) {
+    console.error("chains - backend error:", response.statusText);
   }
 
-  return null;
+  return response.json();
 };

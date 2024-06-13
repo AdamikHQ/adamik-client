@@ -14,10 +14,9 @@ export const getEncode = async (plainTransaction: Transaction) => {
     body: JSON.stringify({ transaction: { plain: plainTransaction } }),
   });
 
-  if (response.status === 200) {
-    const data = await response.json();
-    return data;
-  } else {
+  if (response.status !== 200) {
     console.error("encode - backend error:", response.statusText);
   }
+
+  return response.json();
 };
