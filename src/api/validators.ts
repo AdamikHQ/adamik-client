@@ -27,12 +27,11 @@ const getValidatorsCall = async (chainId: string, offset?: number, limit?: numbe
     body: JSON.stringify(body),
   });
 
-  if (response.status === 200) {
-    const data = await response.json();
-    return data;
-  } else {
-    console.error("state - backend error:", response.statusText);
+  if (response.status !== 200) {
+    console.error("validators - backend error:", response.statusText);
   }
+
+  return response.json();
 };
 
 // TODO Missing return type

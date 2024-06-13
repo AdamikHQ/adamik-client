@@ -36,13 +36,18 @@ export const Encode: React.FC<EncodeProps> = ({
       e.preventDefault();
       if (transactionInputs) {
         setIsLoading(true);
-        const data = await getEncode({
+        const payload = {
           ...transactionInputs,
           chainId: transactionToSign.chainId,
           format: wallet.signFormat,
           pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
-          amount: transactionInputs.useMaxAmount ? undefined : transactionInputs.formattedAmount,
-        });
+        };
+        if (transactionInputs.useMaxAmount) {
+          delete payload.amount;
+        } else {
+          payload.amount = transactionInputs.formattedAmount;
+        }
+        const data = await getEncode(payload);
         const result = data.transaction;
         setResult(result);
         if (!(result.status.errors.length > 0)) {

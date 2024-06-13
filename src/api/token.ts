@@ -14,13 +14,11 @@ const getTokenCall = async (chainId: string, tokenId: string) => {
     method: "GET",
   });
 
-  if (response.status === 200) {
-    const data = await response.json();
-    return data;
-  } else {
-    console.error("state - backend error:", response.statusText);
-    return null;
+  if (response.status !== 200) {
+    console.error("token - backend error:", response.statusText);
   }
+
+  return response.json();
 };
 
 // TODO Missing return type
