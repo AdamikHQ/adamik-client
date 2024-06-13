@@ -4,7 +4,7 @@ import { env, ADAMIK_API_URL } from "~/env";
 import { cache } from "~/utils/cache";
 
 const getValidatorsCall = async (chainId: string, offset?: number, limit?: number) => {
-  const url = new URL(`${ADAMIK_API_URL}/data/validators`);
+  const url = new URL(`${ADAMIK_API_URL}/chains/${chainId}/validators`);
   const body: {
     chainId: string;
     offset?: string;
