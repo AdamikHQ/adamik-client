@@ -37,7 +37,7 @@ export const Data: React.FC<DataProps> = ({ address, chainId, tokenDetails, setT
       // Fetch token details
       if (data?.balances?.tokens) {
         const tokenDetailsPromises = data.balances.tokens.map(async (token: any) => {
-          const tokenInfo = await getToken(chainId, token.tokenId);
+          const tokenInfo = await getToken(chainId, token.token.id);
           return { ...token, ...tokenInfo };
         });
         const tokens = await Promise.all(tokenDetailsPromises);
