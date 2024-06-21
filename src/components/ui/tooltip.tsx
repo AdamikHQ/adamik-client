@@ -11,7 +11,7 @@ export const Tooltip: React.FC<TooltipProps> = ({ text, children }) => {
   return (
     <div
       className="relative flex items-center"
-      onMouseEnter={() => setVisible(true)}
+      onMouseEnter={() => text && setVisible(true)}
       onMouseLeave={() => setVisible(false)}
     >
       {children}
