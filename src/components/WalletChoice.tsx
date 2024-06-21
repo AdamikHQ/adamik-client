@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { useWallet } from "~/hooks/useWallet";
 import { KeplrWallet } from "~/wallets/KeplrWallet";
@@ -17,17 +17,8 @@ import { Tooltip } from "./ui/tooltip"; // Import the Tooltip component
 
 export const WalletChoice = () => {
   const { setActiveWallet, activeWallet } = useWallet();
-  const { theme, resolvedTheme } = useTheme(); // Get the current theme and resolved theme
-  const [mounted, setMounted] = useState(false); // State to check if component is mounted
+  const { theme } = useTheme(); // Get the current theme
   const [tooltipVisible, setTooltipVisible] = useState(false); // State for tooltip visibility
-
-  // Wait until the component is mounted to ensure the theme state is available
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Use resolvedTheme instead of theme for more accurate theme detection
-  const currentTheme = mounted ? (theme === "system" ? resolvedTheme : theme) : "light";
 
   const wallets = [
     {
@@ -77,7 +68,7 @@ export const WalletChoice = () => {
     },
     {
       name: "Fireblocks",
-      icon: currentTheme === "light" ? "/icons/Fireblocks_light.svg" : "/icons/Fireblocks_dark.svg", // Conditional icon based on theme
+      icon: theme === "light" ? "/icons/Fireblocks_light.svg" : "/icons/Fireblocks_dark.svg", // Conditional icon
       connect: async () => {
         // Show tooltip when Fireblocks logo is clicked
         setTooltipVisible(true);
@@ -85,11 +76,6 @@ export const WalletChoice = () => {
       },
     },
   ];
-
-  if (!mounted) {
-    // Don't render the component until it is mounted
-    return null;
-  }
 
   return (
     <Card>
@@ -101,7 +87,7 @@ export const WalletChoice = () => {
         {wallets.map((wallet) => (
           <Tooltip
             key={wallet.name}
-            text={wallet.name === "Fireblocks" && tooltipVisible ? "Please contact us to get access to Fireblocks connectivity <a href='https://adamik.io/contact' target='_blank' class='underline'>here</a>" : ""}
+            text={wallet.name === "Fireblocks" && tooltipVisible ? "Please <a href='https://adamik.io/contact' target='_blank' class='underline'>contact us</a> to get access to Fireblocks connectivity" : ""}
           >
             <Button
               variant="ghost"
