@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface TooltipProps {
   text: string;
@@ -6,12 +6,23 @@ interface TooltipProps {
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({ text, children }) => {
+  const [visible, setVisible] = useState(false);
+
   return (
-    <div className="relative flex items-center">
+    <div
+      className="relative flex items-center"
+      onMouseEnter={() => setVisible(true)}
+      onMouseLeave={() => setVisible(false)}
+    >
       {children}
-      <div className="absolute bottom-full mb-2 w-max p-2 bg-black text-white text-xs rounded opacity-0 transition-opacity duration-300 tooltip-content">
-        {text}
-      </div>
+      {text && (
+        <div
+          className={`absolute bottom-full mb-2 w-max p-2 bg-black text-white text-xs rounded transition-opacity duration-300 ${
+            visible ? 'opacity-100' : 'opacity-0'
+          }`}
+          dangerouslySetInnerHTML={{ __html: text }} // Set HTML content
+        />
+      )}
     </div>
   );
 };
