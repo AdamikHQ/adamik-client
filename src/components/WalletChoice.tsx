@@ -87,7 +87,7 @@ export const WalletChoice = () => {
         {wallets.map((wallet) => (
           <Tooltip
             key={wallet.name}
-            text={wallet.name === "Fireblocks" && tooltipVisible ? "Please contact us to get access to Fireblocks connectivity <a href='https://adamik.io/contact' target='_blank' class='underline'>here</a>" : ""}
+            text={wallet.name === "Fireblocks" && tooltipVisible ? "Please <a href='https://adamik.io/contact' target='_blank' class='underline'>contact us</a> to get access to Fireblocks connectivity" : ""}
           >
             <Button
               variant="ghost"
