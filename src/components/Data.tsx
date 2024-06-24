@@ -3,7 +3,6 @@
 import { Info } from "lucide-react"; // Import icon for tooltip
 import React, { useCallback, useEffect, useState } from "react";
 import { getChainDetails } from "~/api/chainDetails"; // Import the function
-import { getToken } from "~/api/token"; // Import the TokenInfo function
 import { amountToMainUnit } from "~/utils/utils"; // Import amountToMainUnit function
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
@@ -22,29 +21,22 @@ type DataProps = {
 };
 
 export const Data: React.FC<DataProps> = ({ address, chainId, tokenDetails, setTokenDetails }) => {
-  const [result, setResult] = useState<any>();
+  const [addressData, setAddressData] = useState<any>();
   const [chainDetails, setChainDetails] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchData = useCallback(async () => {
     if (address) {
       setIsLoading(true);
-      const data = await getAddressState(chainId, address);
-      setResult(data);
+      const addressData = await getAddressState(chainId, address);
+      setAddressData(addressData);
       const details = await getChainDetails(chainId);
       setChainDetails(details);
 
-      // Fetch token details
-      if (data?.balances?.tokens) {
-        const tokenDetailsPromises = data.balances.tokens.map(async (token: any) => {
-          const tokenInfo = await getToken(chainId, token.token.id);
-          return { ...token, ...tokenInfo };
-        });
-        const tokens = await Promise.all(tokenDetailsPromises);
-        setTokenDetails(tokens);
-      } else {
-        setTokenDetails([]);
-      }
+      const tokens = addressData.balances.tokens.map((tokenAmount: any) => {
+        return { value: tokenAmount.value, ...tokenAmount.token };
+      });
+      setTokenDetails(tokens);
 
       setIsLoading(false);
     }
@@ -61,10 +53,9 @@ export const Data: React.FC<DataProps> = ({ address, chainId, tokenDetails, setT
 
   useEffect(() => {
     setIsLoading(false);
-    setResult(undefined);
+    setAddressData(undefined);
     setChainDetails(undefined);
-    setTokenDetails([]);
-  }, [address, setTokenDetails]);
+  }, [address]);
 
   const formatBalance = (balance: string, decimals: number) => {
     return amountToMainUnit(balance, decimals);
@@ -92,12 +83,12 @@ export const Data: React.FC<DataProps> = ({ address, chainId, tokenDetails, setT
           ) : (
             <>
               <TabsContent value="userMode">
-                {result && chainDetails && (
+                {addressData && chainDetails && (
                   <div>
                     <div className="mt-4">
                       <div>
                         <strong>Balance:</strong>{" "}
-                        {formatBalance(result.balances?.native?.available, chainDetails.decimals)}{" "}
+                        {formatBalance(addressData.balances?.native?.available, chainDetails.decimals)}{" "}
                         {chainDetails.ticker}
                       </div>
                       <div className="ml-4">
@@ -149,7 +140,7 @@ export const Data: React.FC<DataProps> = ({ address, chainId, tokenDetails, setT
                   </div>
                   <Textarea
                     className="border text-xs p-2 rounded-md h-fit"
-                    value={JSON.stringify(result, null, 2)}
+                    value={JSON.stringify(addressData, null, 2)}
                     readOnly={true}
                   />
                   <div className="flex items-center mt-4">
