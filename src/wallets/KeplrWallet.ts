@@ -4,7 +4,7 @@ import { mintscanUrl } from "../utils/utils";
 
 export class KeplrWallet implements IWallet {
   public name = "Keplr";
-  public supportedChains: Chain[] = ["cosmoshub"];
+  public supportedChains: Chain[] = ["cosmoshub", "osmosis"];
   public icon = "/icons/Keplr.svg";
   public unit = 6; // TODO: Get from Adamik ?
   public signFormat = "json";

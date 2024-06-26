@@ -10,7 +10,7 @@ import { mintscanUrl } from "../utils/utils";
 
 export class LeapWallet implements IWallet {
   public name = "Leap";
-  public supportedChains: Chain[] = ["cosmoshub"];
+  public supportedChains: Chain[] = ["cosmoshub", "osmosis"];
   public icon = "/icons/Leap.svg";
   public unit = 6; // TODO: Get from Adamik ?
   public signFormat = "json";
