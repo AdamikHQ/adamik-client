@@ -12,7 +12,13 @@ export type EVMChain =
   | "optimism"
   | "optimism-sepolia"
   | "arbitrum"
-  | "arbitrum-sepolia";
+  | "arbitrum-sepolia"
+  | "fantom"
+  | "polygon";
+// | "gnosis"
+// | "moonbeam"
+// | "moonriver"
+// | "palm";
 
 export type Token = {
   chainId: Chain;

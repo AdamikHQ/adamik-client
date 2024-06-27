@@ -55,8 +55,7 @@ const chainConfig: Record<EVMChain, ChainConfig> = {
     chainId: "0x12c",
     chainName: "zkSync Sepolia",
     rpcUrls: ["https://sepolia.era.zksync.dev"],
-    explorerUrl: (hash: string) =>
-      `https://sepolia.explorer.zksync.io/tx/${hash}`,
+    explorerUrl: (hash: string) => `https://sepolia.explorer.zksync.io/tx/${hash}`,
     nativeCurrency: {
       name: "Ethereum",
       symbol: "ETH",
@@ -69,8 +68,7 @@ const chainConfig: Record<EVMChain, ChainConfig> = {
     chainId: "0x978",
     chainName: "zkSync Sepolia",
     rpcUrls: ["https://testnet.rpc.inevm.com/http"],
-    explorerUrl: (hash: string) =>
-      `https://inevm-testnet.explorer.caldera.xyz/tx/${hash}`,
+    explorerUrl: (hash: string) => `https://inevm-testnet.explorer.caldera.xyz/tx/${hash}`,
     nativeCurrency: {
       name: "Injective",
       symbol: "INJ",
@@ -120,8 +118,7 @@ const chainConfig: Record<EVMChain, ChainConfig> = {
     chainId: "0xAA37DC",
     chainName: "Optimism Sepolia",
     rpcUrls: ["https://sepolia.optimism.io"],
-    explorerUrl: (hash: string) =>
-      `https://sepolia-optimistic.etherscan.io/tx/${hash}`,
+    explorerUrl: (hash: string) => `https://sepolia-optimistic.etherscan.io/tx/${hash}`,
     nativeCurrency: {
       name: "Ether",
       symbol: "ETH",
@@ -138,6 +135,30 @@ const chainConfig: Record<EVMChain, ChainConfig> = {
     nativeCurrency: {
       name: "Ether",
       symbol: "ETH",
+      decimals: 18,
+    },
+  },
+  fantom: {
+    adamikChainId: "fantom",
+    chainId: "0xFA",
+    chainName: "Fantom",
+    rpcUrls: ["https://rpcapi.fantom.network"],
+    explorerUrl: (hash: string) => `https://ftmscan.com/tx/${hash}`,
+    nativeCurrency: {
+      name: "Fantom",
+      symbol: "FTM",
+      decimals: 18,
+    },
+  },
+  polygon: {
+    adamikChainId: "polygon",
+    chainId: "0x89",
+    chainName: "Polygon",
+    rpcUrls: ["https://polygon-rpc.com"],
+    explorerUrl: (hash: string) => `https://polygonscan.com//tx/${hash}`,
+    nativeCurrency: {
+      name: "MATIC",
+      symbol: "MATIC",
       decimals: 18,
     },
   },
@@ -163,9 +184,7 @@ export const getAdamikChainId = (chainId: EVMChain): string | undefined => {
   return undefined;
 };
 
-const getMetamaskConfig = (
-  chainId: EVMChain
-): Omit<ChainConfig, "adamikChainId"> | undefined => {
+const getMetamaskConfig = (chainId: EVMChain): Omit<ChainConfig, "adamikChainId"> | undefined => {
   if (chainConfig[chainId]) {
     return {
       chainId: chainConfig[chainId].chainId,
@@ -188,9 +207,7 @@ function getEVMChains(withoutTestnet = false): Chain[] {
   const chains = Object.entries(chainConfig);
 
   if (withoutTestnet) {
-    return chains
-      .filter(([, config]) => !config.isTestnet)
-      .map(([chainId]) => chainId as Chain);
+    return chains.filter(([, config]) => !config.isTestnet).map(([chainId]) => chainId as Chain);
   }
   return chains
     .sort(([, aConfig], [, bConfig]) => {
