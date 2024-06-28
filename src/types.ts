@@ -1,4 +1,4 @@
-export type Chain = "cosmoshub" | "algorand" | "osmosis" | EVMChain;
+export type Chain = "cosmoshub" | "algorand" | "osmosis" | "dydx" | "celestia" | "axelar" | EVMChain;
 
 export type EVMChain =
   | "ethereum"
@@ -12,7 +12,13 @@ export type EVMChain =
   | "optimism"
   | "optimism-sepolia"
   | "arbitrum"
-  | "arbitrum-sepolia";
+  | "arbitrum-sepolia"
+  | "fantom"
+  | "polygon";
+// | "gnosis"
+// | "moonbeam"
+// | "moonriver"
+// | "palm";
 
 export type Token = {
   chainId: Chain;

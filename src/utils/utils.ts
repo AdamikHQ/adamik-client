@@ -33,6 +33,10 @@ export function getChainModes(chainId: Chain): Mode[] {
   switch (chainId) {
     case "cosmoshub":
     case "osmosis":
+    case "celestia":
+    //case "cosmoshub-testnet":
+    case "dydx":
+    case "axelar":
       return ["transfer", "delegate"];
     case "algorand":
     case "ethereum":
@@ -43,10 +47,8 @@ export function getChainModes(chainId: Chain): Mode[] {
     case "injective-testnet":
     case "base":
     case "base-sepolia":
-    case "optimism":
-    case "optimism-sepolia":
-    case "arbitrum":
-    case "arbitrum-sepolia":
+    case "optimism": //case "optimism-sepolia":
+    case "arbitrum": //case "arbitrum-sepolia":
       return ["transfer", "transferToken"];
     default:
       return ["transfer"];
