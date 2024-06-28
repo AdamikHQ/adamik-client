@@ -223,12 +223,12 @@ export const getForm = (
         id: "validator",
         label: "Validator",
         type: "validator",
-        value: (transactionInputs as DelegateTransaction).validator ?? "",
+        value: (transactionInputs as DelegateTransaction).validatorAddress ?? "",
         onChange: (e) => {
           setTransactionInputs({
             ...transactionInputs,
             mode: "delegate",
-            validator: e.target.value,
+            validatorAddress: e.target.value,
           });
         },
       },
@@ -321,7 +321,7 @@ export const EncodeForm: React.FC<EncodeFormProps> = ({
               key={id}
               chainId={transactionInputs.chainId}
               setTransactionInputs={setTransactionInputs}
-              validatorAddress={transactionInputs.validator}
+              validatorAddress={transactionInputs.validatorAddress}
             />
           );
         }
@@ -358,7 +358,7 @@ export const EncodeForm: React.FC<EncodeFormProps> = ({
               mode: "transfer",
               recipients: [],
               tokenId: "",
-              validator: "",
+              validatorAddress: "",
             });
           } else if (value === "transferToken") {
             setTransactionInputs({
@@ -371,7 +371,7 @@ export const EncodeForm: React.FC<EncodeFormProps> = ({
             setTransactionInputs({
               ...transactionInputs,
               mode: "delegate",
-              validator: "",
+              validatorAddress: "",
             });
           }
         }}

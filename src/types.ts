@@ -58,7 +58,7 @@ export type TokenTransferTransaction = TransactionCommon & {
 
 export type DelegateTransaction = TransactionCommon & {
   mode: "delegate";
-  validator: string;
+  validatorAddress: string;
 };
 
 export type Transaction = TransferTransaction | TokenTransferTransaction | DelegateTransaction;

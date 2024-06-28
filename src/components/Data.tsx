@@ -34,7 +34,7 @@ export const Data: React.FC<DataProps> = ({ address, chainId, tokenDetails, setT
       setChainDetails(details);
 
       const tokens = addressData.balances.tokens.map((tokenAmount: any) => {
-        return { value: tokenAmount.value, ...tokenAmount.token };
+        return { value: tokenAmount.amount, ...tokenAmount.token };
       });
       setTokenDetails(tokens);
 
@@ -60,6 +60,11 @@ export const Data: React.FC<DataProps> = ({ address, chainId, tokenDetails, setT
   const formatBalance = (balance: string, decimals: number) => {
     return amountToMainUnit(balance, decimals);
   };
+
+  const rewards = addressData?.balances?.staking?.rewards.native.reduce(
+    (total: bigint, reward: any) => total + BigInt(reward.amount),
+    0n
+  );
 
   return (
     <Card className="w-full">
@@ -91,6 +96,9 @@ export const Data: React.FC<DataProps> = ({ address, chainId, tokenDetails, setT
                         {formatBalance(addressData.balances?.native?.available, chainDetails.decimals)}{" "}
                         {chainDetails.ticker}
                       </div>
+                      <div>
+                        <strong>Tokens:</strong>{" "}
+                      </div>
                       <div className="ml-4">
                         {tokenDetails.map((token, index) => (
                           <div key={index}>
@@ -99,6 +107,32 @@ export const Data: React.FC<DataProps> = ({ address, chainId, tokenDetails, setT
                           </div>
                         ))}
                       </div>
+                      {addressData?.balances?.staking && (
+                        <>
+                          <div>
+                            <strong>Staking:</strong>{" "}
+                          </div>
+                          <div className="ml-4">
+                            <strong>Locked:</strong>{" "}
+                            {formatBalance(addressData.balances?.staking?.locked, chainDetails.decimals)}{" "}
+                            {chainDetails.ticker}
+                          </div>
+                          <div className="ml-4">
+                            <strong>Unlocking:</strong>{" "}
+                            {formatBalance(addressData.balances?.staking?.unlocking, chainDetails.decimals)}{" "}
+                            {chainDetails.ticker}
+                          </div>
+                          <div className="ml-4">
+                            <strong>Unlocked:</strong>{" "}
+                            {formatBalance(addressData.balances?.staking?.unlocked, chainDetails.decimals)}{" "}
+                            {chainDetails.ticker}
+                          </div>
+                          <div className="ml-4">
+                            <strong>Rewards:</strong> {formatBalance(rewards, chainDetails.decimals)}{" "}
+                            {chainDetails.ticker}
+                          </div>
+                        </>
+                      )}
                     </div>
                     <Button onClick={fetchData} className="mt-4">
                       Refresh Data
