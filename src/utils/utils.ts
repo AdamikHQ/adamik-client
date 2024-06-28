@@ -45,6 +45,8 @@ export function getChainModes(chainId: Chain): Mode[] {
     case "zksync":
     case "zksync-sepolia":
     case "injective-testnet":
+    case "polygon":
+    case "fantom":
     case "base":
     case "base-sepolia":
     case "optimism": //case "optimism-sepolia":
