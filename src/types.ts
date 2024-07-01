@@ -40,9 +40,11 @@ type TransactionCommon = {
   gas?: string;
   amount?: string;
   formattedAmount?: string; // amount converted to smallest unit
-  format?: string;
-  pubKey?: string;
   memo?: string;
+  format?: string;
+  params?: {
+    pubKey?: string;
+  };
 };
 
 export type TransferTransaction = TransactionCommon & {

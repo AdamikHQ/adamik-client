@@ -242,6 +242,7 @@ export const getForm = (
           setTransactionInputs({
             ...transactionInputs,
             amount: e.target.value,
+            formattedAmount: amountToSmallestUnit(e.target.value, wallet.unit),
           });
         },
       },

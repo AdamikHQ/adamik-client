@@ -40,7 +40,9 @@ export const Encode: React.FC<EncodeProps> = ({
           ...transactionInputs,
           chainId: transactionToSign.chainId,
           format: wallet.signFormat,
-          pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
+          params: {
+            pubKey: (wallet.getPubkey && (await wallet.getPubkey())) || undefined,
+          },
         };
         if (transactionInputs.useMaxAmount) {
           delete payload.amount;

@@ -78,7 +78,7 @@ export const Validators: React.FC<ValidatorsProps> = ({
                     onSelect={() => {
                       setTransactionInputs((transaction: Transaction) => ({
                         ...transaction,
-                        validator: validator.address,
+                        validatorAddress: validator.address,
                       }));
                       setOpen(false);
                     }}
